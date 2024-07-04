@@ -4,6 +4,7 @@ import at.apo.model.APOException;
 import at.apo.model.Apotheke;
 import at.apo.view.ApoView;
 import at.apo.view.View;
+import at.apo.view.aboutMe;
 import at.apo.view.createApoDialog;
 import javafx.stage.FileChooser;
 
@@ -22,12 +23,18 @@ public class Controller {
         Optional<Apotheke> a = newApo.showAndWait();
 
         a.ifPresent(apotheke -> {
-            this.view.getApothekenListView().getItems().add(apotheke);
-            this.view.getApothekenListView().refresh();
-            this.view.infoAlert("Informationen zu neuer Apotheke:\n" + apotheke.getName(), "Bitte vervollständigen Sie die Attribute der Apotheke\n" +
-                    "in den Einstellungen SOBALD WIE MÖGLICH!\n\n" +
-                    "zu bearbeitende Attribute:\n" +
-                    "Öffnungszeiten");
+            File file = new File(this.view.getDirectory(), apotheke.getName() + ".apo");
+            try {
+                apotheke.speichern(file);
+                this.view.getApothekenListView().getItems().add(apotheke);
+                this.view.getApothekenListView().refresh();
+                this.view.infoAlert("Informationen zu neuer Apotheke:\n" + apotheke.getName(), "Bitte vervollständigen Sie die Attribute der Apotheke\n" +
+                        "in den Einstellungen SOBALD WIE MÖGLICH!\n\n" +
+                        "zu bearbeitende Attribute:\n" +
+                        "Öffnungszeiten");
+            } catch (Exception e) {
+                this.view.errorAlert("Fehler beim Erstellen der Apotheke..", e.getMessage());
+            }
         });
     }
 
@@ -48,8 +55,18 @@ public class Controller {
                 Apotheke apotheke = new Apotheke("Apotheke", "Musterstraße 1", "+43 677 62099198", "j.mader@apotronik.at", 1000000);
                 apotheke.laden(file);
                 if (!(this.view.getApothekenListView().getItems().contains(apotheke))) {
-                    this.view.getApothekenListView().getItems().add(apotheke);
-                    this.view.getApothekenListView().refresh();
+                    File file2 = new File(this.view.getDirectory(), apotheke.getName() + ".apo");
+                    try {
+                        apotheke.speichern(file2);
+                        this.view.getApothekenListView().getItems().add(apotheke);
+                        this.view.getApothekenListView().refresh();
+                        this.view.infoAlert("Informationen zu neuer Apotheke:\n" + apotheke.getName(), "Bitte vervollständigen Sie die Attribute der Apotheke\n" +
+                                "in den Einstellungen SOBALD WIE MÖGLICH!\n\n" +
+                                "zu bearbeitende Attribute:\n" +
+                                "Öffnungszeiten");
+                    } catch (Exception e) {
+                        this.view.errorAlert("Fehler beim Importieren der übergebenen Apotheke..", e.getMessage());
+                    }
                 } else {
                     this.view.errorAlert("Importieren", "Die zu importierende Apotheke ist bereits in der Liste eingetragen!");
                 }
@@ -61,11 +78,21 @@ public class Controller {
     }
 
     public void openApo(Apotheke apotheke) {
-        ApoView apoView = new ApoView(apotheke);
+        ApoView apoView = new ApoView(this.view, apotheke);
     }
 
     public void deleteApo(Apotheke apotheke) {
-        this.view.getApothekenListView().getItems().remove(apotheke);
-        this.view.getApothekenListView().refresh();
+        File file = new File(this.view.getDirectory(), apotheke.getName() + ".apo");
+        if(file.exists()) {
+            this.view.getApothekenListView().getItems().remove(apotheke);
+            file.delete();
+            this.view.getApothekenListView().refresh();
+        } else {
+            this.view.errorAlert("Apotheke löschen", "Es gab einen Fehler beim Löschen/Entfernen der Apotheke!");
+        }
+    }
+
+    public void aboutMe() {
+        aboutMe aboutMe = new aboutMe();
     }
 }

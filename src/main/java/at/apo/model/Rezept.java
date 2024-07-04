@@ -1,10 +1,12 @@
 package at.apo.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Rezept {
+public class Rezept implements Serializable {
+    private static final long serialVersionUID = 1L;
     private int rezeptnummer;
     private Kunde patient;
     private String arzt;
@@ -31,6 +33,14 @@ public class Rezept {
             }
         }
         setBemerkung(bemerkung);
+    }
+
+    public void setRezeptnummer(int rezeptnummer) throws APOException {
+        if(rezeptnummer >= 1) {
+            this.rezeptnummer = rezeptnummer;
+        } else {
+            throw new APOException("Ungültige Rezeptnummer!");
+        }
     }
 
     public void setPatient(Kunde patient) throws APOException {

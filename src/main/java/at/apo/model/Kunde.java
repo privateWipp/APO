@@ -1,6 +1,9 @@
 package at.apo.model;
 
-public class Kunde {
+import java.io.Serializable;
+
+public class Kunde implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String name;
 
     public Kunde(String name) throws APOException {

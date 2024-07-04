@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Objects;
 
-public class Mitarbeiter implements Serializable {
+public class Geschaeftsfuehrer implements Serializable {
     private static final long serialVersionUID = 1L;
     private int id;
     private String nachname;
@@ -15,9 +15,8 @@ public class Mitarbeiter implements Serializable {
     private String adresse;
     private String telefonnummer;
     private String email;
-    private double gehalt;
 
-    public Mitarbeiter(String nachname, String vorname, LocalDate geburtsdatum, String geschlecht, String adresse, String telefonnummer, String email, double gehalt) throws APOException {
+    public Geschaeftsfuehrer(String nachname, String vorname, LocalDate geburtsdatum, String geschlecht, String adresse, String telefonnummer, String email) throws APOException {
         this.id = 0;
         setNachname(nachname);
         setVorname(vorname);
@@ -26,15 +25,6 @@ public class Mitarbeiter implements Serializable {
         setAdresse(adresse);
         setTelefonnummer(telefonnummer);
         setEmail(email);
-        setGehalt(gehalt);
-    }
-
-    public void setId(int mitarbeiterId) throws APOException {
-        if(mitarbeiterId >= 1) {
-            this.id = mitarbeiterId;
-        } else {
-            throw new APOException("Ungültige Mitarbeiter-ID!");
-        }
     }
 
     public void setNachname(String nachname) throws APOException {
@@ -42,10 +32,10 @@ public class Mitarbeiter implements Serializable {
             if(!nachname.isEmpty()) {
                 this.nachname = nachname;
             } else {
-                throw new APOException("Der Nachname des Mitarbeiters ist ungültig!");
+                throw new APOException("Der Nachname des Geschäftsführers ist ungültig!");
             }
         } else {
-            throw new APOException("Der Nachname des Mitarbeiters darf nicht null sein!");
+            throw new APOException("Der Nachname des Geschäftsführers darf nicht null sein!");
         }
     }
 
@@ -54,10 +44,10 @@ public class Mitarbeiter implements Serializable {
             if(!vorname.isEmpty()) {
                 this.vorname = vorname;
             } else {
-                throw new APOException("Der Vorname des Mitarbeiters ist ungültig!");
+                throw new APOException("Der Vorname des Geschäftsführers ist ungültig!");
             }
         } else {
-            throw new APOException("Der Vorname des Mitarbeiters darf nicht null sein!");
+            throw new APOException("Der Vorname des Geschäftsführers darf nicht null sein!");
         }
     }
 
@@ -66,10 +56,10 @@ public class Mitarbeiter implements Serializable {
             if(geburtsdatum.isBefore(LocalDate.now())) {
                 this.geburtsdatum = geburtsdatum;
             } else {
-                throw new APOException("Des Mitarbeiters Geburtsdatum ist ungültig!");
+                throw new APOException("Des Geschäftsführers Geburtsdatum ist ungültig!");
             }
         } else {
-            throw new APOException("Das Geburtsdatum des Mitarbeiters darf nicht null sein!");
+            throw new APOException("Das Geburtsdatum des Geschäftsführers darf nicht null sein!");
         }
     }
 
@@ -83,10 +73,10 @@ public class Mitarbeiter implements Serializable {
                             "Männlich/Weiblich/Inter/Divers/Offen/keine Angabe");
                 }
             } else {
-                throw new APOException("Das Geschlecht des Mitarbeiters darf nicht leer sein!");
+                throw new APOException("Das Geschlecht des Geschäftsführers darf nicht leer sein!");
             }
         } else {
-            throw new APOException("Das Geschlecht des Mitarbeiters darf nicht null sein!");
+            throw new APOException("Das Geschlecht des Geschäftsführers darf nicht null sein!");
         }
     }
 
@@ -95,10 +85,10 @@ public class Mitarbeiter implements Serializable {
             if(!adresse.isEmpty()) {
                 this.adresse = adresse;
             } else {
-                throw new APOException("Die Adresse des Mitarbeiters ist ungültig!");
+                throw new APOException("Die Adresse des Geschäftsführers ist ungültig!");
             }
         } else {
-            throw new APOException("Die Adresse des Mitarbeiters darf nicht null sein!");
+            throw new APOException("Die Adresse des Geschäftsführers darf nicht null sein!");
         }
     }
 
@@ -110,7 +100,7 @@ public class Mitarbeiter implements Serializable {
                 throw new APOException("Ungültige Telefonnummer!");
             }
         } else {
-            throw new APOException("Die Telefonnummer des Mitarbeiters darf nicht null sein!");
+            throw new APOException("Die Telefonnummer des Geschäftsführers darf nicht null sein!");
         }
     }
 
@@ -119,18 +109,10 @@ public class Mitarbeiter implements Serializable {
             if(!email.isEmpty()) {
                 this.email = email;
             } else {
-                throw new APOException("Die E-Mail-Adresse des Mitarbeiters ist ungültig!");
+                throw new APOException("Die E-Mail-Adresse des Geschäftsführers ist ungültig!");
             }
         } else {
-            throw new APOException("Die E-Mail-Adresse des Mitarbeiters darf nicht null sein!");
-        }
-    }
-
-    public void setGehalt(double gehalt) throws APOException {
-        if(gehalt >= 0) {
-            this.gehalt = gehalt;
-        } else {
-            throw new APOException("Ungültiges Gehalt!");
+            throw new APOException("Die E-Mail-Adresse des Geschäftsführers darf nicht null sein!");
         }
     }
 
@@ -166,15 +148,11 @@ public class Mitarbeiter implements Serializable {
         return this.email;
     }
 
-    public double getGehalt() {
-        return this.gehalt;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Mitarbeiter that = (Mitarbeiter) o;
+        Geschaeftsfuehrer that = (Geschaeftsfuehrer) o;
         return getId() == that.getId();
     }
 
@@ -197,7 +175,6 @@ public class Mitarbeiter implements Serializable {
                 "Geschlecht: " + getGeschlecht() + ",\n" +
                 "Adresse: " + getAdresse() + ",\n" +
                 "Tel. Nr.: " + getTelefonnummer() + ",\n" +
-                "E-Mail: " + getEmail() + ",\n" +
-                "Gehalt: " + getGehalt() + " €";
+                "E-Mail: " + getEmail();
     }
 }

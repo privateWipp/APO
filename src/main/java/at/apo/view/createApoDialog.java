@@ -20,15 +20,15 @@ public class createApoDialog extends Dialog<Apotheke> {
         TextField nameTF = new TextField();
         nameTF.setPromptText("Name der Apotheke");
         nameHBox.getChildren().addAll(nameL, nameTF);
-        nameHBox.setPadding(new Insets(0, 0, 10, 10));
+        nameHBox.setPadding(new Insets(10, 10, 0, 10));
         nameHBox.setSpacing(10);
 
         HBox adresseHBox = new HBox();
         Label adresseL = new Label("Adresse:");
         TextField adresseTF = new TextField();
-        adresseTF.setPromptText("z.B.: Musterstraße 1");
+        adresseTF.setPromptText("Adresse der Apotheke");
         adresseHBox.getChildren().addAll(adresseL, adresseTF);
-        adresseHBox.setPadding(new Insets(0, 0, 10, 10));
+        adresseHBox.setPadding(new Insets(10, 10, 0, 10));
         adresseHBox.setSpacing(10);
 
         HBox telefonnummerHBox = new HBox();
@@ -36,15 +36,15 @@ public class createApoDialog extends Dialog<Apotheke> {
         TextField telefonnummerTF = new TextField();
         telefonnummerTF.setPromptText("Telefonnummer eingeben");
         telefonnummerHBox.getChildren().addAll(telefonnummerL, telefonnummerTF);
-        telefonnummerHBox.setPadding(new Insets(0, 0, 10, 10));
+        telefonnummerHBox.setPadding(new Insets(10, 10, 0, 10));
         telefonnummerHBox.setSpacing(10);
 
         HBox emailHBox = new HBox();
         Label emailL = new Label("E-Mail Adresse:");
         TextField emailTF = new TextField();
-        emailTF.setPromptText("z.B.: info@apotronik.at");
+        emailTF.setPromptText("E-Mail Adresse der Apotheke");
         emailHBox.getChildren().addAll(emailL, emailTF);
-        emailHBox.setPadding(new Insets(0, 0, 10, 10));
+        emailHBox.setPadding(new Insets(10, 10, 0, 10));
         emailHBox.setSpacing(10);
 
         HBox budgetHBox = new HBox();
@@ -52,7 +52,7 @@ public class createApoDialog extends Dialog<Apotheke> {
         TextField budgetTF = new TextField();
         budgetTF.setPromptText("Budget der Apotheke");
         budgetHBox.getChildren().addAll(budgetL, budgetTF);
-        budgetHBox.setPadding(new Insets(0, 0, 10, 10));
+        budgetHBox.setPadding(new Insets(10, 10, 0, 10));
         budgetHBox.setSpacing(10);
 
         flowPane.getChildren().addAll(nameHBox, adresseHBox, telefonnummerHBox, emailHBox, budgetHBox);

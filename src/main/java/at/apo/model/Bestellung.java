@@ -1,10 +1,12 @@
 package at.apo.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Bestellung {
+public class Bestellung implements Serializable {
+    private static final long serialVersionUID = 1L;
     private int bestellnummer;
     private LocalDate datum;
     private ArrayList<Medikament> medikamente;
@@ -23,8 +25,12 @@ public class Bestellung {
         this.bestellstatus = "BESTELLT";
     }
 
-    public void setBestellnummer(int bestellnummer) {
-        this.bestellnummer = bestellnummer;
+    public void setBestellnummer(int bestellnummer) throws APOException {
+        if(bestellnummer >= 1) {
+            this.bestellnummer = bestellnummer;
+        } else {
+            throw new APOException("Ungültige Bestellnummer!");
+        }
     }
 
     public void setBestellstatus(String bestellstatus) throws APOException {

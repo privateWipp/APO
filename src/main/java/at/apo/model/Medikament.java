@@ -1,9 +1,11 @@
 package at.apo.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Medikament {
+public class Medikament implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String bezeichnung;
     private double preis;
     private int lagerbestand;

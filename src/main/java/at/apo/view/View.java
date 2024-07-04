@@ -1,19 +1,29 @@
 package at.apo.view;
 
 import at.apo.control.Controller;
+import at.apo.model.APOException;
 import at.apo.model.Apotheke;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 
+import java.io.File;
+import java.util.Arrays;
+
 public class View extends BorderPane {
+    private File directory;
     private Controller ctrl;
     private ListView<Apotheke> apothekenListView;
 
     public View() {
+        this.directory = new File("apotheken");
+        if(!this.directory.exists()) {
+            this.directory.mkdir();
+        }
         this.ctrl = new Controller(this);
         this.apothekenListView = new ListView<Apotheke>();
+        loadApotheken();
 
         initGUI();
     }
@@ -29,7 +39,11 @@ public class View extends BorderPane {
         MenuItem deleteApo = new MenuItem("Löschen");
         apotheke.getItems().addAll(createApo, importApo, openApo, deleteApo);
 
-        menuBar.getMenus().addAll(apotheke);
+        Menu help = new Menu("Hilfe");
+        MenuItem aboutMe = new MenuItem("Über mich");
+        help.getItems().add(aboutMe);
+
+        menuBar.getMenus().addAll(apotheke, help);
 
         setTop(menuBar);
 
@@ -40,6 +54,8 @@ public class View extends BorderPane {
         openApo.setOnAction(e -> this.ctrl.openApo(this.apothekenListView.getSelectionModel().getSelectedItem()));
         deleteApo.disableProperty().bind(this.apothekenListView.getSelectionModel().selectedItemProperty().isNull());
         deleteApo.setOnAction(e -> this.ctrl.deleteApo(this.apothekenListView.getSelectionModel().getSelectedItem()));
+
+        aboutMe.setOnAction(e -> this.ctrl.aboutMe());
 
         // -------------------------------------------------------------------------------------------------------------
 
@@ -67,8 +83,27 @@ public class View extends BorderPane {
         deleteApo2.setOnAction(e -> this.ctrl.deleteApo(this.apothekenListView.getSelectionModel().getSelectedItem()));
     }
 
+    private void loadApotheken() {
+        File[] files = this.directory.listFiles((dir, name) -> name.endsWith(".apo"));
+        if(files != null) {
+            Arrays.stream(files).forEach(file -> {
+                try {
+                    Apotheke apotheke = new Apotheke("Apotheke", "Musterstraße 1", "+43 677 62099198", "j.mader@apotronik.at", 1000000);
+                    apotheke.laden(file);
+                    this.apothekenListView.getItems().add(apotheke);
+                } catch (APOException e) {
+                    errorAlert("Fehler beim Laden der Apotheken aus dem Ordner", e.getMessage());
+                }
+            });
+        }
+    }
+
     public ListView<Apotheke> getApothekenListView() {
         return this.apothekenListView;
+    }
+
+    public File getDirectory() {
+        return this.directory;
     }
 
     public void errorAlert(String headerText, String contentText) {
