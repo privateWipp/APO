@@ -31,7 +31,7 @@ public class Controller {
                 this.view.infoAlert("Informationen zu neuer Apotheke:\n" + apotheke.getName(), "Bitte vervollständigen Sie die Attribute der Apotheke\n" +
                         "in den Einstellungen SOBALD WIE MÖGLICH!\n\n" +
                         "zu bearbeitende Attribute:\n" +
-                        "Öffnungszeiten");
+                        "Geschäftsführer, Öffnungszeiten");
             } catch (Exception e) {
                 this.view.errorAlert("Fehler beim Erstellen der Apotheke..", e.getMessage());
             }

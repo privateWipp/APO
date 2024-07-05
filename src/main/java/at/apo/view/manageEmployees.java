@@ -5,6 +5,7 @@ import at.apo.control.EmployeeController;
 import at.apo.model.Apotheke;
 import at.apo.model.Mitarbeiter;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -14,16 +15,18 @@ import javafx.util.Callback;
 
 public class manageEmployees extends BorderPane {
     private APO apoInstance;
+    private ApoView mainView;
     private Apotheke model;
     private EmployeeController ctrl;
     private ListView<Mitarbeiter> mitarbeiterListView;
     private TextArea mitarbeiterTA;
     private Stage stage;
 
-    public manageEmployees(Apotheke model) {
+    public manageEmployees(ApoView mainView, Apotheke model) {
         this.apoInstance = APO.getInstance();
+        this.mainView = mainView;
         this.model = model;
-        this.ctrl = new EmployeeController(this, this.model);
+        this.ctrl = new EmployeeController(this.mainView, this, this.model);
         this.mitarbeiterListView = new ListView<Mitarbeiter>();
         this.mitarbeiterListView.setCellFactory(new Callback<ListView<Mitarbeiter>, ListCell<Mitarbeiter>>() {
             @Override
@@ -33,7 +36,7 @@ public class manageEmployees extends BorderPane {
                     protected void updateItem(Mitarbeiter mitarbeiter, boolean empty) {
                         super.updateItem(mitarbeiter, empty);
 
-                        if(mitarbeiter == null || empty) {
+                        if (mitarbeiter == null || empty) {
                             setText(null);
                         } else {
                             setText(mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + "\n" +
@@ -84,9 +87,26 @@ public class manageEmployees extends BorderPane {
 
         // -------------------------------------------------------------------------------------------------------------
 
+        // Right: Infos anzeigen lassen
+        ToolBar toolBar = new ToolBar();
+        toolBar.setOrientation(Orientation.VERTICAL);
+        toolBar.setPadding(new Insets(10, 10, 10, 10));
+
+        Button printAllEmployees = new Button("alle Mitarbeiter anzeigen");
+
+        toolBar.getItems().addAll(printAllEmployees);
+
+        setRight(toolBar);
+
+        printAllEmployees.setOnAction(e -> {
+            this.ctrl.printAllEmployees();
+        });
+
+        // -------------------------------------------------------------------------------------------------------------
+
         // Bottom: Details zum ausgewähltem Mitarbeiter
         this.mitarbeiterListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null) {
+            if (newValue != null) {
                 this.mitarbeiterTA.setText(newValue.toString());
             } else {
                 this.mitarbeiterTA.setText(null);
@@ -101,8 +121,8 @@ public class manageEmployees extends BorderPane {
 
     private void updateMitarbeiterListView() {
         this.mitarbeiterListView.getItems().clear();
-        if(this.model.getMitarbeiter() != null && !this.model.getMitarbeiter().isEmpty()) {
-            for(Mitarbeiter mitarbeiter : this.model.getMitarbeiter()) {
+        if (this.model.getMitarbeiter() != null && !this.model.getMitarbeiter().isEmpty()) {
+            for (Mitarbeiter mitarbeiter : this.model.getMitarbeiter()) {
                 this.mitarbeiterListView.getItems().add(mitarbeiter);
             }
         }

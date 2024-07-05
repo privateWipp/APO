@@ -14,10 +14,10 @@ import java.util.Optional;
 public class ApoView extends BorderPane {
     private APO apoInstance;
     private View mainView;
-    private Apotheke originalModel;
     private Apotheke model;
+    private Apotheke originalModel;
     private ApoController ctrl;
-    private boolean saved = true;
+    private boolean changed;
     private Stage stage;
 
     public ApoView(View mainView, Apotheke apotheke) {
@@ -25,9 +25,8 @@ public class ApoView extends BorderPane {
         this.mainView = mainView;
         this.model = apotheke;
         this.ctrl = new ApoController(this, this.model);
-        if(this.saved) {
-            this.originalModel = deepCopy(apotheke);
-        }
+        this.changed = false;
+        this.originalModel = deepCopy(apotheke);
         this.stage = new Stage();
 
         initGUI();
@@ -47,8 +46,9 @@ public class ApoView extends BorderPane {
         mitarbeiter.getItems().add(manageEmployees);
 
         Menu optionen = new Menu("Optionen");
-        MenuItem geschaeftsfuehrerFestlegen = new MenuItem("Geschäftsführer festlegen");
-        optionen.getItems().add(geschaeftsfuehrerFestlegen);
+        MenuItem geschaeftsfuehrerFestlegen = new MenuItem("Geschäftsführer ändern/festlegen");
+        MenuItem oeffnungszeitenFestlegen = new MenuItem("Öffnungszeiten festlegen");
+        optionen.getItems().addAll(geschaeftsfuehrerFestlegen, oeffnungszeitenFestlegen);
 
         menuBar.getMenus().addAll(mitarbeiter, optionen);
 
@@ -56,7 +56,9 @@ public class ApoView extends BorderPane {
 
         // Verwalten der Menüs
         manageEmployees.setOnAction(e -> this.ctrl.manageEmployees());
+
         geschaeftsfuehrerFestlegen.setOnAction(e -> this.ctrl.geschaeftsfuehrerFestlegen());
+        oeffnungszeitenFestlegen.setOnAction(e -> this.ctrl.oeffnungszeitenFestlegen());
 
         // -------------------------------------------------------------------------------------------------------------
 
@@ -84,7 +86,7 @@ public class ApoView extends BorderPane {
     }
 
     private void saveConfirmation(Stage stage) {
-        if (!this.originalModel.equals(this.model)) {
+        if (this.changed) {
             Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
             confirmation.setTitle("ungespeicherte Änderungen");
             confirmation.setHeaderText("Speichern?");
@@ -102,7 +104,6 @@ public class ApoView extends BorderPane {
                 File file = new File("apotheken", this.model.getName() + ".apo");
                 try {
                     this.model.speichern(file);
-                    this.saved = true;
                     this.mainView.getApothekenListView().refresh();
                     this.stage.close();
                 } catch (Exception e) {
@@ -114,7 +115,6 @@ public class ApoView extends BorderPane {
                     errorAlert.showAndWait();
                 }
             } else if (result.isPresent() && result.get() == no) { // NICHT SPEICHERN
-                this.saved = false;
                 this.model = deepCopy(this.originalModel);
                 this.stage.close();
             } else {
@@ -123,6 +123,10 @@ public class ApoView extends BorderPane {
         } else {
             this.stage.close();
         }
+    }
+
+    public void setChanged(boolean changed) {
+        this.changed = changed;
     }
 
     public void errorAlert(String headerText, String contentText) {

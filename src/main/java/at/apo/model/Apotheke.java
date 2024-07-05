@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class Apotheke implements Serializable {
+public class Apotheke implements Serializable, Cloneable {
     private static final long serialVersionUID = 1L;
     private String name;
     private String adresse;
@@ -41,6 +41,18 @@ public class Apotheke implements Serializable {
         this.nextMitarbeiter = 1;
         this.nextBestellung = 1;
         this.nextRezept = 1;
+    }
+
+    @Override
+    public Apotheke clone() {
+        try {
+            Apotheke cloned = (Apotheke) super.clone();
+            // Hier tiefe Kopien der Attribute machen, die auch Kopien benötigen
+            cloned.mitarbeiter = new ArrayList<>(this.mitarbeiter); // Tiefe Kopie der Mitarbeiter-Liste
+            return cloned;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(); // Da Cloneable implementiert wird, sollte diese Exception nie auftreten
+        }
     }
 
     public void setName(String name) throws APOException {
