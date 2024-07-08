@@ -1,78 +1,87 @@
 package at.apo.view;
 
 import at.apo.model.APOException;
+import at.apo.model.Apotheke;
 import at.apo.model.Geschaeftsfuehrer;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.scene.control.*;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.GridPane;
 
 import java.time.LocalDate;
 
 public class geschaeftsfuehrerFestlegenDialog extends Dialog<Geschaeftsfuehrer> {
-    public geschaeftsfuehrerFestlegenDialog() {
+    private Apotheke model;
+
+    public geschaeftsfuehrerFestlegenDialog(Apotheke model, boolean change) {
+        this.model = model;
+
         setTitle("Geschäftsführer festlegen");
 
-        FlowPane flowPane = new FlowPane();
-        flowPane.setOrientation(Orientation.VERTICAL);
+        GridPane gridPane = new GridPane();
+        gridPane.setPadding(new Insets(10, 10, 10, 10));
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
 
-        HBox nameHBox = new HBox();
         Label nachnameL = new Label("Nachname:");
         TextField nachnameTF = new TextField();
-        nachnameTF.setPromptText("Nachname des Geschäftsführers");
+        gridPane.add(nachnameL, 0, 0);
+        gridPane.add(nachnameTF, 1, 0);
+
         Label vornameL = new Label("Vorname:");
         TextField vornameTF = new TextField();
-        vornameTF.setPromptText("Vorname des Geschäftsführers");
-        nameHBox.getChildren().addAll(nachnameL, nachnameTF, vornameL, vornameTF);
-        nameHBox.setPadding(new Insets(10, 10, 0, 10));
-        nameHBox.setSpacing(10);
+        gridPane.add(vornameL, 0, 1);
+        gridPane.add(vornameTF, 1, 1);
 
-        HBox geburtsdatumHBox = new HBox();
         Label geburtsdatumL = new Label("Geb. Dat.:");
         DatePicker geburtsdatumDP = new DatePicker();
-        geburtsdatumHBox.getChildren().addAll(geburtsdatumL, geburtsdatumDP);
-        geburtsdatumHBox.setPadding(new Insets(10, 10, 0, 10));
-        geburtsdatumHBox.setSpacing(10);
+        gridPane.add(geburtsdatumL, 0, 2);
+        gridPane.add(geburtsdatumDP, 1, 2);
 
-        HBox geschlechtHBox = new HBox();
         Label geschlechtL = new Label("Geschlecht:");
-        ComboBox<String> geschlechtCB = new ComboBox<String>();
+        ComboBox<String> geschlechtCB = new ComboBox<>();
         geschlechtCB.getItems().addAll("Männlich", "Weiblich", "Inter", "Divers", "Offen", "keine Angabe");
-        geschlechtHBox.getChildren().addAll(geschlechtL, geschlechtCB);
-        geschlechtHBox.setPadding(new Insets(10, 10, 0, 10));
-        geschlechtHBox.setSpacing(10);
+        gridPane.add(geschlechtL, 0, 3);
+        gridPane.add(geschlechtCB, 1, 3);
 
-        HBox adresseHBox = new HBox();
         Label adresseL = new Label("Adresse:");
         TextField adresseTF = new TextField();
-        adresseTF.setPromptText("Adresse des Geschäftsführers");
-        adresseHBox.getChildren().addAll(adresseL, adresseTF);
-        adresseHBox.setPadding(new Insets(10, 10, 0, 10));
-        adresseHBox.setSpacing(10);
+        gridPane.add(adresseL, 0, 4);
+        gridPane.add(adresseTF, 1, 4);
 
-        HBox telefonnummerHBox = new HBox();
         Label telefonnummerL = new Label("Tel. Nr.:");
         TextField telefonnummerTF = new TextField();
-        telefonnummerTF.setPromptText("Telefonnummer eingeben");
-        telefonnummerHBox.getChildren().addAll(telefonnummerL, telefonnummerTF);
-        telefonnummerHBox.setPadding(new Insets(10, 10, 0, 10));
-        telefonnummerHBox.setSpacing(10);
+        gridPane.add(telefonnummerL, 0, 5);
+        gridPane.add(telefonnummerTF, 1, 5);
 
-        HBox emailHBox = new HBox();
         Label emailL = new Label("E-Mail Adresse:");
         TextField emailTF = new TextField();
-        emailTF.setPromptText("E-Mail Adresse vom Geschäftsführer");
-        emailHBox.getChildren().addAll(emailL, emailTF);
-        emailHBox.setPadding(new Insets(10, 10, 0, 10));
-        emailHBox.setSpacing(10);
+        gridPane.add(emailL, 0, 6);
+        gridPane.add(emailTF, 1, 6);
 
-        flowPane.getChildren().addAll(nameHBox, geburtsdatumHBox, geschlechtHBox, adresseHBox, telefonnummerHBox, emailHBox);
+        ButtonType buttonType;
 
-        getDialogPane().setContent(flowPane);
+        if (change) {
+            nachnameTF.setText(this.model.getGeschaeftsfuehrer().getNachname());
+            vornameTF.setText(this.model.getGeschaeftsfuehrer().getVorname());
+            geburtsdatumDP.setValue(this.model.getGeschaeftsfuehrer().getGeburtsdatum());
+            geschlechtCB.setValue(this.model.getGeschaeftsfuehrer().getGeschlecht());
+            adresseTF.setText(this.model.getGeschaeftsfuehrer().getAdresse());
+            telefonnummerTF.setText(this.model.getGeschaeftsfuehrer().getTelefonnummer());
+            emailTF.setText(this.model.getGeschaeftsfuehrer().getEmail());
 
-        ButtonType buttonType = new ButtonType("Festlegen", ButtonBar.ButtonData.APPLY);
+            buttonType = new ButtonType("Ändern", ButtonBar.ButtonData.APPLY);
+        } else {
+            nachnameTF.setPromptText("Nachname des Geschäftsführers");
+            vornameTF.setPromptText("Vorname des Geschäftsführers");
+            adresseTF.setPromptText("Adresse des Geschäftsführers");
+            telefonnummerTF.setPromptText("Telefonnummer eingeben");
+            emailTF.setPromptText("E-Mail Adresse vom Geschäftsführer");
+
+            buttonType = new ButtonType("Festlegen", ButtonBar.ButtonData.APPLY);
+        }
+
         getDialogPane().getButtonTypes().add(buttonType);
+        getDialogPane().setContent(gridPane);
 
         this.setResultConverter(bt -> {
             if (bt == buttonType) {
@@ -89,7 +98,7 @@ public class geschaeftsfuehrerFestlegenDialog extends Dialog<Geschaeftsfuehrer> 
                 } catch (APOException e) {
                     Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                     errorAlert.setTitle("Fehler");
-                    errorAlert.setHeaderText("Fehler beim Festlegen des Geschäftsführers");
+                    errorAlert.setHeaderText("Fehler beim Festlegen des Geschäftsführers.");
                     errorAlert.setContentText(e.getMessage());
                     errorAlert.showAndWait();
                 }

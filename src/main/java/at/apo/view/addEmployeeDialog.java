@@ -3,10 +3,9 @@ package at.apo.view;
 import at.apo.model.APOException;
 import at.apo.model.Mitarbeiter;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.scene.control.*;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 
 import java.time.LocalDate;
 
@@ -14,82 +13,67 @@ public class addEmployeeDialog extends Dialog<Mitarbeiter> {
     public addEmployeeDialog() {
         setTitle("neuer Mitarbeiter");
 
-        FlowPane flowPane = new FlowPane();
-        flowPane.setOrientation(Orientation.VERTICAL);
+        GridPane gridPane = new GridPane();
+        gridPane.setPadding(new Insets(10, 10, 10, 10));
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
 
-        HBox nachnameHBox = new HBox();
         Label nachnameL = new Label("Nachname:");
         TextField nachnameTF = new TextField();
         nachnameTF.setPromptText("Nachname des Mitarbeiters");
-        nachnameHBox.getChildren().addAll(nachnameL, nachnameTF);
-        nachnameHBox.setPadding(new Insets(10, 10, 0, 10));
-        nachnameHBox.setSpacing(10);
+        gridPane.add(nachnameL, 0, 0);
+        gridPane.add(nachnameTF, 1, 0);
 
-        HBox vornameHBox = new HBox();
         Label vornameL = new Label("Vorname:");
         TextField vornameTF = new TextField();
         vornameTF.setPromptText("Vorname des Mitarbeiters");
-        vornameHBox.getChildren().addAll(vornameL, vornameTF);
-        vornameHBox.setPadding(new Insets(10, 10, 0, 10));
-        vornameHBox.setSpacing(10);
+        gridPane.add(vornameL, 0, 1);
+        gridPane.add(vornameTF, 1, 1);
 
-        HBox geburtsdatumHBox = new HBox();
         Label geburtsdatumL = new Label("Geb. Dat.:");
         DatePicker geburtsdatumDP = new DatePicker();
-        geburtsdatumHBox.getChildren().addAll(geburtsdatumL, geburtsdatumDP);
-        geburtsdatumHBox.setPadding(new Insets(10, 10, 0, 10));
-        geburtsdatumHBox.setSpacing(10);
+        gridPane.add(geburtsdatumL, 0, 2);
+        gridPane.add(geburtsdatumDP, 1, 2);
 
-        HBox geschlechtHBox = new HBox();
         Label geschlechtL = new Label("Geschlecht:");
-        ComboBox<String> geschlechtCB = new ComboBox<String>();
+        ComboBox<String> geschlechtCB = new ComboBox<>();
         geschlechtCB.getItems().addAll("Männlich", "Weiblich", "Inter", "Divers", "Offen", "keine Angabe");
-        geschlechtHBox.getChildren().addAll(geschlechtL, geschlechtCB);
-        geschlechtHBox.setPadding(new Insets(10, 10, 0, 10));
-        geschlechtHBox.setSpacing(10);
+        gridPane.add(geschlechtL, 0, 3);
+        gridPane.add(geschlechtCB, 1, 3);
 
-        HBox adresseHBox = new HBox();
         Label adresseL = new Label("Adresse:");
         TextField adresseTF = new TextField();
         adresseTF.setPromptText("Adresse des Mitarbeiters");
-        adresseHBox.getChildren().addAll(adresseL, adresseTF);
-        adresseHBox.setPadding(new Insets(10, 10, 0, 10));
-        adresseHBox.setSpacing(10);
+        gridPane.add(adresseL, 0, 4);
+        gridPane.add(adresseTF, 1, 4);
 
-        HBox telefonnummerHBox = new HBox();
         Label telefonnummerL = new Label("Tel. Nr.:");
         TextField telefonnummerTF = new TextField();
         telefonnummerTF.setPromptText("Telefonnummer eingeben");
-        telefonnummerHBox.getChildren().addAll(telefonnummerL, telefonnummerTF);
-        telefonnummerHBox.setPadding(new Insets(10, 10, 0, 10));
-        telefonnummerHBox.setSpacing(10);
+        gridPane.add(telefonnummerL, 0, 5);
+        gridPane.add(telefonnummerTF, 1, 5);
 
-        HBox emailHBox = new HBox();
         Label emailL = new Label("E-Mail Adresse:");
         TextField emailTF = new TextField();
         emailTF.setPromptText("E-Mail Adresse vom Mitarbeiter");
-        emailHBox.getChildren().addAll(emailL, emailTF);
-        emailHBox.setPadding(new Insets(10, 10, 0, 10));
-        emailHBox.setSpacing(10);
+        gridPane.add(emailL, 0, 6);
+        gridPane.add(emailTF, 1, 6);
 
-        HBox gehaltHBox = new HBox();
         Label gehaltL = new Label("Gehalt:");
         TextField gehaltTF = new TextField();
         gehaltTF.setPromptText("üblich: 2500");
         Label euroIcon = new Label("€");
-        gehaltHBox.getChildren().addAll(gehaltL, gehaltTF, euroIcon);
-        gehaltHBox.setPadding(new Insets(10, 10, 0, 10));
-        gehaltHBox.setSpacing(10);
+        gridPane.add(gehaltL, 0, 7);
+        gridPane.add(gehaltTF, 1, 7);
+        gridPane.add(euroIcon, 2, 7);
 
-        flowPane.getChildren().addAll(nachnameHBox, vornameHBox, geburtsdatumHBox, geschlechtHBox, adresseHBox, telefonnummerHBox, emailHBox, gehaltHBox);
-
-        getDialogPane().setContent(flowPane);
+        getDialogPane().setContent(gridPane);
 
         ButtonType buttonType = new ButtonType("Hinzufügen", ButtonBar.ButtonData.APPLY);
         getDialogPane().getButtonTypes().add(buttonType);
 
         this.setResultConverter(bt -> {
-            if(bt == buttonType) {
+            if (bt == buttonType) {
                 try {
                     String nachnameTFInput = nachnameTF.getText();
                     String vornameTFInput = vornameTF.getText();
@@ -104,7 +88,7 @@ public class addEmployeeDialog extends Dialog<Mitarbeiter> {
                 } catch (APOException e) {
                     Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                     errorAlert.setTitle("Fehler");
-                    errorAlert.setHeaderText("Fehler beim Erstellen des neuen Mitarbeiters");
+                    errorAlert.setHeaderText("Fehler beim Erstellen des neuen Mitarbeiters.");
                     errorAlert.setContentText(e.getMessage());
                     errorAlert.showAndWait();
                 }

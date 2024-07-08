@@ -17,7 +17,6 @@ public class APO extends Application {
     @Override
     public void start(Stage stage) {
         instance = this;
-
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         this.screenWidth = primaryScreenBounds.getWidth();
         this.screenHeight = primaryScreenBounds.getHeight();

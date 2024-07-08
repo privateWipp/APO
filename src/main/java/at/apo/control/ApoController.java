@@ -3,13 +3,11 @@ package at.apo.control;
 import at.apo.model.APOException;
 import at.apo.model.Apotheke;
 import at.apo.model.Geschaeftsfuehrer;
-import at.apo.view.ApoView;
-import at.apo.view.geschaeftsfuehrerFestlegenDialog;
-import at.apo.view.manageEmployees;
-import at.apo.view.oeffnungszeitenFestlegenDialog;
+import at.apo.view.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 public class ApoController {
@@ -27,15 +25,17 @@ public class ApoController {
 
     public void geschaeftsfuehrerFestlegen() {
         if (this.model.getGeschaeftsfuehrer() == null) {
-            geschaeftsfuehrerFestlegenDialog geschaeftsfuehrerFestlegenDialog = new geschaeftsfuehrerFestlegenDialog();
+            geschaeftsfuehrerFestlegenDialog geschaeftsfuehrerFestlegenDialog = new geschaeftsfuehrerFestlegenDialog(this.model, false);
             Optional<Geschaeftsfuehrer> g = geschaeftsfuehrerFestlegenDialog.showAndWait();
 
             g.ifPresent(geschaeftsfuehrer -> {
                 try {
                     this.model.setGeschaeftsfuehrer(geschaeftsfuehrer);
                     this.view.setChanged(true);
+                    System.out.println("Geschäftsführer der Apotheke " + this.model.getName() + " wurde aktualisiert: " + this.model.getGeschaeftsfuehrer().getVorname() + " " + this.model.getGeschaeftsfuehrer().getNachname());
                 } catch (APOException e) {
                     this.view.errorAlert("Fehler beim Festlegen des Geschäftsführers..", e.getMessage());
+                    System.out.println("Fehler: Das Festlegen des Geschäftsführers der Apotheke " + this.model.getName() + " ist fehlgeschlagen!");
                 }
             });
         } else {
@@ -54,14 +54,17 @@ public class ApoController {
 
             Optional<ButtonType> result = confirmation.showAndWait();
             if (result.isPresent() && result.get() == yes) {
-                geschaeftsfuehrerFestlegenDialog geschaeftsfuehrerFestlegenDialog = new geschaeftsfuehrerFestlegenDialog();
+                geschaeftsfuehrerFestlegenDialog geschaeftsfuehrerFestlegenDialog = new geschaeftsfuehrerFestlegenDialog(this.model, true);
                 Optional<Geschaeftsfuehrer> g = geschaeftsfuehrerFestlegenDialog.showAndWait();
 
                 g.ifPresent(geschaeftsfuehrer -> {
                     try {
                         this.model.setGeschaeftsfuehrer(geschaeftsfuehrer);
+                        this.view.setChanged(true);
+                        System.out.println("Geschäftsführer der Apotheke " + this.model.getName() + " wurde aktualisiert: " + this.model.getGeschaeftsfuehrer().getVorname() + " " + this.model.getGeschaeftsfuehrer().getNachname());
                     } catch (APOException e) {
                         this.view.errorAlert("Fehler beim Festlegen des Geschäftsführers..", e.getMessage());
+                        System.out.println("Fehler: Das Festlegen des Geschäftsführers der Apotheke " + this.model.getName() + " ist fehlgeschlagen!");
                     }
                 });
             } else {
@@ -70,9 +73,30 @@ public class ApoController {
         }
     }
 
+    public void geschaeftsfuehrerAnzeigen() {
+        if(this.model.getGeschaeftsfuehrer() != null) {
+            geschaeftsfuehrerAnzeigen geschaeftsfuehrerAnzeigen = new geschaeftsfuehrerAnzeigen(this.model);
+        } else {
+            this.view.errorAlert("Geschäftsführer", "Die Apotheke: " + this.model.getName()  + "\n" +
+                    "hat zurzeit keinen Geschäftsführer, daher kann dieser auch nicht angezeigt werden!");
+        }
+    }
+
     public void oeffnungszeitenFestlegen() {
-        if (this.model.getOeffnungszeiten().isEmpty()) {
-            oeffnungszeitenFestlegenDialog oeffnungszeitenFestlegenDialog = new oeffnungszeitenFestlegenDialog();
+        if (!this.model.getOeffnungszeiten().containsKey("Montag")) {
+            oeffnungszeitenFestlegenDialog oeffnungszeitenFestlegenDialog = new oeffnungszeitenFestlegenDialog(this.model,false);
+            Optional<HashMap<String, String>> oe = oeffnungszeitenFestlegenDialog.showAndWait();
+
+            oe.ifPresent(oeffnungszeiten -> {
+                try {
+                    this.model.setOeffnungszeiten(oeffnungszeiten);
+                    this.view.setChanged(true);
+                    System.out.println("Die Öffnungszeiten für die Apotheke " + this.model.getName() + " wurden aktualisiert.");
+                } catch (APOException e) {
+                    this.view.errorAlert("Fehler beim Festlegen der Öffnungszeiten..", e.getMessage());
+                    System.out.println("Fehler: Das Festlegen der Öffnungszeiten für die Apotheke " + this.model.getName() + " ist fehlgeschlagen!");
+                }
+            });
         } else {
             Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
             confirmation.setTitle("Öffnungszeiten festlegen");
@@ -86,6 +110,25 @@ public class ApoController {
             ButtonType cancel = new ButtonType("Abbrechen");
 
             confirmation.getButtonTypes().setAll(yes, no, cancel);
+
+            Optional<ButtonType> result = confirmation.showAndWait();
+            if (result.isPresent() && result.get() == yes) {
+                oeffnungszeitenFestlegenDialog oeffnungszeitenFestlegenDialog = new oeffnungszeitenFestlegenDialog(this.model, true);
+                Optional<HashMap<String, String>> oe = oeffnungszeitenFestlegenDialog.showAndWait();
+
+                oe.ifPresent(oeffnungszeiten -> {
+                    try {
+                        this.model.setOeffnungszeiten(oeffnungszeiten);
+                        this.view.setChanged(true);
+                        System.out.println("Die Öffnungszeiten für die Apotheke " + this.model.getName() + " wurden aktualisiert.");
+                    } catch (APOException e) {
+                        this.view.errorAlert("Fehler beim Festlegen der Öffnungszeiten..", e.getMessage());
+                        System.out.println("Fehler: Das Festlegen der Öffnungszeiten für die Apotheke " + this.model.getName() + " ist fehlgeschlagen!");
+                    }
+                });
+            } else {
+                confirmation.close();
+            }
         }
     }
 }

@@ -163,15 +163,13 @@ public class Geschaeftsfuehrer implements Serializable {
 
     @Override
     public String toString() {
-        Period alter = Period.between(getGeburtsdatum(), LocalDate.now());
-        int jahre = alter.getYears();
-        if(LocalDate.now().getMonthValue() < getGeburtsdatum().getMonthValue() || (LocalDate.now().getMonthValue() == getGeburtsdatum().getMonthValue() && LocalDate.now().getDayOfMonth() < getGeburtsdatum().getDayOfMonth())) {
-            jahre--;
-        }
+        LocalDate heute = LocalDate.now();
+        Period periode = Period.between(getGeburtsdatum(), heute);
+
+        int alter = periode.getYears();
 
         return "Vor- und Nachname: " + getVorname() + " " + getNachname() + ",\n" +
-                "ID: " + getId() + ",\n" +
-                "Alter: " + jahre + " (geb. am " + getGeburtsdatum() + "),\n" +
+                "Alter: " + alter + " Jahre (geb. am " + getGeburtsdatum() + "),\n" +
                 "Geschlecht: " + getGeschlecht() + ",\n" +
                 "Adresse: " + getAdresse() + ",\n" +
                 "Tel. Nr.: " + getTelefonnummer() + ",\n" +

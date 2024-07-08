@@ -29,6 +29,10 @@ public class EmployeeController {
                 this.view.getMitarbeiterListView().getItems().add(mitarbeiter);
                 this.view.getMitarbeiterListView().refresh();
                 this.mainView.setChanged(true);
+                System.out.println("Der Mitarbeiter " + mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " wurde in die Apotheke " + this.model.getName() + " aufgenommen!");
+
+                // -------------------- weiter
+
             } catch (APOException e) {
                 this.view.errorAlert("Fehler beim Hinzufügen eines neuen Mitarbeiters..", e.getMessage());
             }
@@ -93,7 +97,7 @@ public class EmployeeController {
         if(this.model.getMitarbeiter() != null && !this.model.getMitarbeiter().isEmpty()) {
             printAllEmployees printAllEmployees = new printAllEmployees(this, this.model);
         } else {
-            this.view.errorAlert("Mitarbeiter in der Apotheke", "Es gibt nicht genug Mitarbeiter, daher kann auch keine Liste ausgegeben werden!");
+            this.view.errorAlert("Mitarbeiter in der Apotheke", "Es gibt keine/nicht genug Mitarbeiter, daher kann auch keine Liste ausgegeben werden!");
         }
     }
 }

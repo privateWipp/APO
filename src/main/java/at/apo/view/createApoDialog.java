@@ -3,61 +3,50 @@ package at.apo.view;
 import at.apo.model.APOException;
 import at.apo.model.Apotheke;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.scene.control.*;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.GridPane;
 
 public class createApoDialog extends Dialog<Apotheke> {
     public createApoDialog() {
         setTitle("neue Apotheke");
 
-        FlowPane flowPane = new FlowPane();
-        flowPane.setOrientation(Orientation.VERTICAL);
+        GridPane gridPane = new GridPane();
+        gridPane.setPadding(new Insets(10, 10, 10, 10));
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
 
-        HBox nameHBox = new HBox();
         Label nameL = new Label("Name:");
         TextField nameTF = new TextField();
         nameTF.setPromptText("Name der Apotheke");
-        nameHBox.getChildren().addAll(nameL, nameTF);
-        nameHBox.setPadding(new Insets(10, 10, 0, 10));
-        nameHBox.setSpacing(10);
 
-        HBox adresseHBox = new HBox();
         Label adresseL = new Label("Adresse:");
         TextField adresseTF = new TextField();
         adresseTF.setPromptText("Adresse der Apotheke");
-        adresseHBox.getChildren().addAll(adresseL, adresseTF);
-        adresseHBox.setPadding(new Insets(10, 10, 0, 10));
-        adresseHBox.setSpacing(10);
 
-        HBox telefonnummerHBox = new HBox();
         Label telefonnummerL = new Label("Tel. Nr.:");
         TextField telefonnummerTF = new TextField();
         telefonnummerTF.setPromptText("Telefonnummer eingeben");
-        telefonnummerHBox.getChildren().addAll(telefonnummerL, telefonnummerTF);
-        telefonnummerHBox.setPadding(new Insets(10, 10, 0, 10));
-        telefonnummerHBox.setSpacing(10);
 
-        HBox emailHBox = new HBox();
         Label emailL = new Label("E-Mail Adresse:");
         TextField emailTF = new TextField();
         emailTF.setPromptText("E-Mail Adresse der Apotheke");
-        emailHBox.getChildren().addAll(emailL, emailTF);
-        emailHBox.setPadding(new Insets(10, 10, 0, 10));
-        emailHBox.setSpacing(10);
 
-        HBox budgetHBox = new HBox();
         Label budgetL = new Label("Budget:");
         TextField budgetTF = new TextField();
         budgetTF.setPromptText("Budget der Apotheke");
-        budgetHBox.getChildren().addAll(budgetL, budgetTF);
-        budgetHBox.setPadding(new Insets(10, 10, 0, 10));
-        budgetHBox.setSpacing(10);
 
-        flowPane.getChildren().addAll(nameHBox, adresseHBox, telefonnummerHBox, emailHBox, budgetHBox);
+        gridPane.add(nameL, 0, 0);
+        gridPane.add(nameTF, 1, 0);
+        gridPane.add(adresseL, 0, 1);
+        gridPane.add(adresseTF, 1, 1);
+        gridPane.add(telefonnummerL, 0, 2);
+        gridPane.add(telefonnummerTF, 1, 2);
+        gridPane.add(emailL, 0, 3);
+        gridPane.add(emailTF, 1, 3);
+        gridPane.add(budgetL, 0, 4);
+        gridPane.add(budgetTF, 1, 4);
 
-        getDialogPane().setContent(flowPane);
+        getDialogPane().setContent(gridPane);
 
         ButtonType buttonType = new ButtonType("Erstellen", ButtonBar.ButtonData.APPLY);
         getDialogPane().getButtonTypes().add(buttonType);
@@ -67,7 +56,7 @@ public class createApoDialog extends Dialog<Apotheke> {
          * =>
          */
         this.setResultConverter(bt -> {
-            if(bt == buttonType) {
+            if (bt == buttonType) {
                 try {
                     String nameTFInput = nameTF.getText();
                     String adresseTFInput = adresseTF.getText();
@@ -79,7 +68,7 @@ public class createApoDialog extends Dialog<Apotheke> {
                 } catch (APOException e) {
                     Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                     errorAlert.setTitle("Fehler");
-                    errorAlert.setHeaderText("Fehler beim Erstellen der Apotheke");
+                    errorAlert.setHeaderText("Fehler beim Erstellen der Apotheke.");
                     errorAlert.setContentText(e.getMessage());
                     errorAlert.showAndWait();
                 }
