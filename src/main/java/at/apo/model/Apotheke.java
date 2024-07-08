@@ -47,11 +47,10 @@ public class Apotheke implements Serializable, Cloneable {
     public Apotheke clone() {
         try {
             Apotheke cloned = (Apotheke) super.clone();
-            // Hier tiefe Kopien der Attribute machen, die auch Kopien benötigen
-            cloned.mitarbeiter = new ArrayList<>(this.mitarbeiter); // Tiefe Kopie der Mitarbeiter-Liste
+            cloned.mitarbeiter = new ArrayList<>(this.mitarbeiter);
             return cloned;
         } catch (CloneNotSupportedException e) {
-            throw new AssertionError(); // Da Cloneable implementiert wird, sollte diese Exception nie auftreten
+            throw new AssertionError();
         }
     }
 

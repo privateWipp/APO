@@ -7,6 +7,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 
 import java.io.File;
 import java.util.Arrays;
@@ -67,12 +68,15 @@ public class View extends BorderPane {
         // Right: mit der ausgewählten Apotheke (aus der ListView) interagieren (=ToolBar)
         ToolBar toolBar = new ToolBar();
         toolBar.setOrientation(Orientation.VERTICAL);
-        toolBar.setPadding(new Insets(10, 10, 10, 10));
+        toolBar.setPadding(new Insets(20, 20, 20, 20));
 
+        VBox toolBarItemsVBox = new VBox();
+        toolBarItemsVBox.setSpacing(10);
         Button openApo2 = new Button("Öffnen/Verwalten");
         Button deleteApo2 = new Button("Löschen");
+        toolBarItemsVBox.getChildren().addAll(openApo2, deleteApo2);
 
-        toolBar.getItems().addAll(openApo2, deleteApo2);
+        toolBar.getItems().addAll(toolBarItemsVBox);
 
         setRight(toolBar);
 

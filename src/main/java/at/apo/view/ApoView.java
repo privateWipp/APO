@@ -28,6 +28,7 @@ public class ApoView extends BorderPane {
     private ListView<Kunde> kundenListView;
     private ListView<Mitarbeiter> mitarbeiterListView;
     private TextArea changesTA;
+    private String fehlendeAttribute;
     private Stage stage;
 
     public ApoView(View mainView, Apotheke apotheke) {
@@ -49,6 +50,8 @@ public class ApoView extends BorderPane {
         this.changesTA = new TextArea();
         this.changesTA.setEditable(false);
 
+        this.fehlendeAttribute = "";
+
         this.stage = new Stage();
 
         initGUI();
@@ -63,6 +66,25 @@ public class ApoView extends BorderPane {
         this.stage.setResizable(false);
         Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.8, this.apoInstance.getScreenHeight() * 0.8);
         this.stage.setScene(scene);
+
+        if(this.model.getGeschaeftsfuehrer() == null) {
+            this.fehlendeAttribute += "Geschäftsführer";
+        }
+        if(!this.model.getOeffnungszeiten().containsKey("Montag")) {
+            if(!this.fehlendeAttribute.isEmpty()) {
+                this.fehlendeAttribute += ", ";
+            }
+            this.fehlendeAttribute += "Öffnungszeiten";
+        }
+
+        if (!this.fehlendeAttribute.isEmpty()) {
+            this.mainView.infoAlert("", "Informationen zu neuer Apotheke:\n" +
+                    this.model.getName() +
+                    "Bitte vervollständigen Sie folgende Attribute der Apotheke\n" +
+                    "in den Optionen SOBALD WIE MÖGLICH!\n" +
+                    "zu bearbeitende Attribute:\n" +
+                    this.fehlendeAttribute);
+        }
 
         // Top: MenuBar
         MenuBar menuBar = new MenuBar();
@@ -183,28 +205,28 @@ public class ApoView extends BorderPane {
     }
 
     private void loadListViews() {
-        if(!this.model.getMedikamente().isEmpty()) {
-            for(Medikament medikament : this.model.getMedikamente()) {
+        if (!this.model.getMedikamente().isEmpty()) {
+            for (Medikament medikament : this.model.getMedikamente()) {
                 this.medikamentenListView.getItems().add(medikament);
             }
         }
-        if(!this.model.getRezepte().isEmpty()) {
-            for(Rezept rezept : this.model.getRezepte()) {
+        if (!this.model.getRezepte().isEmpty()) {
+            for (Rezept rezept : this.model.getRezepte()) {
                 this.rezepteListView.getItems().add(rezept);
             }
         }
-        if(!this.model.getBestellungen().isEmpty()) {
-            for(Bestellung bestellung : this.model.getBestellungen()) {
+        if (!this.model.getBestellungen().isEmpty()) {
+            for (Bestellung bestellung : this.model.getBestellungen()) {
                 this.bestellungenListView.getItems().add(bestellung);
             }
         }
-        if(!this.model.getKunden().isEmpty()) {
-            for(Kunde kunde : this.model.getKunden()) {
+        if (!this.model.getKunden().isEmpty()) {
+            for (Kunde kunde : this.model.getKunden()) {
                 this.kundenListView.getItems().add(kunde);
             }
         }
-        if(!this.model.getMitarbeiter().isEmpty()) {
-            for(Mitarbeiter mitarbeiter : this.model.getMitarbeiter()) {
+        if (!this.model.getMitarbeiter().isEmpty()) {
+            for (Mitarbeiter mitarbeiter : this.model.getMitarbeiter()) {
                 this.mitarbeiterListView.getItems().add(mitarbeiter);
             }
         }

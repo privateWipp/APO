@@ -1,5 +1,6 @@
 package at.apo.view;
 
+import at.apo.APO;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -8,9 +9,11 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class aboutMe extends BorderPane {
+    private APO apoInstance;
     private Stage stage;
 
     public aboutMe() {
+        this.apoInstance = APO.getInstance();
         this.stage = new Stage();
 
         initGUI();
@@ -19,7 +22,7 @@ public class aboutMe extends BorderPane {
     private void initGUI() {
         this.stage.setTitle("Über mich");
         this.stage.setResizable(false);
-        Scene scene = new Scene(this, 400, 300);
+        Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.125, this.apoInstance.getScreenHeight() * 0.125);
         this.stage.setScene(scene);
 
         // ÜBER MICH

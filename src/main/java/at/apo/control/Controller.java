@@ -2,10 +2,10 @@ package at.apo.control;
 
 import at.apo.model.APOException;
 import at.apo.model.Apotheke;
-import at.apo.view.ApoView;
-import at.apo.view.View;
-import at.apo.view.aboutMe;
-import at.apo.view.createApoDialog;
+import at.apo.model.Geschaeftsfuehrer;
+import at.apo.view.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -28,10 +28,6 @@ public class Controller {
                 apotheke.speichern(file);
                 this.view.getApothekenListView().getItems().add(apotheke);
                 this.view.getApothekenListView().refresh();
-                this.view.infoAlert("Informationen zu neuer Apotheke:\n" + apotheke.getName(), "Bitte vervollständigen Sie die Attribute der Apotheke\n" +
-                        "in den Einstellungen SOBALD WIE MÖGLICH!\n\n" +
-                        "zu bearbeitende Attribute:\n" +
-                        "Geschäftsführer, Öffnungszeiten");
             } catch (Exception e) {
                 this.view.errorAlert("Fehler beim Erstellen der Apotheke..", e.getMessage());
             }
@@ -60,10 +56,6 @@ public class Controller {
                         apotheke.speichern(file2);
                         this.view.getApothekenListView().getItems().add(apotheke);
                         this.view.getApothekenListView().refresh();
-                        this.view.infoAlert("Informationen zu neuer Apotheke:\n" + apotheke.getName(), "Bitte vervollständigen Sie die Attribute der Apotheke\n" +
-                                "in den Einstellungen SOBALD WIE MÖGLICH!\n\n" +
-                                "zu bearbeitende Attribute:\n" +
-                                "Öffnungszeiten");
                     } catch (Exception e) {
                         this.view.errorAlert("Fehler beim Importieren der übergebenen Apotheke..", e.getMessage());
                     }
@@ -82,13 +74,29 @@ public class Controller {
     }
 
     public void deleteApo(Apotheke apotheke) {
-        File file = new File(this.view.getDirectory(), apotheke.getName() + ".apo");
-        if(file.exists()) {
-            this.view.getApothekenListView().getItems().remove(apotheke);
-            file.delete();
-            this.view.getApothekenListView().refresh();
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Apotheke löschen");
+        confirmation.setHeaderText("Apotheke entfernen");
+        confirmation.setContentText("Sind Sie sicher, dass Sie die Apotheke: " + apotheke.getName() + " endgültig löschen wollen?");
+
+        ButtonType yes = new ButtonType("Ja");
+        ButtonType no = new ButtonType("Nein");
+        ButtonType cancel = new ButtonType("Abbrechen");
+
+        confirmation.getButtonTypes().setAll(yes, no, cancel);
+
+        Optional<ButtonType> result = confirmation.showAndWait();
+        if (result.isPresent() && result.get() == yes) {
+            File file = new File(this.view.getDirectory(), apotheke.getName() + ".apo");
+            if(file.exists()) {
+                this.view.getApothekenListView().getItems().remove(apotheke);
+                file.delete();
+                this.view.getApothekenListView().refresh();
+            } else {
+                this.view.errorAlert("Apotheke löschen", "Es gab einen Fehler beim Löschen/Entfernen der Apotheke!");
+            }
         } else {
-            this.view.errorAlert("Apotheke löschen", "Es gab einen Fehler beim Löschen/Entfernen der Apotheke!");
+            confirmation.close();
         }
     }
 

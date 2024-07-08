@@ -29,19 +29,17 @@ public class EmployeeController {
                 this.view.getMitarbeiterListView().getItems().add(mitarbeiter);
                 this.view.getMitarbeiterListView().refresh();
                 this.mainView.setChanged(true);
-                System.out.println("Der Mitarbeiter " + mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " wurde in die Apotheke " + this.model.getName() + " aufgenommen!");
-
-                // -------------------- weiter
-
+                System.out.println("Der Mitarbeiter " + mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " wurde in die Apotheke " + this.model.getName() + " aufgenommen.");
             } catch (APOException e) {
                 this.view.errorAlert("Fehler beim Hinzufügen eines neuen Mitarbeiters..", e.getMessage());
+                System.out.println("Fehler: Das Aufnehmen eines neuen Mitarbeiters in die Apotheke " + this.model.getName() + " ist fehlgeschlagen!");
             }
         });
     }
 
     private void validateMitarbeiter(Mitarbeiter mitarbeiter) throws APOException {
         if (isDuplicateWithModel(mitarbeiter) || isDuplicateWithGeschaeftsfuehrer(mitarbeiter) || isDuplicateWithExistingMitarbeiter(mitarbeiter)) {
-            throw new APOException("Mitarbeiter konnte nicht hinzugefügt werden, da es bereits einen Mitarbeiter mit entweder der gleichen Tel. Nr. oder E-Mail Adresse gibt oder diese mit der Apotheke oder dem Geschäftsführer übereinstimmen.");
+            throw new APOException("Mitarbeiter konnte nicht hinzugefügt werden, da es bereits einen Mitarbeiter mit entweder der gleichen Tel. Nr. oder E-Mail Adresse gibt oder diese mit der Apotheke oder dem Geschäftsführer übereinstimmen!");
         }
     }
 
@@ -77,8 +75,10 @@ public class EmployeeController {
             this.view.getMitarbeiterListView().getItems().remove(mitarbeiter);
             this.view.getMitarbeiterListView().refresh();
             this.mainView.setChanged(true);
+            System.out.println(mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " ist nun kein Teil mehr der Apotheke: " + this.model.getName());
         } catch (APOException e) {
             this.view.errorAlert("Fehler beim Löschen/Entfernen/Feuern eines Mitarbeiters..", e.getMessage());
+            System.out.println("Fehler: Der Mitarbeiter " + mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " konnte nicht gefeuert/entfernt werden!");
         }
     }
 
@@ -90,12 +90,14 @@ public class EmployeeController {
             this.view.getMitarbeiterListView().refresh();
             this.view.getMitarbeiterTA().setText(this.view.getMitarbeiterListView().getSelectionModel().getSelectedItem().toString());
             this.mainView.setChanged(true);
+            System.out.println("Die Daten von " + mitarbeiter1.getVorname() + " " + mitarbeiter1.getNachname() + " wurden aktualisiert.");
         });
     }
 
     public void printAllEmployees() {
         if(this.model.getMitarbeiter() != null && !this.model.getMitarbeiter().isEmpty()) {
             printAllEmployees printAllEmployees = new printAllEmployees(this, this.model);
+            System.out.println("Alle Mitarbeiter in Form einer Liste ausgegeben.");
         } else {
             this.view.errorAlert("Mitarbeiter in der Apotheke", "Es gibt keine/nicht genug Mitarbeiter, daher kann auch keine Liste ausgegeben werden!");
         }
