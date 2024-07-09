@@ -2,7 +2,6 @@ package at.apo.control;
 
 import at.apo.model.APOException;
 import at.apo.model.Apotheke;
-import at.apo.model.Geschaeftsfuehrer;
 import at.apo.view.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;

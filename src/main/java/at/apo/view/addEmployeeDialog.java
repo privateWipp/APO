@@ -5,7 +5,6 @@ import at.apo.model.Mitarbeiter;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Text;
 
 import java.time.LocalDate;
 

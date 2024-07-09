@@ -9,26 +9,26 @@ import javafx.scene.layout.HBox;
 
 import java.util.Optional;
 
-public class nameButtonDialog extends Dialog<String> {
+public class telefonnummerButtonDialog extends Dialog<String> {
     private Apotheke model;
 
-    public nameButtonDialog(Apotheke model) {
+    public telefonnummerButtonDialog(Apotheke model) {
         this.model = model;
 
-        setTitle("offiziellen Namen der Apotheke ändern");
+        setTitle("Telefonnummer der Apotheke ändern");
 
         FlowPane flowPane = new FlowPane();
         flowPane.setOrientation(Orientation.VERTICAL);
 
-        HBox nameHBox = new HBox();
-        Label nameL = new Label("Name:");
-        TextField nameTF = new TextField();
-        nameTF.setText(this.model.getName());
-        nameHBox.getChildren().addAll(nameL, nameTF);
-        nameHBox.setPadding(new Insets(10, 10, 10, 10));
-        nameHBox.setSpacing(10);
+        HBox telefonnummerHBox = new HBox();
+        Label telefonnummerL = new Label("Tel. Nr.:");
+        TextField telefonnummerTF = new TextField();
+        telefonnummerTF.setText(this.model.getTelefonnummer());
+        telefonnummerHBox.getChildren().addAll(telefonnummerL, telefonnummerTF);
+        telefonnummerHBox.setPadding(new Insets(10, 10, 10, 10));
+        telefonnummerHBox.setSpacing(10);
 
-        flowPane.getChildren().addAll(nameHBox);
+        flowPane.getChildren().addAll(telefonnummerHBox);
 
         getDialogPane().setContent(flowPane);
 
@@ -38,9 +38,9 @@ public class nameButtonDialog extends Dialog<String> {
         this.setResultConverter(bt -> {
             if(bt == buttonType) {
                 Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-                confirmation.setTitle("Namen ändern");
-                confirmation.setHeaderText("offiziellen Namen verändern");
-                confirmation.setContentText("Sind Sie sicher, dass Sie den offiziellen Namen der Apotheke von " + this.model.getName() + " auf " + nameTF.getText() + " ändern wollen?");
+                confirmation.setTitle("Telefonnummer ändern");
+                confirmation.setHeaderText("Telefonnummer der Apotheke verändern");
+                confirmation.setContentText("Sind Sie sicher, dass Sie die aktuelle Telefonnummer von der Apotheke " + this.model.getName() + " von " + this.model.getTelefonnummer() + " auf " + telefonnummerTF.getText() + " ändern wollen?");
 
                 ButtonType yes = new ButtonType("Ja");
                 ButtonType no = new ButtonType("Nein");
@@ -50,7 +50,7 @@ public class nameButtonDialog extends Dialog<String> {
 
                 Optional<ButtonType> result = confirmation.showAndWait();
                 if (result.isPresent() && result.get() == yes) {
-                    return nameTF.getText();
+                    return telefonnummerTF.getText();
                 } else {
                     close();
                 }

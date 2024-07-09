@@ -7,8 +7,6 @@ import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
 public class APO extends Application {
     private double screenWidth;
     private double screenHeight;

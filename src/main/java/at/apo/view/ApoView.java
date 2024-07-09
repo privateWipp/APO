@@ -5,6 +5,7 @@ import at.apo.ConsoleOutputStream;
 import at.apo.control.ApoController;
 import at.apo.model.*;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -13,7 +14,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.util.Optional;
 
 public class ApoView extends BorderPane {
@@ -33,14 +33,12 @@ public class ApoView extends BorderPane {
     private Stage stage;
 
     public ApoView(View mainView, Apotheke apotheke) {
-        // anderes Wichtiges!
         this.apoInstance = APO.getInstance();
         this.mainView = mainView;
         this.model = apotheke;
         this.ctrl = new ApoController(this, this.model);
         this.changed = false;
         this.originalModel = deepCopy(apotheke);
-        // Fenster
         this.medikamentenListView = new ListView<Medikament>();
         this.rezepteListView = new ListView<Rezept>();
         this.bestellungenListView = new ListView<Bestellung>();
@@ -90,8 +88,25 @@ public class ApoView extends BorderPane {
         MenuBar menuBar = new MenuBar();
 
         Menu mitarbeiter = new Menu("Mitarbeiter");
-        MenuItem manageEmployees = new MenuItem("verwalten");
+        MenuItem manageEmployees = new MenuItem("Mitarbeiter verwalten");
         mitarbeiter.getItems().add(manageEmployees);
+
+        Menu medikamente = new Menu("Medikamente");
+        MenuItem manageMedikamente = new MenuItem("Medikamente verwalten");
+        medikamente.getItems().add(manageMedikamente);
+
+        Menu rezepte = new Menu("Rezepte");
+        MenuItem manageRezepte = new MenuItem("Rezepte verwalten");
+        rezepte.getItems().add(manageRezepte);
+
+        Menu bestellungen = new Menu("Bestellungen");
+        MenuItem newBestellung = new MenuItem("neue Bestellung aufgeben");
+        MenuItem manageBestellungen = new MenuItem("Bestellungen verwalten/ansehen");
+        bestellungen.getItems().addAll(newBestellung, manageBestellungen);
+
+        Menu kunden = new Menu("Kunden");
+        MenuItem manageKunden = new MenuItem("Kunden verwalten");
+        kunden.getItems().add(manageKunden);
 
         Menu optionen = new Menu("Optionen");
         MenuItem geschaeftsfuehrerFestlegen = new MenuItem("Geschäftsführer ändern/festlegen");
@@ -101,32 +116,47 @@ public class ApoView extends BorderPane {
 
         Menu ansicht = new Menu("Ansicht");
         Menu fenster = new Menu("Fenster");
-        CheckMenuItem medikamente = new CheckMenuItem("Medikamente");
-        CheckMenuItem rezepte = new CheckMenuItem("Rezepte");
-        CheckMenuItem bestellungen = new CheckMenuItem("Bestellungen");
-        CheckMenuItem kunden = new CheckMenuItem("Kunden");
+        CheckMenuItem medikamenteCMI = new CheckMenuItem("Medikamente");
+        CheckMenuItem rezepteCMI = new CheckMenuItem("Rezepte");
+        CheckMenuItem bestellungenCMI = new CheckMenuItem("Bestellungen");
+        CheckMenuItem kundenCMI = new CheckMenuItem("Kunden");
         CheckMenuItem mitarbeiterCMI = new CheckMenuItem("Mitarbeiter");
-        fenster.getItems().addAll(medikamente, rezepte, bestellungen, kunden, mitarbeiterCMI);
+        fenster.getItems().addAll(medikamenteCMI, rezepteCMI, bestellungenCMI, kundenCMI, mitarbeiterCMI);
         CheckMenuItem alleAnzeigen = new CheckMenuItem("alle Anzeigen lassen");
         ansicht.getItems().addAll(fenster, alleAnzeigen);
 
         menuBar.getMenus().addAll(mitarbeiter, optionen, ansicht);
 
+        manageEmployees.setOnAction(e -> this.ctrl.manageEmployees());
+
+        /**
+         * MUSS NOCH FERTIG GEMACHT WERDEN!!!!!!!!!!!
+         */
+        /*manageMedikamente.setOnAction(e -> this.ctrl.manageMedikamente());
+        manageRezepte.setOnAction(e -> this.ctrl.manageRezepte());
+        newBestellung.setOnAction(e -> this.ctrl.newBestellung());
+        manageBestellungen.setOnAction(e -> this.ctrl.manageBestellungen());
+        manageKunden.setOnAction(e -> this.ctrl.manageKunden());*/
+
+        geschaeftsfuehrerFestlegen.setOnAction(e -> this.ctrl.geschaeftsfuehrerFestlegen());
+        geschaeftsfuehrerAnzeigen.setOnAction(e -> this.ctrl.geschaeftsfuehrerAnzeigen());
+        oeffnungszeitenFestlegen.setOnAction(e -> this.ctrl.oeffnungszeitenFestlegen());
+
         setTop(menuBar);
 
         // -------------------------------------------------------------------------------------------------------------
 
-        VBox controlVBox = new VBox();
+        ToolBar toolBar = new ToolBar();
+        toolBar.setOrientation(Orientation.VERTICAL);
+        toolBar.setPadding(new Insets(15, 15, 15, 15));
 
         Button apothekeBearbeiten = new Button("Apotheke bearbeiten");
         VBox aIZAVBox = new VBox(new Label("allgemeine Informationen zur Apotheke bearbeiten:"), apothekeBearbeiten);
         aIZAVBox.setSpacing(5);
 
-        controlVBox.getChildren().addAll(aIZAVBox);
-        controlVBox.setPadding(new Insets(10, 0, 0, 10));
-        controlVBox.setSpacing(10);
+        toolBar.getItems().addAll(aIZAVBox);
 
-        setRight(controlVBox);
+        setRight(toolBar);
 
         apothekeBearbeiten.setOnAction(e -> this.ctrl.apothekeBearbeiten());
 
@@ -145,56 +175,56 @@ public class ApoView extends BorderPane {
         mitarbeiterVBox.setVisible(false);
         listViewFensterHBox.getChildren().addAll(medikamenteVBox, rezepteVBox, bestellungenVBox, kundenVBox, mitarbeiterVBox);
 
-        setCenter(listViewFensterHBox);
-
-        // -------------------------------------------------------------------------------------------------------------
-
-        Button clearChanges = new Button("Änderungen");
-        VBox changesVBox = new VBox(new Label("Änderungen:"), this.changesTA);
-        setBottom(changesVBox);
-
-        // ----------------------------------------VERWALTEN DER MENÜS--------------------------------------------------
-
-        manageEmployees.setOnAction(e -> this.ctrl.manageEmployees());
-
-        geschaeftsfuehrerFestlegen.setOnAction(e -> this.ctrl.geschaeftsfuehrerFestlegen());
-        geschaeftsfuehrerAnzeigen.setOnAction(e -> this.ctrl.geschaeftsfuehrerAnzeigen());
-        oeffnungszeitenFestlegen.setOnAction(e -> this.ctrl.oeffnungszeitenFestlegen());
-
-        medikamente.setOnAction(e -> {
-            medikamenteVBox.setVisible(medikamente.isSelected());
-            System.out.println("Fenster: Medikamente " + (medikamenteVBox.isVisible() ? "anzeigen.\n" : "nicht mehr anzeigen.\n"));
+        medikamenteCMI.setOnAction(e -> {
+            medikamenteVBox.setVisible(medikamenteCMI.isSelected());
+            System.out.println("Fenster: Medikamente " + (medikamenteVBox.isVisible() ? "anzeigen." : "nicht mehr anzeigen."));
         });
-        rezepte.setOnAction(e -> {
-            rezepteVBox.setVisible(rezepte.isSelected());
-            System.out.println("Fenster: Rezepte " + (rezepteVBox.isVisible() ? "anzeigen.\n" : "nicht mehr anzeigen.\n"));
+        rezepteCMI.setOnAction(e -> {
+            rezepteVBox.setVisible(rezepteCMI.isSelected());
+            System.out.println("Fenster: Rezepte " + (rezepteVBox.isVisible() ? "anzeigen." : "nicht mehr anzeigen."));
         });
-        bestellungen.setOnAction(e -> {
-            bestellungenVBox.setVisible(bestellungen.isSelected());
-            System.out.println("Fenster: Bestellungen " + (bestellungenVBox.isVisible() ? "anzeigen.\n" : "nicht mehr anzeigen.\n"));
+        bestellungenCMI.setOnAction(e -> {
+            bestellungenVBox.setVisible(bestellungenCMI.isSelected());
+            System.out.println("Fenster: Bestellungen " + (bestellungenVBox.isVisible() ? "anzeigen." : "nicht mehr anzeigen."));
         });
-        kunden.setOnAction(e -> {
-            kundenVBox.setVisible(kunden.isSelected());
-            System.out.println("Fenster: Kunden " + (kundenVBox.isVisible() ? "anzeigen.\n" : "nicht mehr anzeigen.\n"));
+        kundenCMI.setOnAction(e -> {
+            kundenVBox.setVisible(kundenCMI.isSelected());
+            System.out.println("Fenster: Kunden " + (kundenVBox.isVisible() ? "anzeigen." : "nicht mehr anzeigen."));
         });
         mitarbeiterCMI.setOnAction(e -> {
             mitarbeiterVBox.setVisible(mitarbeiterCMI.isSelected());
-            System.out.println("Fenster: Mitarbeiter " + (mitarbeiterVBox.isVisible() ? "anzeigen.\n" : "nicht mehr anzeigen.\n"));
+            System.out.println("Fenster: Mitarbeiter " + (mitarbeiterVBox.isVisible() ? "anzeigen." : "nicht mehr anzeigen."));
         });
 
         alleAnzeigen.setOnAction(e -> {
-            medikamente.setSelected(alleAnzeigen.isSelected());
-            rezepte.setSelected(alleAnzeigen.isSelected());
-            bestellungen.setSelected(alleAnzeigen.isSelected());
-            kunden.setSelected(alleAnzeigen.isSelected());
+            medikamenteCMI.setSelected(alleAnzeigen.isSelected());
+            rezepteCMI.setSelected(alleAnzeigen.isSelected());
+            bestellungenCMI.setSelected(alleAnzeigen.isSelected());
+            kundenCMI.setSelected(alleAnzeigen.isSelected());
             mitarbeiterCMI.setSelected(alleAnzeigen.isSelected());
             medikamenteVBox.setVisible(alleAnzeigen.isSelected());
             rezepteVBox.setVisible(alleAnzeigen.isSelected());
             bestellungenVBox.setVisible(alleAnzeigen.isSelected());
             kundenVBox.setVisible(alleAnzeigen.isSelected());
             mitarbeiterVBox.setVisible(alleAnzeigen.isSelected());
-            System.out.println("Alle Fenster " + (medikamenteVBox.isVisible() ? "anzeigen.\n" : "nicht mehr anzeigen.\n"));
+            System.out.println("Alle Fenster " + (medikamenteVBox.isVisible() ? "anzeigen." : "nicht mehr anzeigen."));
         });
+
+        setCenter(listViewFensterHBox);
+
+        // -------------------------------------------------------------------------------------------------------------
+
+        Label changes = new Label("Änderungen:");
+        changes.setStyle("-fx-font-size: 13px;");
+        Button clearChanges = new Button("leeren");
+        HBox aenderungenHBox = new HBox(changes, clearChanges);
+        aenderungenHBox.setSpacing(10);
+        aenderungenHBox.setPadding(new Insets(0, 0, 5, 0));
+        VBox changesVBox = new VBox(aenderungenHBox, this.changesTA);
+
+        setBottom(changesVBox);
+
+        clearChanges.setOnAction(e -> this.ctrl.clearChanges());
 
         // -------------------------------------------------------------------------------------------------------------
 

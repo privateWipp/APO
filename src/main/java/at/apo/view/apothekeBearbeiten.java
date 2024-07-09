@@ -63,11 +63,12 @@ public class apothekeBearbeiten extends FlowPane {
         Label telefonnummerDescriptionLabel = new Label("Änderungen für die Tel. Nr. sind HIER festzulegen");
 
         Label emailLabel = new Label("E-Mail Adresse");
+        Label emailDescriptionLabel = new Label("E-Mail Adresse ändern");
 
         HBox nameHBox = createIconLabelBox(nameButton, nameLabel, nameDescriptionLabel);
         HBox adresseHBox = createIconLabelBox(adresseButton, adresseLabel, adresseDescriptionLabel);
         HBox telefonnummerHBox = createIconLabelBox(telefonnummerButton, telefonnummerLabel, telefonnummerDescriptionLabel);
-        HBox emailHBox = createIconLabelBox(emailButton, emailLabel, null);
+        HBox emailHBox = createIconLabelBox(emailButton, emailLabel, emailDescriptionLabel);
 
         nameHBox.setPadding(new Insets(0, 0, 30, 0));
         adresseHBox.setPadding(new Insets(0, 0, 30, 0));
