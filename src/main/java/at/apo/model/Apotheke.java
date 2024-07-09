@@ -8,6 +8,7 @@ import java.util.Objects;
 public class Apotheke implements Serializable, Cloneable {
     private static final long serialVersionUID = 1L;
     private String name;
+    private String originalName;
     private String adresse;
     private String telefonnummer;
     private String email;
@@ -26,6 +27,7 @@ public class Apotheke implements Serializable, Cloneable {
 
     public Apotheke(String name, String adresse, String telefonnummer, String email, double budget) throws APOException {
         setName(name);
+        setOriginalName(getName());
         setAdresse(adresse);
         setTelefonnummer(telefonnummer);
         setEmail(email);
@@ -64,6 +66,10 @@ public class Apotheke implements Serializable, Cloneable {
         } else {
             throw new APOException("Der Name der Apotheke darf nicht null sein!");
         }
+    }
+
+    public void setOriginalName(String originalName) {
+        this.originalName = originalName;
     }
 
     public void setAdresse(String adresse) throws APOException {
@@ -224,6 +230,10 @@ public class Apotheke implements Serializable, Cloneable {
         return this.name;
     }
 
+    public String getOriginalName() {
+        return this.originalName;
+    }
+
     public String getAdresse() {
         return this.adresse;
     }
@@ -275,6 +285,7 @@ public class Apotheke implements Serializable, Cloneable {
     public void speichern(File file) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
             oos.writeObject(getName());
+            oos.writeObject(getOriginalName());
             oos.writeObject(getAdresse());
             oos.writeObject(getTelefonnummer());
             oos.writeObject(getEmail());
@@ -296,6 +307,7 @@ public class Apotheke implements Serializable, Cloneable {
     public void laden(File file) {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             this.name = (String) ois.readObject();
+            this.originalName = (String) ois.readObject();
             this.adresse = (String) ois.readObject();
             this.telefonnummer = (String) ois.readObject();
             this.email = (String) ois.readObject();

@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.Optional;
 
 public class ApoView extends BorderPane {
@@ -148,6 +149,7 @@ public class ApoView extends BorderPane {
 
         // -------------------------------------------------------------------------------------------------------------
 
+        Button clearChanges = new Button("Änderungen");
         VBox changesVBox = new VBox(new Label("Änderungen:"), this.changesTA);
         setBottom(changesVBox);
 
@@ -193,8 +195,6 @@ public class ApoView extends BorderPane {
             mitarbeiterVBox.setVisible(alleAnzeigen.isSelected());
             System.out.println("Alle Fenster " + (medikamenteVBox.isVisible() ? "anzeigen.\n" : "nicht mehr anzeigen.\n"));
         });
-
-        // -------------------------------------------------------------------------------------------------------------
 
         // -------------------------------------------------------------------------------------------------------------
 
@@ -266,15 +266,14 @@ public class ApoView extends BorderPane {
 
             Optional<ButtonType> result = confirmation.showAndWait();
             if (result.isPresent() && result.get() == yes) { // SPEICHERN
-                /**
-                 * Problem hier:
-                 * Wenn man den offiziellen Namen der Apotheke über den Dialog ändert, und es speichert,
-                 * beim nächsten Mal Öffnen des Programms ist die "alte" Version der Apotheke (mit dem alten Namen) ebenfalls da.
-                 * Eben zusätzlich halt die "neue" Version der Apotheke mit dem geupdateten Namen
-                 */
-                File file = new File("apotheken", this.model.getName() + ".apo");
+                File newFile = new File("apotheken", this.model.getName() + ".apo");
+                File oldFile = new File("apotheken", this.model.getOriginalName() + ".apo");
                 try {
-                    this.model.speichern(file);
+                    this.model.setOriginalName(this.model.getName());
+                    this.model.speichern(newFile);
+                    if (!(oldFile.getCanonicalPath().equals(newFile.getCanonicalPath()))) {
+                        oldFile.delete();
+                    }
                     this.mainView.getApothekenListView().refresh();
                     this.stage.close();
                 } catch (Exception e) {
