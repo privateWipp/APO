@@ -67,11 +67,11 @@ public class ApoView extends BorderPane {
         Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.8, this.apoInstance.getScreenHeight() * 0.8);
         this.stage.setScene(scene);
 
-        if(this.model.getGeschaeftsfuehrer() == null) {
+        if (this.model.getGeschaeftsfuehrer() == null) {
             this.fehlendeAttribute += "Geschäftsführer";
         }
-        if(!this.model.getOeffnungszeiten().containsKey("Montag")) {
-            if(!this.fehlendeAttribute.isEmpty()) {
+        if (!this.model.getOeffnungszeiten().containsKey("Montag")) {
+            if (!this.fehlendeAttribute.isEmpty()) {
                 this.fehlendeAttribute += ", ";
             }
             this.fehlendeAttribute += "Öffnungszeiten";
@@ -80,9 +80,8 @@ public class ApoView extends BorderPane {
         if (!this.fehlendeAttribute.isEmpty()) {
             this.mainView.infoAlert("", "Informationen zu neuer Apotheke:\n" +
                     this.model.getName() +
-                    "Bitte vervollständigen Sie folgende Attribute der Apotheke\n" +
-                    "in den Optionen SOBALD WIE MÖGLICH!\n" +
-                    "zu bearbeitende Attribute:\n" +
+                    " Bitte vervollständigen Sie folgende Attribute der Apotheke in den Optionen SOBALD WIE MÖGLICH!\n" +
+                    "zu bearbeitende Attribute:\n\n" +
                     this.fehlendeAttribute);
         }
 
@@ -120,12 +119,15 @@ public class ApoView extends BorderPane {
 
         Button apothekeBearbeiten = new Button("Apotheke bearbeiten");
         VBox aIZAVBox = new VBox(new Label("allgemeine Informationen zur Apotheke bearbeiten:"), apothekeBearbeiten);
+        aIZAVBox.setSpacing(5);
 
         controlVBox.getChildren().addAll(aIZAVBox);
         controlVBox.setPadding(new Insets(10, 0, 0, 10));
         controlVBox.setSpacing(10);
 
         setRight(controlVBox);
+
+        apothekeBearbeiten.setOnAction(e -> this.ctrl.apothekeBearbeiten());
 
         // -------------------------------------------------------------------------------------------------------------
 
@@ -264,6 +266,12 @@ public class ApoView extends BorderPane {
 
             Optional<ButtonType> result = confirmation.showAndWait();
             if (result.isPresent() && result.get() == yes) { // SPEICHERN
+                /**
+                 * Problem hier:
+                 * Wenn man den offiziellen Namen der Apotheke über den Dialog ändert, und es speichert,
+                 * beim nächsten Mal Öffnen des Programms ist die "alte" Version der Apotheke (mit dem alten Namen) ebenfalls da.
+                 * Eben zusätzlich halt die "neue" Version der Apotheke mit dem geupdateten Namen
+                 */
                 File file = new File("apotheken", this.model.getName() + ".apo");
                 try {
                     this.model.speichern(file);

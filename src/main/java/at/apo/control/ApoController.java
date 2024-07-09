@@ -131,4 +131,8 @@ public class ApoController {
             }
         }
     }
+
+    public void apothekeBearbeiten() {
+        apothekeBearbeiten apothekeBearbeiten = new apothekeBearbeiten(this.view, this.model);
+    }
 }
