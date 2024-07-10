@@ -3,10 +3,9 @@ package at.apo.control;
 import at.apo.model.APOException;
 import at.apo.model.Apotheke;
 import at.apo.model.Medikament;
-import at.apo.view.ApoView;
-import at.apo.view.addMedikamentDialog;
-import at.apo.view.manageMedikamente;
-import at.apo.view.printAllMedikamente;
+import at.apo.view.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 import java.util.Optional;
 
@@ -42,6 +41,64 @@ public class MedikamenteController {
                 this.mainView.errorAlert("Fehler beim Hinzufügen eines neuen Medikaments..", e.getMessage());
                 System.out.println("Fehler: Beim Aufnehmen eines neuen Medikaments in die Apotheke " + this.model.getName() + " ist ein Fehler aufgetreten!");
             }
+        });
+    }
+
+    public void removeMedikament(Medikament medikament) {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Medikament entfernen");
+        confirmation.setHeaderText("Sind Sie sicher?");
+        confirmation.setContentText("Sind Sie sicher, dass sie " + medikament.getLagerbestand() + " Stück von dem Medikament " + medikament.getBezeichnung() + " aus der Apotheke " + this.model.getName() + " entfernen wollen?");
+
+        ButtonType yes = new ButtonType("Ja");
+        ButtonType no = new ButtonType("Nein");
+        ButtonType cancel = new ButtonType("Abbrechen");
+
+        confirmation.getButtonTypes().setAll(yes, no, cancel);
+
+        Optional<ButtonType> result = confirmation.showAndWait();
+        if (result.isPresent() && result.get() == yes) {
+            try {
+                this.model.removeMedikament(medikament);
+                if(medikament.isRezeptpflichtig()) {
+                    this.view.getModelR().removeMedikament(medikament);
+                    this.view.updateRMedikamente();
+                } else {
+                    this.view.getModelNR().removeMedikament(medikament);
+                    this.view.updateNRMedikamente();
+                }
+                this.mainView.loadListViews();
+                this.mainView.setChanged(true);
+                System.out.println("Das Medikament " + medikament.getBezeichnung() + " (" + medikament.getLagerbestand() + " Stück) wurde aus der Apotheke " + this.model.getName() + " entfernet.");
+            } catch (APOException e) {
+                this.mainView.errorAlert("Fehler beim Entfernen des Medikaments " + medikament.getBezeichnung() + "..", e.getMessage());
+                System.out.println("Fehler: Beim Entfernen von dem Medikament " + medikament.getBezeichnung() + " (" + medikament.getLagerbestand() + " Stück) ist ein Fehler aufgetreten!");
+            }
+        } else {
+            confirmation.close();
+        }
+    }
+
+    /**
+     * Problem hier:
+     * Änderungen am Medikament die dann gespeichert werden, sind beim Neuaufruf dann doch trotzdem irgendwie
+     * die alten Werte... ??? keine Ahnung
+     *
+     * @param medikament
+     */
+    public void manageMedikament(Medikament medikament) {
+        manageMedikamentDialog manageMedikamentDialog = new manageMedikamentDialog(medikament);
+        Optional<Medikament> m = manageMedikamentDialog.showAndWait();
+
+        m.ifPresent(medikament1 -> {
+            if(medikament1.isRezeptpflichtig()) {
+                this.view.updateRMedikamente();
+            } else {
+                this.view.updateNRMedikamente();
+            }
+            this.mainView.loadListViews();
+            this.mainView.setChanged(true);
+            System.out.println("Die Daten von dem Medikament " + medikament.getBezeichnung() + " wurden aktualisiert.");
         });
     }
 

@@ -145,11 +145,32 @@ public class manageMedikamente extends BorderPane {
                 this.rMedikamente.getSelectionModel().selectedItemProperty().isNull()
                         .and(this.nrMedikamente.getSelectionModel().selectedItemProperty().isNull())
         );
-        //removeMedikament.setOnAction(e -> this.ctrl.removeMedikament());
+        removeMedikament.setOnAction(e -> {
+            Medikament selectR = this.rMedikamente.getSelectionModel().getSelectedItem();
+            Medikament selectNR = this.nrMedikamente.getSelectionModel().getSelectedItem();
+            if(selectR != null) {
+                this.ctrl.removeMedikament(selectR);
+            } else if (selectNR != null) {
+                this.ctrl.removeMedikament(selectNR);
+            } else {
+                this.view.errorAlert("kein ausgewähltes Medikament", "Es ist momentan kein Medikament ausgewählt, daher kann auch keines verwaltet werden!");
+            }
+        });
         manageMedikament.disableProperty().bind(
                 this.rMedikamente.getSelectionModel().selectedItemProperty().isNull()
                         .and(this.nrMedikamente.getSelectionModel().selectedItemProperty().isNull())
         );
+        manageMedikament.setOnAction(e -> {
+            Medikament selectR = this.rMedikamente.getSelectionModel().getSelectedItem();
+            Medikament selectNR = this.nrMedikamente.getSelectionModel().getSelectedItem();
+            if(selectR != null) {
+                this.ctrl.manageMedikament(selectR);
+            } else if (selectNR != null) {
+                this.ctrl.manageMedikament(selectNR);
+            } else {
+                this.view.errorAlert("kein ausgewähltes Medikament", "Es ist momentan kein Medikament ausgewählt, daher kann auch keines verwaltet werden!");
+            }
+        });
         printMedikamente.setOnAction(e -> this.ctrl.printMedikamente());
 
         // -------------------------------------------------------------------------------------------------------------

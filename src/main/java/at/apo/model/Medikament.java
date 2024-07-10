@@ -27,10 +27,10 @@ public class Medikament implements Serializable, Cloneable {
         setHersteller(hersteller);
         setWirkstoff(wirkstoff);
         setDosierung(dosierung);
-        this.rezeptpflichtig = rezeptpflichtig;
+        setRezeptpflichtig(rezeptpflichtig);
         setNebenwirkungen(nebenwirkungen);
         setLagerbedingungen(lagerbedingungen);
-        this.verfuegbar = verfuegbar;
+        setVerfuegbar(verfuegbar);
         setBeschreibung(beschreibung);
     }
 
@@ -119,6 +119,10 @@ public class Medikament implements Serializable, Cloneable {
         }
     }
 
+    public void setRezeptpflichtig(boolean rezeptpflichtig) {
+        this.rezeptpflichtig = rezeptpflichtig;
+    }
+
     public void setNebenwirkungen(String nebenwirkungen) throws APOException {
         if (nebenwirkungen != null) {
             this.nebenwirkungen = nebenwirkungen;
@@ -133,6 +137,10 @@ public class Medikament implements Serializable, Cloneable {
         } else {
             throw new APOException("Die Lagerbedingungen für das Medikament dürfen nicht null sein!");
         }
+    }
+
+    public void setVerfuegbar(boolean verfuegbar) {
+        this.verfuegbar = verfuegbar;
     }
 
     public void setBeschreibung(String beschreibung) throws APOException {
