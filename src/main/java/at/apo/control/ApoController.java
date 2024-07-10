@@ -139,4 +139,8 @@ public class ApoController {
     public void clearChanges() {
         this.view.getChangesTA().clear();
     }
+
+    public void manageMedikamente() {
+        manageMedikamente manageMedikamente = new manageMedikamente(this.view, this.model);
+    }
 }

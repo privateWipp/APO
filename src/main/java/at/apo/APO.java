@@ -11,6 +11,7 @@ public class APO extends Application {
     private double screenWidth;
     private double screenHeight;
     private static APO instance;
+    private Stage stage;
 
     @Override
     public void start(Stage stage) {
@@ -18,17 +19,22 @@ public class APO extends Application {
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         this.screenWidth = primaryScreenBounds.getWidth();
         this.screenHeight = primaryScreenBounds.getHeight();
+        this.stage = stage;
 
         View view = new View();
         Scene scene = new Scene(view, getScreenWidth() * 0.25, getScreenHeight() * 0.4);
-        stage.setTitle("APO");
-        stage.setResizable(false);
-        stage.setScene(scene);
-        stage.show();
+        this.stage.setTitle("APO");
+        this.stage.setResizable(false);
+        this.stage.setScene(scene);
+        this.stage.show();
     }
 
     public static void main(String[] args) {
         launch();
+    }
+
+    public void close() {
+        this.stage.close();
     }
 
     public double getScreenWidth() {

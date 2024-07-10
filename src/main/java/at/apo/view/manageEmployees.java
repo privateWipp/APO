@@ -10,23 +10,28 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+
+import java.util.Comparator;
 
 public class manageEmployees extends BorderPane {
     private APO apoInstance;
     private ApoView mainView;
+    private Apotheke originalModel;
     private Apotheke model;
     private EmployeeController ctrl;
     private ListView<Mitarbeiter> mitarbeiterListView;
     private TextArea mitarbeiterTA;
     private Stage stage;
 
-    public manageEmployees(ApoView mainView, Apotheke model) {
+    public manageEmployees(ApoView mainView, Apotheke originalModel) {
         this.apoInstance = APO.getInstance();
         this.mainView = mainView;
-        this.model = model;
-        this.ctrl = new EmployeeController(this.mainView, this, this.model);
+        this.originalModel = originalModel;
+        this.model = this.originalModel.clone();
+        this.ctrl = new EmployeeController(this.mainView, this, this.originalModel);
         this.mitarbeiterListView = new ListView<Mitarbeiter>();
         this.mitarbeiterListView.setCellFactory(new Callback<ListView<Mitarbeiter>, ListCell<Mitarbeiter>>() {
             @Override
@@ -57,21 +62,65 @@ public class manageEmployees extends BorderPane {
     }
 
     private void initGUI() {
-        this.stage.setTitle(this.model.getName() + " : Mitarbeiter verwalten");
+        this.stage.setTitle(this.originalModel.getName() + " : Mitarbeiter verwalten");
         this.stage.setResizable(false);
         Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.25, this.apoInstance.getScreenHeight() * 0.4);
         this.stage.setScene(scene);
 
-        // Top: Buttons zum Verwalten der Mitarbeiter
+        // Top: MenuBar und Buttons zum Verwalten der Mitarbeiter
+        MenuBar menuBar = new MenuBar();
+
+        Menu bearbeiten = new Menu("Bearbeiten");
+        MenuItem sortID = new MenuItem("nach ID sortieren");
+        MenuItem sortNachname = new MenuItem("nach Nachnamen sortieren");
+        MenuItem sortVorname = new MenuItem("nach Vornamen sortieren");
+        MenuItem sortGebDat = new MenuItem("nach Geb. Dat. sortieren");
+        MenuItem sortGehalt = new MenuItem("nach Gehalt sortieren");
+        bearbeiten.getItems().addAll(sortID, sortNachname, sortVorname, sortGebDat, sortGehalt);
+
+        Menu list = new Menu("Liste");
+        MenuItem refreshList = new MenuItem("aktualisieren");
+        list.getItems().add(refreshList);
+
+        menuBar.getMenus().addAll(bearbeiten, list);
+
+        sortID.setOnAction(e -> {
+            this.model.getMitarbeiter().sort(Comparator.comparing(Mitarbeiter::getId));
+            updateMitarbeiterListView();
+        });
+        sortNachname.setOnAction(e -> {
+            this.model.getMitarbeiter().sort(Comparator.comparing(Mitarbeiter::getNachname));
+            updateMitarbeiterListView();
+        });
+        sortVorname.setOnAction(e -> {
+            this.model.getMitarbeiter().sort(Comparator.comparing(Mitarbeiter::getVorname));
+            updateMitarbeiterListView();
+        });
+        sortGebDat.setOnAction(e -> {
+            this.model.getMitarbeiter().sort(Comparator.comparing(Mitarbeiter::getGeburtsdatum));
+            updateMitarbeiterListView();
+        });
+        sortGehalt.setOnAction(e -> {
+            this.model.getMitarbeiter().sort(Comparator.comparing(Mitarbeiter::getGehalt));
+            updateMitarbeiterListView();
+        });
+
+        refreshList.setOnAction(e -> {
+            updateMitarbeiterListView();
+            System.out.println("Die Liste der Mitarbeiter wurde aktualisiert.");
+        });
+
         HBox manageEmployeesHBox = new HBox();
         Button addEmployee = new Button("+ Mitarbeiter");
         Button removeEmployee = new Button("- Mitarbeiter");
         Button manageEmployee = new Button("anschauen/verwalten");
         manageEmployeesHBox.getChildren().addAll(addEmployee, removeEmployee, manageEmployee);
-        manageEmployeesHBox.setPadding(new Insets(10, 10, 10, 10));
+        manageEmployeesHBox.setPadding(new Insets(20, 10, 20, 10));
         manageEmployeesHBox.setSpacing(10);
 
-        setTop(manageEmployeesHBox);
+        VBox topVBox = new VBox(menuBar, manageEmployeesHBox);
+
+        setTop(topVBox);
 
         // Verwaltung der Buttons
         addEmployee.setOnAction(e -> this.ctrl.addEmployee());
@@ -142,5 +191,9 @@ public class manageEmployees extends BorderPane {
         errorAlert.setHeaderText(headerText);
         errorAlert.setContentText(contentText);
         errorAlert.showAndWait();
+    }
+
+    public Apotheke getModel() {
+        return this.model;
     }
 }

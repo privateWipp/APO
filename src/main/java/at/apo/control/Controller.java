@@ -70,6 +70,7 @@ public class Controller {
 
     public void openApo(Apotheke apotheke) {
         ApoView apoView = new ApoView(this.view, apotheke);
+        this.view.getApoInstance().close();
     }
 
     public void deleteApo(Apotheke apotheke) {

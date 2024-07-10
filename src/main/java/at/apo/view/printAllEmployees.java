@@ -16,17 +16,15 @@ import java.util.Comparator;
 
 public class printAllEmployees extends BorderPane {
     private APO apoInstance;
-    private EmployeeController ctrl;
     private Apotheke originalModel;
     private Apotheke model;
     private TextArea textArea;
     private Stage stage;
 
-    public printAllEmployees(EmployeeController ctrl, Apotheke originalModel) {
+    public printAllEmployees(Apotheke originalModel) {
         this.apoInstance = APO.getInstance();
-        this.ctrl = ctrl;
         this.originalModel = originalModel;
-        this.model = originalModel.clone();
+        this.model = this.originalModel.clone();
         this.textArea = new TextArea();
         this.textArea.setEditable(false);
         updateTextArea();

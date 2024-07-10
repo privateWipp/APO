@@ -26,8 +26,10 @@ public class EmployeeController {
             try {
                 validateMitarbeiter(mitarbeiter);
                 this.model.addMitarbeiter(mitarbeiter);
+                this.view.getModel().addMitarbeiter(mitarbeiter);
                 this.view.getMitarbeiterListView().getItems().add(mitarbeiter);
                 this.view.getMitarbeiterListView().refresh();
+                this.mainView.loadListViews();
                 this.mainView.setChanged(true);
                 System.out.println("Der Mitarbeiter " + mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " wurde in die Apotheke " + this.model.getName() + " aufgenommen.");
             } catch (APOException e) {
@@ -72,8 +74,10 @@ public class EmployeeController {
     public void removeEmployee(Mitarbeiter mitarbeiter) {
         try {
             this.model.removeMitarbeiter(mitarbeiter);
+            this.view.getModel().removeMitarbeiter(mitarbeiter);
             this.view.getMitarbeiterListView().getItems().remove(mitarbeiter);
             this.view.getMitarbeiterListView().refresh();
+            this.mainView.loadListViews();
             this.mainView.setChanged(true);
             System.out.println(mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " ist nun kein Teil mehr der Apotheke: " + this.model.getName());
         } catch (APOException e) {
@@ -89,6 +93,7 @@ public class EmployeeController {
         m.ifPresent(mitarbeiter1 -> {
             this.view.getMitarbeiterListView().refresh();
             this.view.getMitarbeiterTA().setText(this.view.getMitarbeiterListView().getSelectionModel().getSelectedItem().toString());
+            this.mainView.loadListViews();
             this.mainView.setChanged(true);
             System.out.println("Die Daten von " + mitarbeiter1.getVorname() + " " + mitarbeiter1.getNachname() + " wurden aktualisiert.");
         });
@@ -96,10 +101,10 @@ public class EmployeeController {
 
     public void printAllEmployees() {
         if(this.model.getMitarbeiter() != null && !this.model.getMitarbeiter().isEmpty()) {
-            printAllEmployees printAllEmployees = new printAllEmployees(this, this.model);
-            System.out.println("Alle Mitarbeiter in Form einer Liste ausgegeben.");
+            printAllEmployees printAllEmployees = new printAllEmployees(this.model);
+            System.out.println("Alle Mitarbeiter der Apotheke in Form einer Liste ausgegeben.");
         } else {
-            this.view.errorAlert("Mitarbeiter in der Apotheke", "Es gibt keine/nicht genug Mitarbeiter, daher kann auch keine Liste ausgegeben werden!");
+            this.view.errorAlert("Mitarbeiter in der Apotheke", "Es gibt keine/nicht genug Mitarbeiter in der Apotheke, daher kann auch keine Liste ausgegeben werden!");
         }
     }
 }

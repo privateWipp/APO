@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Objects;
 
-public class Geschaeftsfuehrer implements Serializable {
+public class Geschaeftsfuehrer implements Serializable, Cloneable {
     private static final long serialVersionUID = 1L;
     private int id;
     private String nachname;
@@ -25,6 +25,15 @@ public class Geschaeftsfuehrer implements Serializable {
         setAdresse(adresse);
         setTelefonnummer(telefonnummer);
         setEmail(email);
+    }
+
+    @Override
+    public Geschaeftsfuehrer clone() {
+        try {
+            return (Geschaeftsfuehrer) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 
     public void setNachname(String nachname) throws APOException {

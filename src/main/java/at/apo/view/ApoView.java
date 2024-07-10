@@ -123,20 +123,18 @@ public class ApoView extends BorderPane {
         CheckMenuItem mitarbeiterCMI = new CheckMenuItem("Mitarbeiter");
         fenster.getItems().addAll(medikamenteCMI, rezepteCMI, bestellungenCMI, kundenCMI, mitarbeiterCMI);
         CheckMenuItem alleAnzeigen = new CheckMenuItem("alle Anzeigen lassen");
-        ansicht.getItems().addAll(fenster, alleAnzeigen);
+        MenuItem refreshLists = new MenuItem("Listen aktualisieren");
+        ansicht.getItems().addAll(fenster, alleAnzeigen, refreshLists);
 
-        menuBar.getMenus().addAll(mitarbeiter, optionen, ansicht);
+        menuBar.getMenus().addAll(mitarbeiter, medikamente, rezepte, bestellungen, kunden, optionen, ansicht);
 
         manageEmployees.setOnAction(e -> this.ctrl.manageEmployees());
 
-        /**
-         * MUSS NOCH FERTIG GEMACHT WERDEN!!!!!!!!!!!
-         */
-        /*manageMedikamente.setOnAction(e -> this.ctrl.manageMedikamente());
-        manageRezepte.setOnAction(e -> this.ctrl.manageRezepte());
-        newBestellung.setOnAction(e -> this.ctrl.newBestellung());
-        manageBestellungen.setOnAction(e -> this.ctrl.manageBestellungen());
-        manageKunden.setOnAction(e -> this.ctrl.manageKunden());*/
+        manageMedikamente.setOnAction(e -> this.ctrl.manageMedikamente());
+        //manageRezepte.setOnAction(e -> this.ctrl.manageRezepte());
+        //newBestellung.setOnAction(e -> this.ctrl.newBestellung());
+        //manageBestellungen.setOnAction(e -> this.ctrl.manageBestellungen());
+        //manageKunden.setOnAction(e -> this.ctrl.manageKunden());
 
         geschaeftsfuehrerFestlegen.setOnAction(e -> this.ctrl.geschaeftsfuehrerFestlegen());
         geschaeftsfuehrerAnzeigen.setOnAction(e -> this.ctrl.geschaeftsfuehrerAnzeigen());
@@ -163,17 +161,28 @@ public class ApoView extends BorderPane {
         // -------------------------------------------------------------------------------------------------------------
 
         HBox listViewFensterHBox = new HBox();
+
         VBox medikamenteVBox = new VBox(new Label("Medikamente:"), this.medikamentenListView);
+        medikamenteVBox.setPadding(new Insets(0, 10, 0, 0));
+
         VBox rezepteVBox = new VBox(new Label("Rezepte:"), this.rezepteListView);
+        rezepteVBox.setPadding(new Insets(0, 10, 0, 0));
+
         VBox bestellungenVBox = new VBox(new Label("Bestellungen:"), this.bestellungenListView);
+        bestellungenVBox.setPadding(new Insets(0, 10, 0, 0));
+
         VBox kundenVBox = new VBox(new Label("Kunden:"), this.kundenListView);
+        kundenVBox.setPadding(new Insets(0, 10, 0, 0));
+
         VBox mitarbeiterVBox = new VBox(new Label("Mitarbeiter:"), this.mitarbeiterListView);
+
         medikamenteVBox.setVisible(false);
         rezepteVBox.setVisible(false);
         bestellungenVBox.setVisible(false);
         kundenVBox.setVisible(false);
         mitarbeiterVBox.setVisible(false);
         listViewFensterHBox.getChildren().addAll(medikamenteVBox, rezepteVBox, bestellungenVBox, kundenVBox, mitarbeiterVBox);
+        listViewFensterHBox.setPadding(new Insets(10, 0, 0, 10));
 
         medikamenteCMI.setOnAction(e -> {
             medikamenteVBox.setVisible(medikamenteCMI.isSelected());
@@ -210,6 +219,11 @@ public class ApoView extends BorderPane {
             System.out.println("Alle Fenster " + (medikamenteVBox.isVisible() ? "anzeigen." : "nicht mehr anzeigen."));
         });
 
+        refreshLists.setOnAction(e -> {
+            loadListViews();
+            System.out.println("Die Listen: Medikamente, Rezepte, Bestellungen, Kunden und Mitarbeiter wurden aktualisiert.");
+        });
+
         setCenter(listViewFensterHBox);
 
         // -------------------------------------------------------------------------------------------------------------
@@ -236,28 +250,33 @@ public class ApoView extends BorderPane {
         this.stage.show();
     }
 
-    private void loadListViews() {
+    public void loadListViews() {
         if (!this.model.getMedikamente().isEmpty()) {
+            this.medikamentenListView.getItems().clear();
             for (Medikament medikament : this.model.getMedikamente()) {
                 this.medikamentenListView.getItems().add(medikament);
             }
         }
         if (!this.model.getRezepte().isEmpty()) {
+            this.rezepteListView.getItems().clear();
             for (Rezept rezept : this.model.getRezepte()) {
                 this.rezepteListView.getItems().add(rezept);
             }
         }
         if (!this.model.getBestellungen().isEmpty()) {
+            this.bestellungenListView.getItems().clear();
             for (Bestellung bestellung : this.model.getBestellungen()) {
                 this.bestellungenListView.getItems().add(bestellung);
             }
         }
         if (!this.model.getKunden().isEmpty()) {
+            this.kundenListView.getItems().clear();
             for (Kunde kunde : this.model.getKunden()) {
                 this.kundenListView.getItems().add(kunde);
             }
         }
         if (!this.model.getMitarbeiter().isEmpty()) {
+            this.mitarbeiterListView.getItems().clear();
             for (Mitarbeiter mitarbeiter : this.model.getMitarbeiter()) {
                 this.mitarbeiterListView.getItems().add(mitarbeiter);
             }
@@ -340,5 +359,25 @@ public class ApoView extends BorderPane {
 
     public TextArea getChangesTA() {
         return this.changesTA;
+    }
+
+    public ListView<Medikament> getMedikamentenListView() {
+        return this.medikamentenListView;
+    }
+
+    public ListView<Rezept> getRezepteListView() {
+        return this.rezepteListView;
+    }
+
+    public ListView<Bestellung> getBestellungenListView() {
+        return this.bestellungenListView;
+    }
+
+    public ListView<Kunde> getKundenListView() {
+        return this.kundenListView;
+    }
+
+    public ListView<Mitarbeiter> getMitarbeiterListView() {
+        return this.mitarbeiterListView;
     }
 }

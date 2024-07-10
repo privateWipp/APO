@@ -49,12 +49,45 @@ public class Apotheke implements Serializable, Cloneable {
     public Apotheke clone() {
         try {
             Apotheke cloned = (Apotheke) super.clone();
-            cloned.mitarbeiter = new ArrayList<>(this.mitarbeiter);
+
+            cloned.oeffnungszeiten = new HashMap<>(this.oeffnungszeiten);
+            cloned.lagerbestand = new HashMap<>(this.lagerbestand);
+
+            cloned.mitarbeiter = new ArrayList<>();
+            for (Mitarbeiter m : this.mitarbeiter) {
+                cloned.mitarbeiter.add(m.clone());
+            }
+
+            cloned.medikamente = new ArrayList<>();
+            for (Medikament med : this.medikamente) {
+                cloned.medikamente.add(med.clone());
+            }
+
+            cloned.kunden = new ArrayList<>();
+            for (Kunde k : this.kunden) {
+                cloned.kunden.add(k.clone());
+            }
+
+            cloned.bestellungen = new ArrayList<>();
+            for (Bestellung b : this.bestellungen) {
+                cloned.bestellungen.add(b.clone());
+            }
+
+            cloned.rezepte = new ArrayList<>();
+            for (Rezept r : this.rezepte) {
+                cloned.rezepte.add(r.clone());
+            }
+
+            if (this.geschaeftsfuehrer != null) {
+                cloned.geschaeftsfuehrer = this.geschaeftsfuehrer.clone();
+            }
+
             return cloned;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
     }
+
 
     public void setName(String name) throws APOException {
         if (name != null) {

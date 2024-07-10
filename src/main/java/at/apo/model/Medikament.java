@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Medikament implements Serializable {
+public class Medikament implements Serializable, Cloneable {
     private static final long serialVersionUID = 1L;
     private String bezeichnung;
     private double preis;
@@ -32,6 +32,15 @@ public class Medikament implements Serializable {
         setLagerbedingungen(lagerbedingungen);
         this.verfuegbar = verfuegbar;
         setBeschreibung(beschreibung);
+    }
+
+    @Override
+    public Medikament clone() {
+        try {
+            return (Medikament) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 
     public void setBezeichnung(String bezeichnung) throws APOException {

@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Bestellung implements Serializable {
+public class Bestellung implements Serializable, Cloneable {
     private static final long serialVersionUID = 1L;
     private int bestellnummer;
     private LocalDate datum;
@@ -23,6 +23,15 @@ public class Bestellung implements Serializable {
             }
         }
         this.bestellstatus = "BESTELLT";
+    }
+
+    @Override
+    public Bestellung clone() {
+        try {
+            return (Bestellung) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 
     public void setBestellnummer(int bestellnummer) throws APOException {

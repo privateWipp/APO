@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Objects;
 
-public class Mitarbeiter implements Serializable {
+public class Mitarbeiter implements Serializable, Cloneable {
     private static final long serialVersionUID = 1L;
     private int id;
     private String nachname;
@@ -27,6 +27,15 @@ public class Mitarbeiter implements Serializable {
         setTelefonnummer(telefonnummer);
         setEmail(email);
         setGehalt(gehalt);
+    }
+
+    @Override
+    public Mitarbeiter clone() {
+        try {
+            return (Mitarbeiter) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 
     public void setId(int mitarbeiterId) throws APOException {

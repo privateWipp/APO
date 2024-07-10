@@ -51,10 +51,6 @@ public class createApoDialog extends Dialog<Apotheke> {
         ButtonType buttonType = new ButtonType("Erstellen", ButtonBar.ButtonData.APPLY);
         getDialogPane().getButtonTypes().add(buttonType);
 
-        /**
-         * Was passiert, wenn auf den Button(-Type) "Erstellen" gedrückt wird?
-         * =>
-         */
         this.setResultConverter(bt -> {
             if (bt == buttonType) {
                 try {

@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Rezept implements Serializable {
+public class Rezept implements Serializable, Cloneable {
     private static final long serialVersionUID = 1L;
     private int rezeptnummer;
     private Kunde patient;
@@ -33,6 +33,15 @@ public class Rezept implements Serializable {
             }
         }
         setBemerkung(bemerkung);
+    }
+
+    @Override
+    public Rezept clone() {
+        try {
+            return (Rezept) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 
     public void setRezeptnummer(int rezeptnummer) throws APOException {

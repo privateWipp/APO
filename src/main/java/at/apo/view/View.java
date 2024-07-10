@@ -1,5 +1,6 @@
 package at.apo.view;
 
+import at.apo.APO;
 import at.apo.control.Controller;
 import at.apo.model.APOException;
 import at.apo.model.Apotheke;
@@ -13,11 +14,13 @@ import java.io.File;
 import java.util.Arrays;
 
 public class View extends BorderPane {
+    private APO apoInstance;
     private File directory;
     private Controller ctrl;
     private ListView<Apotheke> apothekenListView;
 
     public View() {
+        this.apoInstance = APO.getInstance();
         this.directory = new File("apotheken");
         if(!this.directory.exists()) {
             this.directory.mkdir();
@@ -38,7 +41,8 @@ public class View extends BorderPane {
         MenuItem importApo = new MenuItem("Importieren");
         MenuItem openApo = new MenuItem("Apotheke öffnen/verwalten");
         MenuItem deleteApo = new MenuItem("Löschen");
-        apotheke.getItems().addAll(createApo, importApo, openApo, deleteApo);
+        MenuItem refreshList = new MenuItem("Liste aktualisieren");
+        apotheke.getItems().addAll(createApo, importApo, openApo, deleteApo, refreshList);
 
         Menu help = new Menu("Hilfe");
         MenuItem aboutMe = new MenuItem("Über mich");
@@ -55,6 +59,7 @@ public class View extends BorderPane {
         openApo.setOnAction(e -> this.ctrl.openApo(this.apothekenListView.getSelectionModel().getSelectedItem()));
         deleteApo.disableProperty().bind(this.apothekenListView.getSelectionModel().selectedItemProperty().isNull());
         deleteApo.setOnAction(e -> this.ctrl.deleteApo(this.apothekenListView.getSelectionModel().getSelectedItem()));
+        refreshList.setOnAction(e -> loadApotheken());
 
         aboutMe.setOnAction(e -> this.ctrl.aboutMe());
 
@@ -88,6 +93,7 @@ public class View extends BorderPane {
     }
 
     private void loadApotheken() {
+        this.apothekenListView.getItems().clear();
         File[] files = this.directory.listFiles((dir, name) -> name.endsWith(".apo"));
         if(files != null) {
             Arrays.stream(files).forEach(file -> {
@@ -124,5 +130,9 @@ public class View extends BorderPane {
         infoAlert.setHeaderText(headerText);
         infoAlert.setContentText(contentText);
         infoAlert.showAndWait();
+    }
+
+    public APO getApoInstance() {
+        return this.apoInstance;
     }
 }
