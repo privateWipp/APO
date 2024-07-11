@@ -13,39 +13,32 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.util.Comparator;
-
 public class manageMedikamente extends BorderPane {
     private APO apoInstance;
     private ApoView view;
-    private Apotheke originalModel;
-    private Apotheke modelR;
-    private Apotheke modelNR;
+    private Apotheke model;
     private MedikamenteController ctrl;
     private Stage stage;
 
     private ListView<Medikament> rMedikamente;
     private ListView<Medikament> nrMedikamente;
 
-    public manageMedikamente(ApoView view, Apotheke originalModel) {
+    public manageMedikamente(ApoView view, Apotheke model) {
         this.apoInstance = APO.getInstance();
         this.view = view;
-        this.originalModel = originalModel;
-        this.modelR = this.originalModel.clone();
-        this.modelNR = this.originalModel.clone();
-        this.ctrl = new MedikamenteController(this.originalModel, this.view, this);
+        this.model = model;
+        this.ctrl = new MedikamenteController(this.model, this.view, this);
         this.stage = new Stage();
 
         this.rMedikamente = new ListView<Medikament>();
         this.nrMedikamente = new ListView<Medikament>();
-        updateRMedikamente();
-        updateNRMedikamente();
+        updateMedikamente();
 
         initGUI();
     }
 
     private void initGUI() {
-        this.stage.setTitle("Medikamente der Apotheke " + this.originalModel.getName() + " verwalten");
+        this.stage.setTitle("Medikamente der Apotheke " + this.model.getName() + " verwalten");
         this.stage.setResizable(false);
         Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.25, this.apoInstance.getScreenHeight() * 0.4);
         this.stage.setScene(scene);
@@ -53,76 +46,14 @@ public class manageMedikamente extends BorderPane {
         // Top: MenuBar
         MenuBar menuBar = new MenuBar();
 
-        Menu bearbeiten = new Menu("Bearbeiten");
-
-        Menu rezeptpflichtig = new Menu("rezeptpflichtig");
-        MenuItem sortBezeichnungR = new MenuItem("sortieren nach Bezeichnung");
-        MenuItem sortPreisR = new MenuItem("sortieren nach Preis");
-        MenuItem sortLagerbestandR = new MenuItem("sortieren nach Lagerbestand/Anzahl");
-        MenuItem sortVerfallsdatumR = new MenuItem("sortieren nach Verfallsdatum");
-        MenuItem sortVerfuegbarR = new MenuItem("sortieren nach Verfügbarkeit");
-        rezeptpflichtig.getItems().addAll(sortBezeichnungR, sortPreisR, sortLagerbestandR, sortVerfallsdatumR, sortVerfuegbarR);
-
-        Menu nichtRezeptpflichtig = new Menu("nicht rezeptpflichtig");
-        MenuItem sortBezeichnungNR = new MenuItem("sortieren nach Bezeichnung");
-        MenuItem sortPreisNR = new MenuItem("sortieren nach Preis");
-        MenuItem sortLagerbestandNR = new MenuItem("sortieren nach Lagerbestand/Anzahl");
-        MenuItem sortVerfallsdatumNR = new MenuItem("sortieren nach Verfallsdatum");
-        MenuItem sortVerfuegbarNR = new MenuItem("sortieren nach Verfügbarkeit");
-        nichtRezeptpflichtig.getItems().addAll(sortBezeichnungNR, sortPreisNR, sortLagerbestandNR, sortVerfallsdatumNR, sortVerfuegbarNR);
-
-        bearbeiten.getItems().addAll(rezeptpflichtig, nichtRezeptpflichtig);
-
         Menu listen = new Menu("Listen");
         MenuItem refreshLists = new MenuItem("alle aktualisieren");
         listen.getItems().add(refreshLists);
 
-        menuBar.getMenus().addAll(bearbeiten, listen);
-
-        sortBezeichnungR.setOnAction(e -> {
-            this.modelR.getMedikamente().sort(Comparator.comparing(Medikament::getBezeichnung));
-            updateRMedikamente();
-        });
-        sortBezeichnungNR.setOnAction(e -> {
-            this.modelNR.getMedikamente().sort(Comparator.comparing(Medikament::getBezeichnung));
-            updateNRMedikamente();
-        });
-        sortPreisR.setOnAction(e -> {
-            this.modelR.getMedikamente().sort(Comparator.comparing(Medikament::getPreis));
-            updateRMedikamente();
-        });
-        sortPreisNR.setOnAction(e -> {
-            this.modelNR.getMedikamente().sort(Comparator.comparing(Medikament::getPreis));
-            updateNRMedikamente();
-        });
-        sortLagerbestandR.setOnAction(e -> {
-            this.modelR.getMedikamente().sort(Comparator.comparing(Medikament::getLagerbestand));
-            updateRMedikamente();
-        });
-        sortLagerbestandNR.setOnAction(e -> {
-            this.modelNR.getMedikamente().sort(Comparator.comparing(Medikament::getLagerbestand));
-            updateNRMedikamente();
-        });
-        sortVerfallsdatumR.setOnAction(e -> {
-            this.modelR.getMedikamente().sort(Comparator.comparing(Medikament::getVerfallsdatum));
-            updateRMedikamente();
-        });
-        sortVerfallsdatumNR.setOnAction(e -> {
-            this.modelNR.getMedikamente().sort(Comparator.comparing(Medikament::getVerfallsdatum));
-            updateNRMedikamente();
-        });
-        sortVerfuegbarR.setOnAction(e -> {
-            this.modelR.getMedikamente().sort(Comparator.comparing(Medikament::isVerfuegbar));
-            updateRMedikamente();
-        });
-        sortVerfuegbarNR.setOnAction(e -> {
-            this.modelNR.getMedikamente().sort(Comparator.comparing(Medikament::isVerfuegbar));
-            updateNRMedikamente();
-        });
+        menuBar.getMenus().addAll(listen);
 
         refreshLists.setOnAction(e -> {
-            updateRMedikamente();
-            updateNRMedikamente();
+            updateMedikamente();
             System.out.println("Die rezeptfreie und nicht rezeptfreie Liste an Medikamenten wurde aktualisiert.");
         });
 
@@ -186,19 +117,13 @@ public class manageMedikamente extends BorderPane {
         this.stage.show();
     }
 
-    public void updateRMedikamente() {
+    public void updateMedikamente() {
         this.rMedikamente.getItems().clear();
-        for (Medikament medikament : this.modelR.getMedikamente()) {
-            if (medikament.isRezeptpflichtig()) {
-                this.rMedikamente.getItems().add(medikament);
-            }
-        }
-    }
-
-    public void updateNRMedikamente() {
         this.nrMedikamente.getItems().clear();
-        for (Medikament medikament : this.modelNR.getMedikamente()) {
-            if (!medikament.isRezeptpflichtig()) {
+        for(Medikament medikament : this.model.getMedikamente()) {
+            if(medikament.isRezeptpflichtig()) {
+                this.rMedikamente.getItems().add(medikament);
+            } else {
                 this.nrMedikamente.getItems().add(medikament);
             }
         }
@@ -210,13 +135,5 @@ public class manageMedikamente extends BorderPane {
 
     public ListView<Medikament> getNRMedikamente() {
         return this.nrMedikamente;
-    }
-
-    public Apotheke getModelR() {
-        return this.modelR;
-    }
-
-    public Apotheke getModelNR() {
-        return this.modelNR;
     }
 }

@@ -170,10 +170,8 @@ public class manageEmployees extends BorderPane {
 
     private void updateMitarbeiterListView() {
         this.mitarbeiterListView.getItems().clear();
-        if (this.model.getMitarbeiter() != null && !this.model.getMitarbeiter().isEmpty()) {
-            for (Mitarbeiter mitarbeiter : this.model.getMitarbeiter()) {
-                this.mitarbeiterListView.getItems().add(mitarbeiter);
-            }
+        for (Mitarbeiter mitarbeiter : this.model.getMitarbeiter()) {
+            this.mitarbeiterListView.getItems().add(mitarbeiter);
         }
     }
 

@@ -131,7 +131,7 @@ public class ApoView extends BorderPane {
         manageEmployees.setOnAction(e -> this.ctrl.manageEmployees());
 
         manageMedikamente.setOnAction(e -> this.ctrl.manageMedikamente());
-        //manageRezepte.setOnAction(e -> this.ctrl.manageRezepte());
+        manageRezepte.setOnAction(e -> this.ctrl.manageRezepte());
         //newBestellung.setOnAction(e -> this.ctrl.newBestellung());
         //manageBestellungen.setOnAction(e -> this.ctrl.manageBestellungen());
         //manageKunden.setOnAction(e -> this.ctrl.manageKunden());

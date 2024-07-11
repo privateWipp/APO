@@ -143,4 +143,8 @@ public class ApoController {
     public void manageMedikamente() {
         manageMedikamente manageMedikamente = new manageMedikamente(this.view, this.model);
     }
+
+    public void manageRezepte() {
+        manageRezepte manageRezepte = new manageRezepte(this.view, this.model);
+    }
 }

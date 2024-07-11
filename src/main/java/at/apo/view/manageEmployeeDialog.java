@@ -60,10 +60,9 @@ public class manageEmployeeDialog extends Dialog<Mitarbeiter> {
         Label gehaltL = new Label("Gehalt:");
         TextField gehaltTF = new TextField(Double.toString(mitarbeiter.getGehalt()));
         Label euroIcon = new Label("€");
-        HBox gehaltHBox = new HBox(10, gehaltTF, euroIcon);  // Hier wurde gehaltHBox erstellt
-
+        HBox gehaltHBox = new HBox(10, gehaltTF, euroIcon);
         gridPane.add(gehaltL, 0, 7);
-        gridPane.add(gehaltHBox, 1, 7);  // gehaltHBox zum GridPane hinzufügen
+        gridPane.add(gehaltHBox, 1, 7);
 
         ButtonType buttonType = new ButtonType("Ändern", ButtonBar.ButtonData.APPLY);
         getDialogPane().getButtonTypes().add(buttonType);
