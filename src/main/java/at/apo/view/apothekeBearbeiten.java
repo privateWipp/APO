@@ -38,7 +38,7 @@ public class apothekeBearbeiten extends FlowPane {
 
     private void initGUI() {
         this.stage.setTitle("allgemeine Informationen der Apotheke " + this.model.getName() + " bearbeiten");
-        this.stage.setResizable(false);
+        this.stage.setResizable(true);
         Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.14, this.apoInstance.getScreenHeight() * 0.265);
         this.stage.setScene(scene);
         this.setPadding(new Insets(30, 30, 30, 30));
@@ -74,6 +74,11 @@ public class apothekeBearbeiten extends FlowPane {
         adresseHBox.setPadding(new Insets(0, 0, 30, 0));
         telefonnummerHBox.setPadding(new Insets(0, 0, 30, 0));
         emailHBox.setPadding(new Insets(0, 0, 30, 0));
+
+        nameHBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
+        adresseHBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
+        telefonnummerHBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
+        emailHBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
         applyStyles(nameHBox);
         applyStyles(adresseHBox);

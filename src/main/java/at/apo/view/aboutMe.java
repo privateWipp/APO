@@ -21,7 +21,7 @@ public class aboutMe extends BorderPane {
 
     private void initGUI() {
         this.stage.setTitle("Über mich");
-        this.stage.setResizable(false);
+        this.stage.setResizable(true);
         Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.125, this.apoInstance.getScreenHeight() * 0.125);
         this.stage.setScene(scene);
 
@@ -38,6 +38,7 @@ public class aboutMe extends BorderPane {
                         "und mache mein aller erstes Praktikum in der Firma 'Apotronik'.\n" +
                         "Daher auch der Name: APO");
         ueberMichVBox.getChildren().add(ueberMich);
+        ueberMichVBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
         setCenter(ueberMichVBox);
 

@@ -22,16 +22,12 @@ public class Rezept implements Serializable, Cloneable {
         this.rezeptnummer = 0;
         setPatient(patient);
         setArzt(arzt);
-        this.medikamente = medikamente;
+        setMedikamente(medikamente);
         this.ausstellungsDatum = LocalDate.now();
         setGueltigBis(gueltigBis);
         setAnzDerWiederholungen(anzDerWiederholungen);
         setRezeptArt(rezeptArt);
-        if(this.medikamente != null) {
-            for(Medikament medikament : this.medikamente) {
-                this.preis += medikament.getPreis();
-            }
-        }
+        berechnePreis();
         setBemerkung(bemerkung);
     }
 
@@ -72,6 +68,14 @@ public class Rezept implements Serializable, Cloneable {
         }
     }
 
+    public void setMedikamente(ArrayList<Medikament> medikamente) throws APOException {
+        if(medikamente == null || medikamente.isEmpty()) {
+            throw new APOException("Der übergebene Parameter (Medikamente) darf nicht null bzw. leer sein!");
+        } else {
+            this.medikamente = medikamente;
+        }
+    }
+
     public void setGueltigBis(LocalDate gueltigBis) throws APOException {
         if(gueltigBis != null) {
             if(gueltigBis.isAfter(LocalDate.now())) {
@@ -101,6 +105,14 @@ public class Rezept implements Serializable, Cloneable {
             }
         } else {
             throw new APOException("Die Art des Rezepts darf nicht null sein!");
+        }
+    }
+
+    public void berechnePreis() {
+        if(this.medikamente != null && !this.medikamente.isEmpty()) {
+            for(Medikament medikament : this.medikamente) {
+                this.preis += medikament.getPreis();
+            }
         }
     }
 
@@ -150,6 +162,10 @@ public class Rezept implements Serializable, Cloneable {
 
     public String getBemerkung() {
         return this.bemerkung;
+    }
+
+    public int getAnzMedikamenten() {
+        return getMedikamente().size();
     }
 
     @Override

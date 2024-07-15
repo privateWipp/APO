@@ -1,6 +1,7 @@
 package at.apo.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Kunde implements Serializable, Cloneable {
     private static final long serialVersionUID = 1L;
@@ -33,6 +34,19 @@ public class Kunde implements Serializable, Cloneable {
 
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Kunde kunde = (Kunde) o;
+        return Objects.equals(getName(), kunde.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getName());
     }
 
     @Override

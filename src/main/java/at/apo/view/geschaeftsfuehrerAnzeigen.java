@@ -29,6 +29,7 @@ public class geschaeftsfuehrerAnzeigen extends BorderPane {
         TextArea gFTA = new TextArea();
         gFTA.setEditable(false);
         gFTA.setText(this.model.getGeschaeftsfuehrer().toString());
+        gFTA.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
         setCenter(gFTA);
 

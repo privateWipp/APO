@@ -1,73 +1,122 @@
 package at.apo.view;
 
-import at.apo.model.Apotheke;
-import at.apo.model.Kunde;
-import at.apo.model.Medikament;
-import at.apo.model.Rezept;
+import at.apo.model.*;
 import javafx.geometry.Insets;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 
 public class addRezeptDialog extends Dialog<Rezept> {
     private Apotheke model;
-    private ArrayList<ComboBox<Medikament>> medikamentenCombos;
+    private ListView<Medikament> medikamentenListView;
 
     public addRezeptDialog(Apotheke model) {
         this.model = model;
+        this.medikamentenListView = new ListView<Medikament>();
 
         setTitle("neues Rezept freigeben");
 
         GridPane gridPane = new GridPane();
-        gridPane.setPadding(new Insets(10, 10, 10, 10));
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
+        gridPane.setPadding(new Insets(20, 20, 20, 20));
+        gridPane.setHgap(15);
+        gridPane.setVgap(15);
 
         Label kundeL = new Label("an Patient:");
-        ComboBox<Kunde> kundeCB = new ComboBox<Kunde>();
-        for(Kunde kunde : this.model.getKunden()) {
-            kundeCB.getItems().add(kunde);
-        }
+        TextField kundeTF = new TextField();
+        kundeTF.setPromptText("Nach- und Vorname des Patienten");
+        kundeTF.setMinWidth(300);
 
         Label arztL = new Label("ausgeschrieben von (Arzt):");
         TextField arztTF = new TextField();
         arztTF.setPromptText("Vor- und Nachname des Arztes");
+        arztTF.setMinWidth(300);
 
-        Label anzMedikamentenL = new Label("anz. an Medikamenten:");
-        ComboBox<Integer> anzMedikamentenCB = new ComboBox<Integer>();
-        for(int i = 1; i <= 10; i++) {
-            anzMedikamentenCB.getItems().add(i);
+        Label medikamenteL = new Label("Medikamente:");
+        ComboBox<Medikament> medikamenteCB = new ComboBox<Medikament>();
+        for(Medikament medikament : this.model.getMedikamente()) {
+            medikamenteCB.getItems().add(medikament);
+        }
+        Button addMed = new Button("+");
+        addMed.setOnAction(e -> {
+            if(medikamenteCB.getValue() != null && !this.medikamentenListView.getItems().contains(medikamenteCB.getValue())) {
+                this.medikamentenListView.getItems().add(medikamenteCB.getValue());
+                this.medikamentenListView.refresh();
+                medikamenteCB.setValue(null);
+            } else {
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setTitle("Medikament hinzufügen");
+                errorAlert.setHeaderText("übergebenes Medikament");
+                errorAlert.setContentText("Das übergebene/ausgewählte Medikament für die Liste ist entweder ungültig oder bereits vorhanden!");
+                errorAlert.showAndWait();
+            }
+        });
+
+        Label ausstellungsDatumL = new Label("Ausstellungsdatum:");
+        TextField ausstellungsDatumTF = new TextField("JETZT/HEUTE");
+        ausstellungsDatumTF.setDisable(true);
+
+        Label gueltigBisL = new Label("gültig bis:");
+        DatePicker gueltigBisDP = new DatePicker();
+
+        Label anzWiederholungenL = new Label("Anz. an Wiederholungen:");
+        ComboBox<Integer> anzWiederholungenCB = new ComboBox<>();
+        for (int i = 1; i <= 10; i++) {
+            anzWiederholungenCB.getItems().add(i);
         }
 
+        Label rezeptArtL = new Label("Rezeptart:");
+        TextField rezeptArtTF = new TextField();
+        rezeptArtTF.setPromptText("z.B.: elektronisches Rezept (E-Rezept)");
+
+        Label bemerkungL = new Label("Bemerkung:");
+        TextField bemerkungTF = new TextField();
+        bemerkungTF.setPromptText("Bemerkungen für das Rezept");
+
         gridPane.add(kundeL, 0, 0);
-        gridPane.add(kundeCB, 1, 0);
+        gridPane.add(kundeTF, 1, 0);
         gridPane.add(arztL, 0, 1);
         gridPane.add(arztTF, 1, 1);
-        gridPane.add(anzMedikamentenL, 0, 2);
-        gridPane.add(anzMedikamentenCB, 1, 2);
+        gridPane.add(medikamenteL, 0, 2);
+        gridPane.add(medikamenteCB, 1, 2);
+        gridPane.add(addMed, 2, 0);
+        gridPane.add(this.medikamentenListView, 0, 3);
+        gridPane.add(ausstellungsDatumL, 0, 4);
+        gridPane.add(ausstellungsDatumTF, 1, 4);
+        gridPane.add(gueltigBisL, 0, 5);
+        gridPane.add(gueltigBisDP, 1, 5);
+        gridPane.add(anzWiederholungenL, 0, 6);
+        gridPane.add(anzWiederholungenCB, 1, 6);
+        gridPane.add(rezeptArtL, 0, 7);
+        gridPane.add(rezeptArtTF, 1, 7);
+        gridPane.add(bemerkungL, 0, 8);
+        gridPane.add(bemerkungTF, 1, 8);
 
-        this.medikamentenCombos = new ArrayList<ComboBox<Medikament>>();
+        getDialogPane().setContent(gridPane);
 
-        anzMedikamentenCB.valueProperty().addListener((obs, oldVal, newVal) -> {
-            for (ComboBox<Medikament> comboBox : medikamentenCombos) {
-                gridPane.getChildren().remove(comboBox);
-            }
-            medikamentenCombos.clear();
+        ButtonType buttonType = new ButtonType("Hinzufügen", ButtonBar.ButtonData.APPLY);
+        getDialogPane().getButtonTypes().add(buttonType);
 
-            if (newVal != null) {
-                for (int i = 0; i < newVal; i++) {
-                    ComboBox<Medikament> medikamentCB = new ComboBox<>();
-                    for (Medikament medikament : this.model.getMedikamente()) {
-                        medikamentCB.getItems().add(medikament);
-                    }
-                    medikamentenCombos.add(medikamentCB);
-                    gridPane.add(medikamentCB, 1, 3 + i);
+        this.setResultConverter(bt -> {
+            if (bt == buttonType) {
+                try {
+                    Kunde patient = new Kunde(kundeTF.getText());
+                    String arzt = arztTF.getText();
+                    LocalDate gueltigBisDPInput = gueltigBisDP.getValue();
+                    int anzDerWiederholungenCBInput = anzWiederholungenCB.getValue();
+                    String rezeptArtTFInput = rezeptArtTF.getText();
+                    String bemerkungTFInput = bemerkungTF.getText();
+
+                    return new Rezept(patient, arzt, null, gueltigBisDPInput, anzDerWiederholungenCBInput, rezeptArtTFInput, bemerkungTFInput);
+                } catch (APOException e) {
+                    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                    errorAlert.setTitle("Fehler");
+                    errorAlert.setHeaderText("Fehler beim Hinzufügen eines neuen Rezepts.");
+                    errorAlert.setContentText(e.getMessage());
+                    errorAlert.showAndWait();
                 }
             }
+            return null;
         });
     }
 }

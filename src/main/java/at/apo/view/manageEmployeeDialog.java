@@ -7,6 +7,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 
+import java.util.Optional;
+
 public class manageEmployeeDialog extends Dialog<Mitarbeiter> {
     private Mitarbeiter mitarbeiter;
 
@@ -71,22 +73,38 @@ public class manageEmployeeDialog extends Dialog<Mitarbeiter> {
 
         this.setResultConverter(bt -> {
             if (bt == buttonType) {
-                try {
-                    mitarbeiter.setNachname(nachnameTF.getText());
-                    mitarbeiter.setVorname(vornameTF.getText());
-                    mitarbeiter.setGeburtsdatum(geburtsdatumDP.getValue());
-                    mitarbeiter.setGeschlecht(geschlechtCB.getValue());
-                    mitarbeiter.setAdresse(adresseTF.getText());
-                    mitarbeiter.setTelefonnummer(telefonnummerTF.getText());
-                    mitarbeiter.setEmail(emailTF.getText());
-                    mitarbeiter.setGehalt(Double.parseDouble(gehaltTF.getText()));
-                    return mitarbeiter;
-                } catch (APOException e) {
-                    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                    errorAlert.setTitle("Fehler");
-                    errorAlert.setHeaderText("Fehler beim Ändern/Verwalten eines Mitarbeiters..");
-                    errorAlert.setContentText(e.getMessage());
-                    errorAlert.showAndWait();
+                Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                confirmation.setTitle("Medikament ändern");
+                confirmation.setHeaderText("Sind Sie sicher?");
+                confirmation.setContentText("Sind Sie sicher, dass Sie den Mitarbeiter " + mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " ändern wollen?");
+
+                ButtonType yes = new ButtonType("Ja");
+                ButtonType no = new ButtonType("Nein");
+                ButtonType cancel = new ButtonType("Abbrechen");
+
+                confirmation.getButtonTypes().setAll(yes, no, cancel);
+
+                Optional<ButtonType> result = confirmation.showAndWait();
+                if (result.isPresent() && result.get() == yes) {
+                    try {
+                        mitarbeiter.setNachname(nachnameTF.getText());
+                        mitarbeiter.setVorname(vornameTF.getText());
+                        mitarbeiter.setGeburtsdatum(geburtsdatumDP.getValue());
+                        mitarbeiter.setGeschlecht(geschlechtCB.getValue());
+                        mitarbeiter.setAdresse(adresseTF.getText());
+                        mitarbeiter.setTelefonnummer(telefonnummerTF.getText());
+                        mitarbeiter.setEmail(emailTF.getText());
+                        mitarbeiter.setGehalt(Double.parseDouble(gehaltTF.getText()));
+                        return mitarbeiter;
+                    } catch (APOException e) {
+                        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                        errorAlert.setTitle("Fehler");
+                        errorAlert.setHeaderText("Fehler beim Ändern/Verwalten eines Mitarbeiters..");
+                        errorAlert.setContentText(e.getMessage());
+                        errorAlert.showAndWait();
+                    }
+                } else {
+                    confirmation.close();
                 }
             }
             return null;

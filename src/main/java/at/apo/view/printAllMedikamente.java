@@ -3,13 +3,9 @@ package at.apo.view;
 import at.apo.APO;
 import at.apo.model.Apotheke;
 import at.apo.model.Medikament;
-import at.apo.model.Mitarbeiter;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.Comparator;

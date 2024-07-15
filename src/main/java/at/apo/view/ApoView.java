@@ -62,7 +62,7 @@ public class ApoView extends BorderPane {
         System.setErr(ps);
 
         this.stage.setTitle(this.model.getName() + " : Apotheke");
-        this.stage.setResizable(false);
+        this.stage.setResizable(true);
         Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.8, this.apoInstance.getScreenHeight() * 0.8);
         this.stage.setScene(scene);
 
@@ -147,6 +147,7 @@ public class ApoView extends BorderPane {
         ToolBar toolBar = new ToolBar();
         toolBar.setOrientation(Orientation.VERTICAL);
         toolBar.setPadding(new Insets(15, 15, 15, 15));
+        toolBar.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
         Button apothekeBearbeiten = new Button("Apotheke bearbeiten");
         VBox aIZAVBox = new VBox(new Label("allgemeine Informationen zur Apotheke bearbeiten:"), apothekeBearbeiten);
@@ -183,6 +184,7 @@ public class ApoView extends BorderPane {
         mitarbeiterVBox.setVisible(false);
         listViewFensterHBox.getChildren().addAll(medikamenteVBox, rezepteVBox, bestellungenVBox, kundenVBox, mitarbeiterVBox);
         listViewFensterHBox.setPadding(new Insets(10, 0, 0, 10));
+        listViewFensterHBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
         medikamenteCMI.setOnAction(e -> {
             medikamenteVBox.setVisible(medikamenteCMI.isSelected());
@@ -235,6 +237,7 @@ public class ApoView extends BorderPane {
         aenderungenHBox.setSpacing(10);
         aenderungenHBox.setPadding(new Insets(0, 0, 5, 0));
         VBox changesVBox = new VBox(aenderungenHBox, this.changesTA);
+        changesVBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
         setBottom(changesVBox);
 

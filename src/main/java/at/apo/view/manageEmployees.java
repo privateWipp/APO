@@ -119,6 +119,7 @@ public class manageEmployees extends BorderPane {
         manageEmployeesHBox.setSpacing(10);
 
         VBox topVBox = new VBox(menuBar, manageEmployeesHBox);
+        topVBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
         setTop(topVBox);
 
@@ -140,6 +141,7 @@ public class manageEmployees extends BorderPane {
         ToolBar toolBar = new ToolBar();
         toolBar.setOrientation(Orientation.VERTICAL);
         toolBar.setPadding(new Insets(10, 10, 10, 10));
+        toolBar.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
         Button printAllEmployees = new Button("alle Mitarbeiter anzeigen");
 
@@ -161,6 +163,8 @@ public class manageEmployees extends BorderPane {
                 this.mitarbeiterTA.setText(null);
             }
         });
+        VBox mitarbeiterTAVBox = new VBox(this.mitarbeiterTA);
+        mitarbeiterTAVBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
         setBottom(this.mitarbeiterTA);
 
         // -------------------------------------------------------------------------------------------------------------
@@ -168,7 +172,7 @@ public class manageEmployees extends BorderPane {
         this.stage.show();
     }
 
-    private void updateMitarbeiterListView() {
+    public void updateMitarbeiterListView() {
         this.mitarbeiterListView.getItems().clear();
         for (Mitarbeiter mitarbeiter : this.model.getMitarbeiter()) {
             this.mitarbeiterListView.getItems().add(mitarbeiter);

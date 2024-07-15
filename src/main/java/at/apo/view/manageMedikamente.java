@@ -67,6 +67,7 @@ public class manageMedikamente extends BorderPane {
         manageMedikamenteHBox.setSpacing(10);
 
         VBox topVBox = new VBox(menuBar, manageMedikamenteHBox);
+        topVBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
         setTop(topVBox);
 
@@ -109,7 +110,9 @@ public class manageMedikamente extends BorderPane {
         setLeft(this.rMedikamente);
         Text text = new Text("rezeptpflichtig / NICHT rezeptpflichtig");
         text.setStyle("-fx-font-size: 18px;");
-        setCenter(text);
+        VBox textVBox = new VBox(text);
+        textVBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
+        setCenter(textVBox);
         setRight(this.nrMedikamente);
 
         // -------------------------------------------------------------------------------------------------------------

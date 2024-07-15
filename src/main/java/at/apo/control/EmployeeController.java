@@ -4,6 +4,8 @@ import at.apo.model.APOException;
 import at.apo.model.Apotheke;
 import at.apo.model.Mitarbeiter;
 import at.apo.view.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 import java.util.Optional;
 
@@ -27,8 +29,7 @@ public class EmployeeController {
                 validateMitarbeiter(mitarbeiter);
                 this.model.addMitarbeiter(mitarbeiter);
                 this.view.getModel().addMitarbeiter(mitarbeiter);
-                this.view.getMitarbeiterListView().getItems().add(mitarbeiter);
-                this.view.getMitarbeiterListView().refresh();
+                this.view.updateMitarbeiterListView();
                 this.mainView.loadListViews();
                 this.mainView.setChanged(true);
                 System.out.println("Der Mitarbeiter " + mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " wurde in die Apotheke " + this.model.getName() + " aufgenommen.");
@@ -72,17 +73,32 @@ public class EmployeeController {
     }
 
     public void removeEmployee(Mitarbeiter mitarbeiter) {
-        try {
-            this.model.removeMitarbeiter(mitarbeiter);
-            this.view.getModel().removeMitarbeiter(mitarbeiter);
-            this.view.getMitarbeiterListView().getItems().remove(mitarbeiter);
-            this.view.getMitarbeiterListView().refresh();
-            this.mainView.loadListViews();
-            this.mainView.setChanged(true);
-            System.out.println(mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " ist nun kein Teil mehr der Apotheke: " + this.model.getName());
-        } catch (APOException e) {
-            this.view.errorAlert("Fehler beim Löschen/Entfernen/Feuern eines Mitarbeiters..", e.getMessage());
-            System.out.println("Fehler: Der Mitarbeiter " + mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " konnte nicht gefeuert/entfernt werden!");
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Mitarbeiter entfernen");
+        confirmation.setHeaderText("Sind Sie sicher?");
+        confirmation.setContentText("Sind Sie sicher, dass sie den ausgewählten Mitarbeiter (" + mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + ") aus der Apotheke " + this.model.getName() + " entfernen möchten?");
+
+        ButtonType yes = new ButtonType("Ja");
+        ButtonType no = new ButtonType("Nein");
+        ButtonType cancel = new ButtonType("Abbrechen");
+
+        confirmation.getButtonTypes().setAll(yes, no, cancel);
+
+        Optional<ButtonType> result = confirmation.showAndWait();
+        if (result.isPresent() && result.get() == yes) {
+            try {
+                this.model.removeMitarbeiter(mitarbeiter);
+                this.view.getModel().removeMitarbeiter(mitarbeiter);
+                this.view.updateMitarbeiterListView();
+                this.mainView.loadListViews();
+                this.mainView.setChanged(true);
+                System.out.println(mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " ist nun kein Teil mehr der Apotheke: " + this.model.getName());
+            } catch (APOException e) {
+                this.view.errorAlert("Fehler beim Löschen/Entfernen/Feuern eines Mitarbeiters..", e.getMessage());
+                System.out.println("Fehler: Der Mitarbeiter " + mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " konnte nicht gefeuert/entfernt werden!");
+            }
+        } else {
+            confirmation.close();
         }
     }
 
@@ -100,7 +116,7 @@ public class EmployeeController {
     }
 
     public void printAllEmployees() {
-        if(this.model.getMitarbeiter() != null && !this.model.getMitarbeiter().isEmpty()) {
+        if (this.model.getMitarbeiter() != null && !this.model.getMitarbeiter().isEmpty()) {
             printAllEmployees printAllEmployees = new printAllEmployees(this.model);
             System.out.println("Alle Mitarbeiter der Apotheke in Form einer Liste ausgegeben.");
         } else {

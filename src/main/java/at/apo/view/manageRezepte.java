@@ -9,6 +9,7 @@ import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.Comparator;
@@ -54,29 +55,38 @@ public class manageRezepte extends BorderPane {
         MenuItem sortPreis = new MenuItem("sortieren nach Preis");
         bearbeiten.getItems().addAll(sortRezeptnummer, sortAusstellungsdatum, sortGueltigBis, sortRezeptart, sortPreis);
 
-        menuBar.getMenus().add(bearbeiten);
+        Menu list = new Menu("Liste");
+        MenuItem refreshList = new MenuItem("aktualisieren");
+        list.getItems().add(refreshList);
+
+        menuBar.getMenus().addAll(bearbeiten, list);
 
         setTop(menuBar);
 
         sortRezeptnummer.setOnAction(e -> {
-            this.rezeptListView.getItems().sort(Comparator.comparing(Rezept::getRezeptnummer));
+            this.model.getRezepte().sort(Comparator.comparing(Rezept::getRezeptnummer));
             loadRezepte();
         });
         sortAusstellungsdatum.setOnAction(e -> {
-            this.rezeptListView.getItems().sort(Comparator.comparing(Rezept::getAusstellungsDatum));
+            this.model.getRezepte().sort(Comparator.comparing(Rezept::getAusstellungsDatum));
             loadRezepte();
         });
         sortGueltigBis.setOnAction(e -> {
-            this.rezeptListView.getItems().sort(Comparator.comparing(Rezept::getGueltigBis));
+            this.model.getRezepte().sort(Comparator.comparing(Rezept::getGueltigBis));
             loadRezepte();
         });
         sortRezeptart.setOnAction(e -> {
-            this.rezeptListView.getItems().sort(Comparator.comparing(Rezept::getRezeptArt));
+            this.model.getRezepte().sort(Comparator.comparing(Rezept::getRezeptArt));
             loadRezepte();
         });
         sortPreis.setOnAction(e -> {
-            this.rezeptListView.getItems().sort(Comparator.comparing(Rezept::getPreis));
+            this.model.getRezepte().sort(Comparator.comparing(Rezept::getPreis));
             loadRezepte();
+        });
+
+        refreshList.setOnAction(e -> {
+            loadRezepte();
+            System.out.println("Die Liste der Rezepte wurde aktualisiert.");
         });
 
         // -------------------------------------------------------------------------------------------------------------
@@ -88,27 +98,39 @@ public class manageRezepte extends BorderPane {
         ToolBar toolBar = new ToolBar();
         toolBar.setOrientation(Orientation.VERTICAL);
         toolBar.setPadding(new Insets(10, 10, 10, 10));
+        toolBar.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
         Button addRezept = new Button("neues Rezept freigeben");
         Button removeRezept = new Button("löschen");
         Button manageRezept = new Button("ändern/verwalten");
         Button printRezepte = new Button("Liste ausgeben");
+        VBox buttonVBox = new VBox(addRezept, removeRezept, manageRezept, printRezepte);
+        buttonVBox.setSpacing(10);
 
-        toolBar.getItems().addAll(addRezept, removeRezept, manageRezept, printRezepte);
+        toolBar.getItems().add(buttonVBox);
 
         setRight(toolBar);
 
         addRezept.setOnAction(e -> this.ctrl.addRezept());
+        removeRezept.disableProperty().bind(this.rezeptListView.getSelectionModel().selectedItemProperty().isNull());
+        removeRezept.setOnAction(e -> this.ctrl.removeRezept(this.rezeptListView.getSelectionModel().getSelectedItem()));
+        manageRezept.disableProperty().bind(this.rezeptListView.getSelectionModel().selectedItemProperty().isNull());
+        manageRezept.setOnAction(e -> this.ctrl.manageRezept(this.rezeptListView.getSelectionModel().getSelectedItem()));
+        printRezepte.setOnAction(e -> this.ctrl.printRezepte());
 
         // -------------------------------------------------------------------------------------------------------------
 
         this.stage.show();
     }
 
-    private void loadRezepte() {
+    public void loadRezepte() {
         this.rezeptListView.getItems().clear();
-        for(Rezept rezept : this.model.getRezepte()) {
+        for(Rezept rezept : this.originalModel.getRezepte()) {
             this.rezeptListView.getItems().add(rezept);
         }
+    }
+
+    public ListView<Rezept> getRezeptListView() {
+        return this.rezeptListView;
     }
 }
