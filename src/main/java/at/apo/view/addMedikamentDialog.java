@@ -68,6 +68,7 @@ public class addMedikamentDialog extends Dialog<Medikament> {
         gridPane.add(bezeichnungTF, 1, 0);
         gridPane.add(preisL, 0, 1);
         gridPane.add(preisTF, 1, 1);
+        gridPane.add(new Label("€"), 2, 1);
         gridPane.add(lagerbestandL, 0, 2);
         gridPane.add(lagerbestandTF, 1, 2);
         gridPane.add(verfallsdatumL, 0, 3);
@@ -97,30 +98,21 @@ public class addMedikamentDialog extends Dialog<Medikament> {
         this.setResultConverter(bt -> {
             if(bt == buttonType) {
                 try {
-                    String bezeichnungTFInput = bezeichnungTF.getText();
-                    double preisTFInput = Double.parseDouble(preisTF.getText());
-                    int lagerbestandTFInput = Integer.parseInt(lagerbestandTF.getText());
-                    LocalDate verfallsdatumDPInput = verfallsdatumDP.getValue();
-                    String herstellerTFInput = herstellerTF.getText();
-                    String wirkstoffTFInput = wirkstoffTF.getText();
-                    String dosierungTFInput = dosierungTF.getText();
                     boolean rezeptpflichtigCBInput = false;
                     if(rezeptpflichtigCB.getValue().equals("Ja")) {
                         rezeptpflichtigCBInput = true;
                     }
-                    String nebenwirkungenTFInput = nebenwirkungenTF.getText();
-                    String lagerbedingungenTFInput = lagerbedingungenTF.getText();
                     boolean verfuegbarCBInput = false;
                     if(verfuegbarCB.getValue().equals("Ja")) {
                         verfuegbarCBInput = true;
                     }
-                    String beschreibungTFInput = beschreibungTF.getText();
 
-                    return new Medikament(bezeichnungTFInput, preisTFInput, lagerbestandTFInput, verfallsdatumDPInput, herstellerTFInput, wirkstoffTFInput, dosierungTFInput, rezeptpflichtigCBInput, nebenwirkungenTFInput, lagerbedingungenTFInput, verfuegbarCBInput, beschreibungTFInput);
+                    return new Medikament(bezeichnungTF.getText(), Double.parseDouble(preisTF.getText()), Integer.parseInt(lagerbestandTF.getText()),
+                            verfallsdatumDP.getValue(), herstellerTF.getText(), wirkstoffTF.getText(), dosierungTF.getText(), rezeptpflichtigCBInput, nebenwirkungenTF.getText(), lagerbedingungenTF.getText(), verfuegbarCBInput, beschreibungTF.getText());
                 } catch (APOException e) {
                     Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                     errorAlert.setTitle("Fehler");
-                    errorAlert.setHeaderText("Fehler beim Hinzufügen eines neuen Medikaments.");
+                    errorAlert.setHeaderText("Fehler beim Hinzufügen eines neuen Medikaments");
                     errorAlert.setContentText(e.getMessage());
                     errorAlert.showAndWait();
                 }

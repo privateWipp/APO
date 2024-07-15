@@ -133,4 +133,8 @@ public class manageRezepte extends BorderPane {
     public ListView<Rezept> getRezeptListView() {
         return this.rezeptListView;
     }
+
+    public Apotheke getModel() {
+        return this.model;
+    }
 }

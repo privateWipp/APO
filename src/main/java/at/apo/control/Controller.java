@@ -28,7 +28,7 @@ public class Controller {
                 this.view.getApothekenListView().getItems().add(apotheke);
                 this.view.getApothekenListView().refresh();
             } catch (Exception e) {
-                this.view.errorAlert("Fehler beim Erstellen der Apotheke..", e.getMessage());
+                this.view.errorAlert("Fehler beim Erstellen der Apotheke", e.getMessage());
             }
         });
     }
@@ -56,7 +56,7 @@ public class Controller {
                         this.view.getApothekenListView().getItems().add(apotheke);
                         this.view.getApothekenListView().refresh();
                     } catch (Exception e) {
-                        this.view.errorAlert("Fehler beim Importieren der übergebenen Apotheke..", e.getMessage());
+                        this.view.errorAlert("Fehler beim Importieren der übergebenen Apotheke", e.getMessage());
                     }
                 } else {
                     this.view.errorAlert("Importieren", "Die zu importierende Apotheke ist bereits in der Liste eingetragen!");

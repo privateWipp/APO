@@ -34,7 +34,7 @@ public class EmployeeController {
                 this.mainView.setChanged(true);
                 System.out.println("Der Mitarbeiter " + mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " wurde in die Apotheke " + this.model.getName() + " aufgenommen.");
             } catch (APOException e) {
-                this.view.errorAlert("Fehler beim Hinzufügen eines neuen Mitarbeiters..", e.getMessage());
+                this.view.errorAlert("Fehler beim Hinzufügen eines neuen Mitarbeiters", e.getMessage());
                 System.out.println("Fehler: Das Aufnehmen eines neuen Mitarbeiters in die Apotheke " + this.model.getName() + " ist fehlgeschlagen!");
             }
         });
@@ -94,8 +94,8 @@ public class EmployeeController {
                 this.mainView.setChanged(true);
                 System.out.println(mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " ist nun kein Teil mehr der Apotheke: " + this.model.getName());
             } catch (APOException e) {
-                this.view.errorAlert("Fehler beim Löschen/Entfernen/Feuern eines Mitarbeiters..", e.getMessage());
-                System.out.println("Fehler: Der Mitarbeiter " + mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " konnte nicht gefeuert/entfernt werden!");
+                this.view.errorAlert("Fehler beim Entfernen/Feuern eines Mitarbeiters", e.getMessage());
+                System.out.println("Fehler: Der Mitarbeiter " + mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " konnte nicht entfernt/gefeuert werden!");
             }
         } else {
             confirmation.close();
@@ -107,11 +107,15 @@ public class EmployeeController {
         Optional<Mitarbeiter> m = manageEmployeeDialog.showAndWait();
 
         m.ifPresent(mitarbeiter1 -> {
-            this.view.getMitarbeiterListView().refresh();
-            this.view.getMitarbeiterTA().setText(this.view.getMitarbeiterListView().getSelectionModel().getSelectedItem().toString());
-            this.mainView.loadListViews();
-            this.mainView.setChanged(true);
-            System.out.println("Die Daten von " + mitarbeiter1.getVorname() + " " + mitarbeiter1.getNachname() + " wurden aktualisiert.");
+            if(!this.model.getMitarbeiter().contains(mitarbeiter1)) {
+                this.view.getMitarbeiterListView().refresh();
+                this.view.getMitarbeiterTA().setText(this.view.getMitarbeiterListView().getSelectionModel().getSelectedItem().toString());
+                this.mainView.loadListViews();
+                this.mainView.setChanged(true);
+                System.out.println("Die Daten von " + mitarbeiter1.getVorname() + " " + mitarbeiter1.getNachname() + " wurden aktualisiert.");
+            } else {
+                this.view.errorAlert("Fehler beim Verwalten/Ändern eines Mitarbeiters", "Ein genau solcher Mitarbeiter existiert bereits in der Apotheke " + this.model.getName() + "!");
+            }
         });
     }
 

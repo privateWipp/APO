@@ -45,6 +45,7 @@ public class createApoDialog extends Dialog<Apotheke> {
         gridPane.add(emailTF, 1, 3);
         gridPane.add(budgetL, 0, 4);
         gridPane.add(budgetTF, 1, 4);
+        gridPane.add(new Label("€"), 2, 4);
 
         getDialogPane().setContent(gridPane);
 
@@ -54,17 +55,11 @@ public class createApoDialog extends Dialog<Apotheke> {
         this.setResultConverter(bt -> {
             if (bt == buttonType) {
                 try {
-                    String nameTFInput = nameTF.getText();
-                    String adresseTFInput = adresseTF.getText();
-                    String telefonnummerTFInput = telefonnummerTF.getText();
-                    String emailTFInput = emailTF.getText();
-                    double budgetTFInput = Double.parseDouble(budgetTF.getText());
-
-                    return new Apotheke(nameTFInput, adresseTFInput, telefonnummerTFInput, emailTFInput, budgetTFInput);
+                    return new Apotheke(nameTF.getText(), adresseTF.getText(), telefonnummerTF.getText(), emailTF.getText(), Double.parseDouble(budgetTF.getText()));
                 } catch (APOException e) {
                     Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                     errorAlert.setTitle("Fehler");
-                    errorAlert.setHeaderText("Fehler beim Erstellen der Apotheke.");
+                    errorAlert.setHeaderText("Fehler beim Erstellen der Apotheke");
                     errorAlert.setContentText(e.getMessage());
                     errorAlert.showAndWait();
                 }

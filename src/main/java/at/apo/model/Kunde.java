@@ -51,6 +51,6 @@ public class Kunde implements Serializable, Cloneable {
 
     @Override
     public String toString() {
-        return "Name: " + getName();
+        return getName();
     }
 }

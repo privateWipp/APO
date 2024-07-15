@@ -2,6 +2,7 @@ package at.apo.control;
 
 import at.apo.model.APOException;
 import at.apo.model.Apotheke;
+import at.apo.model.Bestellung;
 import at.apo.model.Geschaeftsfuehrer;
 import at.apo.view.*;
 import javafx.scene.control.Alert;
@@ -34,7 +35,7 @@ public class ApoController {
                     this.view.setChanged(true);
                     System.out.println("Geschäftsführer der Apotheke " + this.model.getName() + " wurde aktualisiert: " + this.model.getGeschaeftsfuehrer().getVorname() + " " + this.model.getGeschaeftsfuehrer().getNachname());
                 } catch (APOException e) {
-                    this.view.errorAlert("Fehler beim Festlegen des Geschäftsführers..", e.getMessage());
+                    this.view.errorAlert("Fehler beim Festlegen des Geschäftsführers", e.getMessage());
                     System.out.println("Fehler: Das Festlegen des Geschäftsführers der Apotheke " + this.model.getName() + " ist fehlgeschlagen!");
                 }
             });
@@ -63,7 +64,7 @@ public class ApoController {
                         this.view.setChanged(true);
                         System.out.println("Geschäftsführer der Apotheke " + this.model.getName() + " wurde aktualisiert: " + this.model.getGeschaeftsfuehrer().getVorname() + " " + this.model.getGeschaeftsfuehrer().getNachname());
                     } catch (APOException e) {
-                        this.view.errorAlert("Fehler beim Festlegen des Geschäftsführers..", e.getMessage());
+                        this.view.errorAlert("Fehler beim Festlegen des Geschäftsführers", e.getMessage());
                         System.out.println("Fehler: Das Festlegen des Geschäftsführers der Apotheke " + this.model.getName() + " ist fehlgeschlagen!");
                     }
                 });
@@ -93,7 +94,7 @@ public class ApoController {
                     this.view.setChanged(true);
                     System.out.println("Die Öffnungszeiten für die Apotheke " + this.model.getName() + " wurden aktualisiert.");
                 } catch (APOException e) {
-                    this.view.errorAlert("Fehler beim Festlegen der Öffnungszeiten..", e.getMessage());
+                    this.view.errorAlert("Fehler beim Festlegen der Öffnungszeiten", e.getMessage());
                     System.out.println("Fehler: Das Festlegen der Öffnungszeiten für die Apotheke " + this.model.getName() + " ist fehlgeschlagen!");
                 }
             });
@@ -122,7 +123,7 @@ public class ApoController {
                         this.view.setChanged(true);
                         System.out.println("Die Öffnungszeiten für die Apotheke " + this.model.getName() + " wurden aktualisiert.");
                     } catch (APOException e) {
-                        this.view.errorAlert("Fehler beim Festlegen der Öffnungszeiten..", e.getMessage());
+                        this.view.errorAlert("Fehler beim Festlegen der Öffnungszeiten", e.getMessage());
                         System.out.println("Fehler: Das Festlegen der Öffnungszeiten für die Apotheke " + this.model.getName() + " ist fehlgeschlagen!");
                     }
                 });
@@ -146,5 +147,22 @@ public class ApoController {
 
     public void manageRezepte() {
         manageRezepte manageRezepte = new manageRezepte(this.view, this.model);
+    }
+
+    public void newBestellung() {
+        neueBestellungDialog neueBestellungDialog = new neueBestellungDialog(this.view, this.model);
+        Optional<Bestellung> b = neueBestellungDialog.showAndWait();
+
+        b.ifPresent(bestellung -> {
+            try {
+                this.model.addBestellung(bestellung);
+                this.view.loadListViews();
+                this.view.setChanged(true);
+                System.out.println("Die Bestellung mit der Bezeichnung '" + bestellung.getBezeichnung() + "' wurde erfolgreich im Name der Apotheke " + this.model.getName() + " aufgegeben!");
+            } catch (APOException e) {
+                this.view.errorAlert("Fehler beim Aufgeben einer neuen Bestellung", e.getMessage());
+                System.out.println("Fehler: Das Aufgeben einer neuen Bestellung für die Apotheke " + this.model.getName() + " ist fehlgeschlagen!");
+            }
+        });
     }
 }

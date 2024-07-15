@@ -5,7 +5,6 @@ import at.apo.model.Mitarbeiter;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 
 import java.util.Optional;
 
@@ -24,50 +23,57 @@ public class manageEmployeeDialog extends Dialog<Mitarbeiter> {
 
         Label nachnameL = new Label("Nachname:");
         TextField nachnameTF = new TextField(mitarbeiter.getNachname());
-        gridPane.add(nachnameL, 0, 0);
-        gridPane.add(nachnameTF, 1, 0);
+        nachnameTF.setPromptText("Nachname des Mitarbeiters");
 
         Label vornameL = new Label("Vorname:");
         TextField vornameTF = new TextField(mitarbeiter.getVorname());
-        gridPane.add(vornameL, 0, 1);
-        gridPane.add(vornameTF, 1, 1);
+        vornameTF.setPromptText("Vorname des Mitarbeiters");
 
         Label geburtsdatumL = new Label("Geb. Dat.:");
         DatePicker geburtsdatumDP = new DatePicker(mitarbeiter.getGeburtsdatum());
-        gridPane.add(geburtsdatumL, 0, 2);
-        gridPane.add(geburtsdatumDP, 1, 2);
 
         Label geschlechtL = new Label("Geschlecht:");
         ComboBox<String> geschlechtCB = new ComboBox<>();
         geschlechtCB.getItems().addAll("Männlich", "Weiblich", "Inter", "Divers", "Offen", "keine Angabe");
         geschlechtCB.setValue(mitarbeiter.getGeschlecht());
-        gridPane.add(geschlechtL, 0, 3);
-        gridPane.add(geschlechtCB, 1, 3);
 
         Label adresseL = new Label("Adresse:");
         TextField adresseTF = new TextField(mitarbeiter.getAdresse());
-        gridPane.add(adresseL, 0, 4);
-        gridPane.add(adresseTF, 1, 4);
+        adresseTF.setPromptText("Adresse des Mitarbeiters");
 
         Label telefonnummerL = new Label("Tel. Nr.:");
         TextField telefonnummerTF = new TextField(mitarbeiter.getTelefonnummer());
-        gridPane.add(telefonnummerL, 0, 5);
-        gridPane.add(telefonnummerTF, 1, 5);
+        telefonnummerTF.setPromptText("Telefonnummer eingeben");
 
         Label emailL = new Label("E-Mail Adresse:");
         TextField emailTF = new TextField(mitarbeiter.getEmail());
-        gridPane.add(emailL, 0, 6);
-        gridPane.add(emailTF, 1, 6);
+        emailTF.setPromptText("E-Mail Adresse vom Mitarbeiter");
 
         Label gehaltL = new Label("Gehalt:");
         TextField gehaltTF = new TextField(Double.toString(mitarbeiter.getGehalt()));
-        Label euroIcon = new Label("€");
-        HBox gehaltHBox = new HBox(10, gehaltTF, euroIcon);
-        gridPane.add(gehaltL, 0, 7);
-        gridPane.add(gehaltHBox, 1, 7);
+        gehaltTF.setPromptText("üblich: 2500");
 
         ButtonType buttonType = new ButtonType("Ändern", ButtonBar.ButtonData.APPLY);
         getDialogPane().getButtonTypes().add(buttonType);
+
+        gridPane.add(nachnameL, 0, 0);
+        gridPane.add(nachnameTF, 1, 0);
+        gridPane.add(vornameL, 0, 1);
+        gridPane.add(vornameTF, 1, 1);
+        gridPane.add(geburtsdatumL, 0, 2);
+        gridPane.add(geburtsdatumDP, 1, 2);
+        gridPane.add(geschlechtL, 0, 3);
+        gridPane.add(geschlechtCB, 1, 3);
+        gridPane.add(adresseL, 0, 4);
+        gridPane.add(adresseTF, 1, 4);
+        gridPane.add(telefonnummerL, 0, 5);
+        gridPane.add(telefonnummerTF, 1, 5);
+        gridPane.add(emailL, 0, 6);
+        gridPane.add(emailTF, 1, 6);
+        gridPane.add(gehaltL, 0, 7);
+        gridPane.add(gehaltTF, 1, 7);
+        gridPane.add(new Label("€"), 2, 7);
+
 
         getDialogPane().setContent(gridPane);
 
@@ -99,7 +105,7 @@ public class manageEmployeeDialog extends Dialog<Mitarbeiter> {
                     } catch (APOException e) {
                         Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                         errorAlert.setTitle("Fehler");
-                        errorAlert.setHeaderText("Fehler beim Ändern/Verwalten eines Mitarbeiters..");
+                        errorAlert.setHeaderText("Fehler beim Ändern/Verwalten eines Mitarbeiters");
                         errorAlert.setContentText(e.getMessage());
                         errorAlert.showAndWait();
                     }

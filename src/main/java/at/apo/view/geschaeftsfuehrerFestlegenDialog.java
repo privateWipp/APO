@@ -24,37 +24,43 @@ public class geschaeftsfuehrerFestlegenDialog extends Dialog<Geschaeftsfuehrer> 
 
         Label nachnameL = new Label("Nachname:");
         TextField nachnameTF = new TextField();
-        gridPane.add(nachnameL, 0, 0);
-        gridPane.add(nachnameTF, 1, 0);
+        nachnameTF.setPromptText("Nachname des Geschäftsführers");
 
         Label vornameL = new Label("Vorname:");
         TextField vornameTF = new TextField();
-        gridPane.add(vornameL, 0, 1);
-        gridPane.add(vornameTF, 1, 1);
+        vornameTF.setPromptText("Vorname des Geschäftsführers");
 
         Label geburtsdatumL = new Label("Geb. Dat.:");
         DatePicker geburtsdatumDP = new DatePicker();
-        gridPane.add(geburtsdatumL, 0, 2);
-        gridPane.add(geburtsdatumDP, 1, 2);
 
         Label geschlechtL = new Label("Geschlecht:");
         ComboBox<String> geschlechtCB = new ComboBox<>();
         geschlechtCB.getItems().addAll("Männlich", "Weiblich", "Inter", "Divers", "Offen", "keine Angabe");
-        gridPane.add(geschlechtL, 0, 3);
-        gridPane.add(geschlechtCB, 1, 3);
 
         Label adresseL = new Label("Adresse:");
         TextField adresseTF = new TextField();
-        gridPane.add(adresseL, 0, 4);
-        gridPane.add(adresseTF, 1, 4);
+        adresseTF.setPromptText("Adresse des Geschäftsführers");
 
         Label telefonnummerL = new Label("Tel. Nr.:");
         TextField telefonnummerTF = new TextField();
-        gridPane.add(telefonnummerL, 0, 5);
-        gridPane.add(telefonnummerTF, 1, 5);
+        telefonnummerTF.setPromptText("Telefonnummer eingeben");
 
         Label emailL = new Label("E-Mail Adresse:");
         TextField emailTF = new TextField();
+        emailTF.setPromptText("E-Mail Adresse vom Geschäftsführer");
+
+        gridPane.add(nachnameL, 0, 0);
+        gridPane.add(nachnameTF, 1, 0);
+        gridPane.add(vornameL, 0, 1);
+        gridPane.add(vornameTF, 1, 1);
+        gridPane.add(geburtsdatumL, 0, 2);
+        gridPane.add(geburtsdatumDP, 1, 2);
+        gridPane.add(geschlechtL, 0, 3);
+        gridPane.add(geschlechtCB, 1, 3);
+        gridPane.add(adresseL, 0, 4);
+        gridPane.add(adresseTF, 1, 4);
+        gridPane.add(telefonnummerL, 0, 5);
+        gridPane.add(telefonnummerTF, 1, 5);
         gridPane.add(emailL, 0, 6);
         gridPane.add(emailTF, 1, 6);
 
@@ -71,12 +77,6 @@ public class geschaeftsfuehrerFestlegenDialog extends Dialog<Geschaeftsfuehrer> 
 
             buttonType = new ButtonType("Ändern", ButtonBar.ButtonData.APPLY);
         } else {
-            nachnameTF.setPromptText("Nachname des Geschäftsführers");
-            vornameTF.setPromptText("Vorname des Geschäftsführers");
-            adresseTF.setPromptText("Adresse des Geschäftsführers");
-            telefonnummerTF.setPromptText("Telefonnummer eingeben");
-            emailTF.setPromptText("E-Mail Adresse vom Geschäftsführer");
-
             buttonType = new ButtonType("Festlegen", ButtonBar.ButtonData.APPLY);
         }
 
@@ -86,15 +86,7 @@ public class geschaeftsfuehrerFestlegenDialog extends Dialog<Geschaeftsfuehrer> 
         this.setResultConverter(bt -> {
             if (bt == buttonType) {
                 try {
-                    String nachnameTFInput = nachnameTF.getText();
-                    String vornameTFInput = vornameTF.getText();
-                    LocalDate geburtsdatumDPInput = geburtsdatumDP.getValue();
-                    String geschlechtCBInput = geschlechtCB.getValue();
-                    String adresseTFInput = adresseTF.getText();
-                    String telefonnummerTFInput = telefonnummerTF.getText();
-                    String emailTFInput = emailTF.getText();
-
-                    return new Geschaeftsfuehrer(nachnameTFInput, vornameTFInput, geburtsdatumDPInput, geschlechtCBInput, adresseTFInput, telefonnummerTFInput, emailTFInput);
+                    return new Geschaeftsfuehrer(nachnameTF.getText(), vornameTF.getText(), geburtsdatumDP.getValue(), geschlechtCB.getValue(), adresseTF.getText(), telefonnummerTF.getText(), emailTF.getText());
                 } catch (APOException e) {
                     Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                     errorAlert.setTitle("Fehler");

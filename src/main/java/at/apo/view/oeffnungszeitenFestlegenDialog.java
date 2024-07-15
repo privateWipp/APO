@@ -185,7 +185,7 @@ public class oeffnungszeitenFestlegenDialog extends Dialog<HashMap<String, Strin
                 } catch (Exception e) {
                     Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                     errorAlert.setTitle("Fehler");
-                    errorAlert.setHeaderText("Fehler beim Festlegen der Öffnungszeiten.");
+                    errorAlert.setHeaderText("Fehler beim Festlegen der Öffnungszeiten");
                     errorAlert.setContentText(e.getMessage());
                     errorAlert.showAndWait();
                 }

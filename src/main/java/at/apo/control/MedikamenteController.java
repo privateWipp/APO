@@ -32,7 +32,7 @@ public class MedikamenteController {
                 this.mainView.setChanged(true);
                 System.out.println("Das Medikament " + medikament.getBezeichnung() + " wurde in die Apotheke " + this.model.getName() + " mit " + medikament.getLagerbestand() + " Stück aufgenommen.");
             } catch (APOException e) {
-                this.mainView.errorAlert("Fehler beim Hinzufügen eines neuen Medikaments..", e.getMessage());
+                this.mainView.errorAlert("Fehler beim Hinzufügen eines neuen Medikaments", e.getMessage());
                 System.out.println("Fehler: Beim Aufnehmen eines neuen Medikaments in die Apotheke " + this.model.getName() + " ist ein Fehler aufgetreten!");
             }
         });
@@ -72,15 +72,19 @@ public class MedikamenteController {
         Optional<Medikament> m = manageMedikamentDialog.showAndWait();
 
         m.ifPresent(medikament1 -> {
-            this.view.updateMedikamente();
-            this.mainView.loadListViews();
-            this.mainView.setChanged(true);
-            System.out.println("Die Daten von dem Medikament " + medikament.getBezeichnung() + " wurden aktualisiert.");
+            if (!this.model.getMedikamente().contains(medikament1)) {
+                this.view.updateMedikamente();
+                this.mainView.loadListViews();
+                this.mainView.setChanged(true);
+                System.out.println("Die Daten von dem Medikament " + medikament.getBezeichnung() + " wurden aktualisiert.");
+            } else {
+                this.mainView.errorAlert("Fehler beim Ändern eines Medikaments", "Ein genau solches Medikament existiert bereits in der Apotheke " + this.model.getName() + "!");
+            }
         });
     }
 
     public void printMedikamente() {
-        if(!this.model.getMedikamente().isEmpty()) {
+        if (!this.model.getMedikamente().isEmpty()) {
             printAllMedikamente printAllMedikamente = new printAllMedikamente(this.model);
             System.out.println("Alle Medikamente der Apotheke in Form einer Liste ausgegeben.");
         } else {

@@ -5,7 +5,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class addRezeptDialog extends Dialog<Rezept> {
     private Apotheke model;
@@ -38,6 +38,7 @@ public class addRezeptDialog extends Dialog<Rezept> {
             medikamenteCB.getItems().add(medikament);
         }
         Button addMed = new Button("+");
+        addMed.disableProperty().bind(medikamenteCB.getSelectionModel().selectedItemProperty().isNull());
         addMed.setOnAction(e -> {
             if(medikamenteCB.getValue() != null && !this.medikamentenListView.getItems().contains(medikamenteCB.getValue())) {
                 this.medikamentenListView.getItems().add(medikamenteCB.getValue());
@@ -48,6 +49,7 @@ public class addRezeptDialog extends Dialog<Rezept> {
                 errorAlert.setTitle("Medikament hinzufügen");
                 errorAlert.setHeaderText("übergebenes Medikament");
                 errorAlert.setContentText("Das übergebene/ausgewählte Medikament für die Liste ist entweder ungültig oder bereits vorhanden!");
+                medikamenteCB.setValue(null);
                 errorAlert.showAndWait();
             }
         });
@@ -79,8 +81,8 @@ public class addRezeptDialog extends Dialog<Rezept> {
         gridPane.add(arztTF, 1, 1);
         gridPane.add(medikamenteL, 0, 2);
         gridPane.add(medikamenteCB, 1, 2);
-        gridPane.add(addMed, 2, 0);
-        gridPane.add(this.medikamentenListView, 0, 3);
+        gridPane.add(addMed, 2, 2);
+        gridPane.add(this.medikamentenListView, 1, 3);
         gridPane.add(ausstellungsDatumL, 0, 4);
         gridPane.add(ausstellungsDatumTF, 1, 4);
         gridPane.add(gueltigBisL, 0, 5);
@@ -100,18 +102,11 @@ public class addRezeptDialog extends Dialog<Rezept> {
         this.setResultConverter(bt -> {
             if (bt == buttonType) {
                 try {
-                    Kunde patient = new Kunde(kundeTF.getText());
-                    String arzt = arztTF.getText();
-                    LocalDate gueltigBisDPInput = gueltigBisDP.getValue();
-                    int anzDerWiederholungenCBInput = anzWiederholungenCB.getValue();
-                    String rezeptArtTFInput = rezeptArtTF.getText();
-                    String bemerkungTFInput = bemerkungTF.getText();
-
-                    return new Rezept(patient, arzt, null, gueltigBisDPInput, anzDerWiederholungenCBInput, rezeptArtTFInput, bemerkungTFInput);
+                    return new Rezept(new Kunde(kundeTF.getText()), arztTF.getText(), new ArrayList<Medikament>(this.medikamentenListView.getItems()), gueltigBisDP.getValue(), anzWiederholungenCB.getValue(), rezeptArtTF.getText(), bemerkungTF.getText());
                 } catch (APOException e) {
                     Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                     errorAlert.setTitle("Fehler");
-                    errorAlert.setHeaderText("Fehler beim Hinzufügen eines neuen Rezepts.");
+                    errorAlert.setHeaderText("Fehler beim Hinzufügen eines neuen Rezepts");
                     errorAlert.setContentText(e.getMessage());
                     errorAlert.showAndWait();
                 }

@@ -109,10 +109,8 @@ public class manageMedikamente extends BorderPane {
 
         setLeft(this.rMedikamente);
         Text text = new Text("rezeptpflichtig / NICHT rezeptpflichtig");
-        text.setStyle("-fx-font-size: 18px;");
-        VBox textVBox = new VBox(text);
-        textVBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
-        setCenter(textVBox);
+        text.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.005) + "px;");
+        setCenter(text);
         setRight(this.nrMedikamente);
 
         // -------------------------------------------------------------------------------------------------------------
