@@ -27,7 +27,6 @@ public class BestellungenController {
         b.ifPresent(bestellung -> {
             try {
                 this.model.addBestellung(bestellung);
-                this.view.getModel().addBestellung(bestellung);
                 this.view.updateBestellungen();
                 this.mainView.loadListViews();
                 this.mainView.setChanged(true);
@@ -55,14 +54,13 @@ public class BestellungenController {
         if (result.isPresent() && result.get() == yes) {
             try {
                 this.model.removeBestellung(bestellung);
-                this.view.getModel().removeBestellung(bestellung);
                 this.view.updateBestellungen();
                 this.mainView.loadListViews();
                 this.mainView.setChanged(true);
                 System.out.println("Die ausgewählte Bestellung mit der Bezeichnung '" + bestellung.getBezeichnung() + "' wurde erfolgreich storniert.");
             } catch (APOException e) {
                 this.mainView.errorAlert("Fehler beim Stornieren einer Bestellung", e.getMessage());
-                System.out.println("Fehler: Beim Stornieren der Bestellung '" + bestellung.getBezeichnung() + "' ist ein Fehler aufgetreten!");
+                System.out.println("Fehler: Beim Stornieren der Bestellung mit der Bezeichnung '" + bestellung.getBezeichnung() + "' ist ein Fehler aufgetreten!");
             }
         } else {
             confirmation.close();
@@ -80,7 +78,7 @@ public class BestellungenController {
                 this.view.updateBestellungen();
                 this.mainView.loadListViews();
                 this.mainView.setChanged(true);
-                System.out.println("Die Bestellung '" + bestellungBefore.getBezeichnung() + "' wurde geändert/verändert.");
+                System.out.println("Die Bestellung (" + bestellungBefore.getBezeichnung() + ") wurde geändert.");
             });
         } else {
             this.mainView.errorAlert("Bestellung verändern", "Die ausgewählte Bestellung ('" + bestellung.getBezeichnung() + "') kann NICHT verändert werden, da sie schon " + bestellung.getBestellstatus() + " ist (nur möglich wenn Bestellstatus = 'BESTELLT')!");
@@ -95,13 +93,14 @@ public class BestellungenController {
             this.view.updateBestellungen();
             this.mainView.loadListViews();
             this.mainView.setChanged(true);
-            System.out.println("Die Bestellung '" + bestellung.getBezeichnung() + "' hat nun den Bestellstatus: " + bestellung2.getBestellstatus());
+            System.out.println("Die Bestellung mit der Bezeichnung '" + bestellung.getBezeichnung() + "' hat nun den Bestellstatus: " + bestellung2.getBestellstatus());
         });
     }
 
     public void printAllBestellungen() {
-        if (this.model.getBestellungen() != null && !this.model.getBestellungen().isEmpty()) {
+        if (!this.model.getBestellungen().isEmpty()) {
             printAllBestellungen printAllBestellungen = new printAllBestellungen(this.model);
+            System.out.println("Es wurden alle Bestellungen der Apotheke " + this.model.getName() + " in Form einer Liste ausgegeben.");
         } else {
             this.mainView.errorAlert("Bestellungen ausgeben", "Es sind momentan keine/zu wenige Bestellungen vorhanden, daher kann auch keine Liste ausgegeben werden!");
         }

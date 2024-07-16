@@ -13,12 +13,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.util.Comparator;
-
 public class manageBestellungen extends BorderPane {
     private APO apoInstance;
     private ApoView view;
-    private Apotheke originalModel;
     private Apotheke model;
     private BestellungenController ctrl;
 
@@ -26,12 +23,11 @@ public class manageBestellungen extends BorderPane {
 
     private Stage stage;
 
-    public manageBestellungen(ApoView view, Apotheke originalModel) {
+    public manageBestellungen(ApoView view, Apotheke model) {
         this.apoInstance = APO.getInstance();
         this.view = view;
-        this.originalModel = originalModel;
-        this.model = this.originalModel.clone();
-        this.ctrl = new BestellungenController(this.originalModel, this.view, this);
+        this.model = model;
+        this.ctrl = new BestellungenController(this.model, this.view, this);
 
         this.bestellungenListView = new ListView<Bestellung>();
         updateBestellungen();
@@ -42,7 +38,7 @@ public class manageBestellungen extends BorderPane {
     }
 
     private void initGUI() {
-        this.stage.setTitle(this.originalModel.getName() + " : Bestellungen verwalten");
+        this.stage.setTitle(this.model.getName() + " : Bestellungen verwalten");
         this.stage.setResizable(false);
         Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.25, this.apoInstance.getScreenHeight() * 0.4);
         this.stage.setScene(scene);
@@ -50,19 +46,11 @@ public class manageBestellungen extends BorderPane {
         // Top: MenuBar
         MenuBar menuBar = new MenuBar();
 
-        Menu bearbeiten = new Menu("Bearbeiten");
-        MenuItem sortBestellnummer = new MenuItem("sortieren nach Bestellnummer");
-        MenuItem sortBezeichnung = new MenuItem("sortieren nach Bezeichnung");
-        MenuItem sortDatum = new MenuItem("sortieren nach Datum");
-        MenuItem sortKosten = new MenuItem("sortieren nach (Gesamt-)Kosten");
-        MenuItem sortStatus = new MenuItem("sortieren nach (Bestell-)Status");
-        bearbeiten.getItems().addAll(sortBestellnummer, sortBezeichnung, sortDatum, sortKosten, sortStatus);
-
         Menu liste = new Menu("Liste");
         MenuItem aktualisiereListe = new MenuItem("aktualisieren");
         liste.getItems().add(aktualisiereListe);
 
-        menuBar.getMenus().addAll(bearbeiten, liste);
+        menuBar.getMenus().add(liste);
 
         Button addBestellung = new Button("+ neue Bestellung aufgeben");
         Button removeBestellung = new Button("- Bestellung stornieren");
@@ -76,27 +64,6 @@ public class manageBestellungen extends BorderPane {
         topVBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
         setTop(topVBox);
-
-        sortBestellnummer.setOnAction(e -> {
-            this.model.getBestellungen().sort(Comparator.comparing(Bestellung::getBestellnummer));
-            updateBestellungen();
-        });
-        sortBezeichnung.setOnAction(e -> {
-            this.model.getBestellungen().sort(Comparator.comparing(Bestellung::getBezeichnung));
-            updateBestellungen();
-        });
-        sortDatum.setOnAction(e -> {
-            this.model.getBestellungen().sort(Comparator.comparing(Bestellung::getDatum));
-            updateBestellungen();
-        });
-        sortKosten.setOnAction(e -> {
-            this.model.getBestellungen().sort(Comparator.comparing(Bestellung::getGesamtkosten));
-            updateBestellungen();
-        });
-        sortStatus.setOnAction(e -> {
-            this.model.getBestellungen().sort(Comparator.comparing(Bestellung::getBestellstatus));
-            updateBestellungen();
-        });
 
         aktualisiereListe.setOnAction(e -> {
             updateBestellungen();
@@ -139,9 +106,5 @@ public class manageBestellungen extends BorderPane {
         for(Bestellung bestellung : this.model.getBestellungen()) {
             this.bestellungenListView.getItems().add(bestellung);
         }
-    }
-
-    public Apotheke getModel() {
-        return this.model;
     }
 }

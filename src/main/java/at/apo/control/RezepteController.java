@@ -30,14 +30,13 @@ public class RezepteController {
                     this.model.addKunde(rezept.getPatient());
                 }
                 this.model.addRezept(rezept);
-                this.view.getModel().addRezept(rezept);
                 this.view.loadRezepte();
                 this.mainView.loadListViews();
                 this.mainView.setChanged(true);
-                System.out.println("Das gerade erstellte Rezept wurde erfolgreich in der Apotheke " + this.model.getName() + " gespeichert!");
+                System.out.println("Das Rezept wurde erfolgreich in der Apotheke " + this.model.getName() + " gespeichert.");
             } catch (APOException e) {
                 this.mainView.errorAlert("Fehler beim Hinzufügen eines neuen Rezepts", e.getMessage());
-                System.out.println("Fehler: Beim Aufnehmen eines neuen Rezepts in der Apotheke " + this.model.getName() + " ist ein Fehler aufgetreten!");
+                System.out.println("Fehler: Beim Aufnehmen eines neuen Rezepts in die Apotheke " + this.model.getName() + " ist ein Fehler aufgetreten!");
             }
         });
     }
@@ -59,11 +58,10 @@ public class RezepteController {
             try {
                 this.model.removeKunde(rezept.getPatient());
                 this.model.removeRezept(rezept);
-                this.view.getModel().removeRezept(rezept);
                 this.view.loadRezepte();
                 this.mainView.loadListViews();
                 this.mainView.setChanged(true);
-                System.out.println("Das ausgewählte Rezept wurde erfolgreich aus der Apotheke " + this.model.getName() + " entfernt!");
+                System.out.println("Das ausgewählte Rezept wurde erfolgreich aus der Apotheke " + this.model.getName() + " entfernt.");
             } catch (APOException e) {
                 this.mainView.errorAlert("Fehler beim Entfernen eines Rezepts", e.getMessage());
                 System.out.println("Fehler: Beim Löschen eines Rezepts in der Apotheke " + this.model.getName() + " ist ein Fehler aufgetreten!");
@@ -88,7 +86,7 @@ public class RezepteController {
                     System.out.println("Das Rezept ist nun ausgestellt an den Kunden " + rezept1.getPatient().getName() + " und nicht mehr an " + rezeptBefore.getPatient().getName() + ".");
                 } catch (APOException e) {
                     this.mainView.errorAlert("Fehler beim Entfernen eines Kunden", e.getMessage());
-                    System.out.println("Fehler: Beim Löschen eines Kunden in der Apotheke " + this.model.getName() + " ist ein Fehler aufgetreten!");
+                    System.out.println("Fehler: Beim Löschen eines Kunden in der Apotheke " + this.model.getName() + " ist ein Fehler aufgetreten.");
                 }
             }
             this.view.loadRezepte();
@@ -99,7 +97,7 @@ public class RezepteController {
     }
 
     public void printRezepte() {
-        if (this.model.getRezepte() != null && !this.model.getRezepte().isEmpty()) {
+        if (!this.model.getRezepte().isEmpty()) {
             printRezepte printRezepte = new printRezepte(this.model);
             System.out.println("Alle Mitarbeiter der Apotheke in Form einer Liste ausgegeben.");
         } else {

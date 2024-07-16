@@ -14,24 +14,20 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import java.util.Comparator;
-
 public class manageEmployees extends BorderPane {
     private APO apoInstance;
     private ApoView mainView;
-    private Apotheke originalModel;
     private Apotheke model;
     private EmployeeController ctrl;
     private ListView<Mitarbeiter> mitarbeiterListView;
     private TextArea mitarbeiterTA;
     private Stage stage;
 
-    public manageEmployees(ApoView mainView, Apotheke originalModel) {
+    public manageEmployees(ApoView mainView, Apotheke model) {
         this.apoInstance = APO.getInstance();
         this.mainView = mainView;
-        this.originalModel = originalModel;
-        this.model = this.originalModel.clone();
-        this.ctrl = new EmployeeController(this.mainView, this, this.originalModel);
+        this.model = model;
+        this.ctrl = new EmployeeController(this.mainView, this, this.model);
         this.mitarbeiterListView = new ListView<Mitarbeiter>();
         this.mitarbeiterListView.setCellFactory(new Callback<ListView<Mitarbeiter>, ListCell<Mitarbeiter>>() {
             @Override
@@ -62,48 +58,19 @@ public class manageEmployees extends BorderPane {
     }
 
     private void initGUI() {
-        this.stage.setTitle(this.originalModel.getName() + " : Mitarbeiter verwalten");
+        this.stage.setTitle(this.model.getName() + " : Mitarbeiter verwalten");
         this.stage.setResizable(false);
         Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.25, this.apoInstance.getScreenHeight() * 0.4);
         this.stage.setScene(scene);
 
-        // Top: MenuBar und Buttons zum Verwalten der Mitarbeiter
+        // Top: MenuBar
         MenuBar menuBar = new MenuBar();
-
-        Menu bearbeiten = new Menu("Bearbeiten");
-        MenuItem sortID = new MenuItem("nach ID sortieren");
-        MenuItem sortNachname = new MenuItem("nach Nachnamen sortieren");
-        MenuItem sortVorname = new MenuItem("nach Vornamen sortieren");
-        MenuItem sortGebDat = new MenuItem("nach Geb. Dat. sortieren");
-        MenuItem sortGehalt = new MenuItem("nach Gehalt sortieren");
-        bearbeiten.getItems().addAll(sortID, sortNachname, sortVorname, sortGebDat, sortGehalt);
 
         Menu list = new Menu("Liste");
         MenuItem refreshList = new MenuItem("aktualisieren");
         list.getItems().add(refreshList);
 
-        menuBar.getMenus().addAll(bearbeiten, list);
-
-        sortID.setOnAction(e -> {
-            this.model.getMitarbeiter().sort(Comparator.comparing(Mitarbeiter::getId));
-            updateMitarbeiterListView();
-        });
-        sortNachname.setOnAction(e -> {
-            this.model.getMitarbeiter().sort(Comparator.comparing(Mitarbeiter::getNachname));
-            updateMitarbeiterListView();
-        });
-        sortVorname.setOnAction(e -> {
-            this.model.getMitarbeiter().sort(Comparator.comparing(Mitarbeiter::getVorname));
-            updateMitarbeiterListView();
-        });
-        sortGebDat.setOnAction(e -> {
-            this.model.getMitarbeiter().sort(Comparator.comparing(Mitarbeiter::getGeburtsdatum));
-            updateMitarbeiterListView();
-        });
-        sortGehalt.setOnAction(e -> {
-            this.model.getMitarbeiter().sort(Comparator.comparing(Mitarbeiter::getGehalt));
-            updateMitarbeiterListView();
-        });
+        menuBar.getMenus().add(list);
 
         refreshList.setOnAction(e -> {
             updateMitarbeiterListView();

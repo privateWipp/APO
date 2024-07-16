@@ -93,7 +93,7 @@ public class Controller {
                 file.delete();
                 this.view.getApothekenListView().refresh();
             } else {
-                this.view.errorAlert("Apotheke löschen", "Es gab einen Fehler beim Löschen/Entfernen der Apotheke!");
+                this.view.errorAlert("Apotheke löschen", "Es gab einen Fehler beim Löschen der Apotheke!");
             }
         } else {
             confirmation.close();

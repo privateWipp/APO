@@ -12,24 +12,20 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.util.Comparator;
-
 public class manageRezepte extends BorderPane {
     private APO apoInstance;
     private ApoView view;
-    private Apotheke originalModel;
     private Apotheke model;
     private RezepteController ctrl;
     private Stage stage;
 
     private ListView<Rezept> rezeptListView;
 
-    public manageRezepte(ApoView view, Apotheke originalModel) {
+    public manageRezepte(ApoView view, Apotheke model) {
         this.apoInstance = APO.getInstance();
         this.view = view;
-        this.originalModel = originalModel;
-        this.model = this.originalModel.clone();
-        this.ctrl = new RezepteController(this.originalModel, this.view, this);
+        this.model = model;
+        this.ctrl = new RezepteController(this.model, this.view, this);
         this.stage = new Stage();
 
         this.rezeptListView = new ListView<Rezept>();
@@ -47,42 +43,13 @@ public class manageRezepte extends BorderPane {
         // Top: MenuBar
         MenuBar menuBar = new MenuBar();
 
-        Menu bearbeiten = new Menu("Bearbeiten");
-        MenuItem sortRezeptnummer = new MenuItem("sortieren nach Rezeptnummer");
-        MenuItem sortAusstellungsdatum = new MenuItem("sortieren nach Ausstellungsdatum");
-        MenuItem sortGueltigBis = new MenuItem("sortieren nach 'gültig bis'");
-        MenuItem sortRezeptart = new MenuItem("sortieren nach Rezeptart");
-        MenuItem sortPreis = new MenuItem("sortieren nach Preis");
-        bearbeiten.getItems().addAll(sortRezeptnummer, sortAusstellungsdatum, sortGueltigBis, sortRezeptart, sortPreis);
-
         Menu list = new Menu("Liste");
         MenuItem refreshList = new MenuItem("aktualisieren");
         list.getItems().add(refreshList);
 
-        menuBar.getMenus().addAll(bearbeiten, list);
+        menuBar.getMenus().add(list);
 
         setTop(menuBar);
-
-        sortRezeptnummer.setOnAction(e -> {
-            this.model.getRezepte().sort(Comparator.comparing(Rezept::getRezeptnummer));
-            loadRezepte();
-        });
-        sortAusstellungsdatum.setOnAction(e -> {
-            this.model.getRezepte().sort(Comparator.comparing(Rezept::getAusstellungsDatum));
-            loadRezepte();
-        });
-        sortGueltigBis.setOnAction(e -> {
-            this.model.getRezepte().sort(Comparator.comparing(Rezept::getGueltigBis));
-            loadRezepte();
-        });
-        sortRezeptart.setOnAction(e -> {
-            this.model.getRezepte().sort(Comparator.comparing(Rezept::getRezeptArt));
-            loadRezepte();
-        });
-        sortPreis.setOnAction(e -> {
-            this.model.getRezepte().sort(Comparator.comparing(Rezept::getPreis));
-            loadRezepte();
-        });
 
         refreshList.setOnAction(e -> {
             loadRezepte();
@@ -125,16 +92,12 @@ public class manageRezepte extends BorderPane {
 
     public void loadRezepte() {
         this.rezeptListView.getItems().clear();
-        for(Rezept rezept : this.originalModel.getRezepte()) {
+        for(Rezept rezept : this.model.getRezepte()) {
             this.rezeptListView.getItems().add(rezept);
         }
     }
 
     public ListView<Rezept> getRezeptListView() {
         return this.rezeptListView;
-    }
-
-    public Apotheke getModel() {
-        return this.model;
     }
 }

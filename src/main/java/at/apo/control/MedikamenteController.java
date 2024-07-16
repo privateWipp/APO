@@ -57,9 +57,9 @@ public class MedikamenteController {
                 this.view.updateMedikamente();
                 this.mainView.loadListViews();
                 this.mainView.setChanged(true);
-                System.out.println("Das Medikament " + medikament.getBezeichnung() + " (" + medikament.getLagerbestand() + " Stück) wurde aus der Apotheke " + this.model.getName() + " entfernet.");
+                System.out.println("Das Medikament " + medikament.getBezeichnung() + " (" + medikament.getLagerbestand() + " Stück) wurde aus der Apotheke " + this.model.getName() + " entfernt.");
             } catch (APOException e) {
-                this.mainView.errorAlert("Fehler beim Entfernen des Medikaments " + medikament.getBezeichnung() + "..", e.getMessage());
+                this.mainView.errorAlert("Fehler beim Entfernen des Medikaments " + medikament.getBezeichnung(), e.getMessage());
                 System.out.println("Fehler: Beim Entfernen von dem Medikament " + medikament.getBezeichnung() + " (" + medikament.getLagerbestand() + " Stück) ist ein Fehler aufgetreten!");
             }
         } else {
@@ -82,7 +82,7 @@ public class MedikamenteController {
     public void printMedikamente() {
         if (!this.model.getMedikamente().isEmpty()) {
             printAllMedikamente printAllMedikamente = new printAllMedikamente(this.model);
-            System.out.println("Alle Medikamente der Apotheke in Form einer Liste ausgegeben.");
+            System.out.println("Alle Medikamente der Apotheke " + this.model.getName() + " in Form einer Liste ausgegeben.");
         } else {
             this.mainView.errorAlert("Medikamente in der Apotheke", "Es gibt keine/nicht genug Medikamente in der Apotheke, daher kann auch keine Liste ausgegeben werden!");
         }

@@ -79,7 +79,7 @@ public class ApoController {
             geschaeftsfuehrerAnzeigen geschaeftsfuehrerAnzeigen = new geschaeftsfuehrerAnzeigen(this.model);
         } else {
             this.view.errorAlert("Geschäftsführer", "Die Apotheke: " + this.model.getName()  + "\n" +
-                    "hat zurzeit keinen Geschäftsführer, daher kann dieser auch nicht angezeigt werden!");
+                    "hat zurzeit keinen Geschäftsführer, daher können auch keine Informationen angezeigt werden!");
         }
     }
 
@@ -158,7 +158,7 @@ public class ApoController {
                 this.model.addBestellung(bestellung);
                 this.view.loadListViews();
                 this.view.setChanged(true);
-                System.out.println("Die Bestellung mit der Bezeichnung '" + bestellung.getBezeichnung() + "' wurde erfolgreich im Name der Apotheke " + this.model.getName() + " aufgegeben!");
+                System.out.println("Die Bestellung mit der Bezeichnung '" + bestellung.getBezeichnung() + "' wurde erfolgreich aufgegeben.");
             } catch (APOException e) {
                 this.view.errorAlert("Fehler beim Aufgeben einer neuen Bestellung", e.getMessage());
                 System.out.println("Fehler: Das Aufgeben einer neuen Bestellung für die Apotheke " + this.model.getName() + " ist fehlgeschlagen!");
