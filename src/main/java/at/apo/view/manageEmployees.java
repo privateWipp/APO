@@ -110,12 +110,11 @@ public class manageEmployees extends BorderPane {
             System.out.println("Die Liste der Mitarbeiter wurde aktualisiert.");
         });
 
-        HBox manageEmployeesHBox = new HBox();
         Button addEmployee = new Button("+ Mitarbeiter");
         Button removeEmployee = new Button("- Mitarbeiter");
         Button manageEmployee = new Button("anschauen/verwalten");
-        manageEmployeesHBox.getChildren().addAll(addEmployee, removeEmployee, manageEmployee);
-        manageEmployeesHBox.setPadding(new Insets(20, 10, 20, 10));
+        HBox manageEmployeesHBox = new HBox(addEmployee, removeEmployee, manageEmployee);
+        manageEmployeesHBox.setPadding(new Insets(20, 20, 20, 20));
         manageEmployeesHBox.setSpacing(10);
 
         VBox topVBox = new VBox(menuBar, manageEmployeesHBox);
@@ -145,13 +144,11 @@ public class manageEmployees extends BorderPane {
 
         Button printAllEmployees = new Button("alle Mitarbeiter anzeigen");
 
-        toolBar.getItems().addAll(printAllEmployees);
+        toolBar.getItems().add(printAllEmployees);
 
         setRight(toolBar);
 
-        printAllEmployees.setOnAction(e -> {
-            this.ctrl.printAllEmployees();
-        });
+        printAllEmployees.setOnAction(e -> this.ctrl.printAllEmployees());
 
         // -------------------------------------------------------------------------------------------------------------
 

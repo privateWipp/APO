@@ -72,14 +72,10 @@ public class MedikamenteController {
         Optional<Medikament> m = manageMedikamentDialog.showAndWait();
 
         m.ifPresent(medikament1 -> {
-            if (!this.model.getMedikamente().contains(medikament1)) {
-                this.view.updateMedikamente();
-                this.mainView.loadListViews();
-                this.mainView.setChanged(true);
-                System.out.println("Die Daten von dem Medikament " + medikament.getBezeichnung() + " wurden aktualisiert.");
-            } else {
-                this.mainView.errorAlert("Fehler beim Ändern eines Medikaments", "Ein genau solches Medikament existiert bereits in der Apotheke " + this.model.getName() + "!");
-            }
+            this.view.updateMedikamente();
+            this.mainView.loadListViews();
+            this.mainView.setChanged(true);
+            System.out.println("Die Daten von dem Medikament " + medikament.getBezeichnung() + " wurden aktualisiert.");
         });
     }
 

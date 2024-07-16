@@ -107,15 +107,11 @@ public class EmployeeController {
         Optional<Mitarbeiter> m = manageEmployeeDialog.showAndWait();
 
         m.ifPresent(mitarbeiter1 -> {
-            if(!this.model.getMitarbeiter().contains(mitarbeiter1)) {
-                this.view.getMitarbeiterListView().refresh();
-                this.view.getMitarbeiterTA().setText(this.view.getMitarbeiterListView().getSelectionModel().getSelectedItem().toString());
-                this.mainView.loadListViews();
-                this.mainView.setChanged(true);
-                System.out.println("Die Daten von " + mitarbeiter1.getVorname() + " " + mitarbeiter1.getNachname() + " wurden aktualisiert.");
-            } else {
-                this.view.errorAlert("Fehler beim Verwalten/Ändern eines Mitarbeiters", "Ein genau solcher Mitarbeiter existiert bereits in der Apotheke " + this.model.getName() + "!");
-            }
+            this.view.getMitarbeiterListView().refresh();
+            this.view.getMitarbeiterTA().setText(this.view.getMitarbeiterListView().getSelectionModel().getSelectedItem().toString());
+            this.mainView.loadListViews();
+            this.mainView.setChanged(true);
+            System.out.println("Die Daten von " + mitarbeiter1.getVorname() + " " + mitarbeiter1.getNachname() + " wurden aktualisiert.");
         });
     }
 

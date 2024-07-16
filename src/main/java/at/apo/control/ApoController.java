@@ -165,4 +165,8 @@ public class ApoController {
             }
         });
     }
+
+    public void manageBestellungen() {
+        manageBestellungen manageBestellungen = new manageBestellungen(this.view, this.model);
+    }
 }

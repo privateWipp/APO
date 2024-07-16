@@ -38,7 +38,7 @@ public class manageMedikamente extends BorderPane {
     }
 
     private void initGUI() {
-        this.stage.setTitle("Medikamente der Apotheke " + this.model.getName() + " verwalten");
+        this.stage.setTitle(this.model.getName() + " : Medikamente verwalten");
         this.stage.setResizable(false);
         Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.25, this.apoInstance.getScreenHeight() * 0.4);
         this.stage.setScene(scene);
@@ -63,7 +63,7 @@ public class manageMedikamente extends BorderPane {
         Button manageMedikament = new Button("anschauen/verwalten");
         Button printMedikamente = new Button("alle Medikamente ausgeben");
         manageMedikamenteHBox.getChildren().addAll(addMedikament, removeMedikament, manageMedikament, printMedikamente);
-        manageMedikamenteHBox.setPadding(new Insets(20, 10, 20, 10));
+        manageMedikamenteHBox.setPadding(new Insets(20, 20, 20, 20));
         manageMedikamenteHBox.setSpacing(10);
 
         VBox topVBox = new VBox(menuBar, manageMedikamenteHBox);

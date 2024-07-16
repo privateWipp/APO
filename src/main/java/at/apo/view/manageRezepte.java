@@ -39,7 +39,7 @@ public class manageRezepte extends BorderPane {
     }
 
     private void initGUI() {
-        this.stage.setTitle("Rezepte der Apotheke " + this.originalModel.getName() + " verwalten");
+        this.stage.setTitle(this.model.getName() + " : Rezepte verwalten");
         this.stage.setResizable(false);
         Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.25, this.apoInstance.getScreenHeight() * 0.4);
         this.stage.setScene(scene);

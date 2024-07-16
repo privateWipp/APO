@@ -74,7 +74,6 @@ public class manageEmployeeDialog extends Dialog<Mitarbeiter> {
         gridPane.add(gehaltTF, 1, 7);
         gridPane.add(new Label("€"), 2, 7);
 
-
         getDialogPane().setContent(gridPane);
 
         this.setResultConverter(bt -> {

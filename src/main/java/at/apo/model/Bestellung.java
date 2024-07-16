@@ -19,11 +19,7 @@ public class Bestellung implements Serializable, Cloneable {
         setBezeichnung(bezeichnung);
         this.datum = LocalDate.now();
         setMedikamente(medikamente);
-        if (this.medikamente != null) {
-            for (Medikament medikament : this.medikamente) {
-                this.gesamtkosten += medikament.getPreis();
-            }
-        }
+        berechneGesamtkosten();
         this.bestellstatus = "BESTELLT";
     }
 
@@ -69,7 +65,7 @@ public class Bestellung implements Serializable, Cloneable {
     }
 
     public void setBestellstatus(String bestellstatus) throws APOException {
-        if (bestellstatus.equals("BESTELLT") || bestellstatus.equals("VERSANDT") || bestellstatus.equals("ERHALTEN")) {
+        if (bestellstatus.equals("BESTELLT") || bestellstatus.equals("VERSANDT") || bestellstatus.equals("ZUGESTELLT")) {
             this.bestellstatus = bestellstatus;
         } else {
             throw new APOException("Gültige Bestellstatus:\n" +
@@ -121,5 +117,13 @@ public class Bestellung implements Serializable, Cloneable {
                 "bestellt am: " + getDatum() + ",\n" +
                 "Gesamtkosten: " + getGesamtkosten() + " €,\n" +
                 "aktueller Bestellstatus: " + getBestellstatus();
+    }
+
+    public void berechneGesamtkosten() {
+        double gesamtkosten = 0;
+        for(Medikament medikament : this.medikamente) {
+            gesamtkosten += medikament.getPreis();
+        }
+        this.gesamtkosten = gesamtkosten;
     }
 }

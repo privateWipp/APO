@@ -26,7 +26,6 @@ public class RezepteController {
 
         r.ifPresent(rezept -> {
             try {
-                rezept.berechnePreis();
                 if (!this.model.getKunden().contains(rezept.getPatient())) {
                     this.model.addKunde(rezept.getPatient());
                 }
@@ -81,25 +80,21 @@ public class RezepteController {
         Optional<Rezept> r = manageRezeptDialog.showAndWait();
 
         r.ifPresent(rezept1 -> {
-            if (!this.model.getRezepte().contains(rezept1)) {
-                rezept1.berechnePreis();
-                if (!(rezeptBefore.getPatient().getName().equals(rezept1.getPatient().getName()))) {
-                    try {
-                        this.model.removeKunde(rezeptBefore.getPatient());
-                        this.model.addKunde(rezept1.getPatient());
-                        System.out.println("Das Rezept ist nun ausgestellt an den Kunden " + rezept1.getPatient().getName() + " und nicht mehr an " + rezeptBefore.getPatient().getName() + ".");
-                    } catch (APOException e) {
-                        this.mainView.errorAlert("Fehler beim Entfernen eines Kunden", e.getMessage());
-                        System.out.println("Fehler: Beim Löschen eines Kunden in der Apotheke " + this.model.getName() + " ist ein Fehler aufgetreten!");
-                    }
+            rezept1.berechnePreis();
+            if (!(rezeptBefore.getPatient().getName().equals(rezept1.getPatient().getName()))) {
+                try {
+                    this.model.removeKunde(rezeptBefore.getPatient());
+                    this.model.addKunde(rezept1.getPatient());
+                    System.out.println("Das Rezept ist nun ausgestellt an den Kunden " + rezept1.getPatient().getName() + " und nicht mehr an " + rezeptBefore.getPatient().getName() + ".");
+                } catch (APOException e) {
+                    this.mainView.errorAlert("Fehler beim Entfernen eines Kunden", e.getMessage());
+                    System.out.println("Fehler: Beim Löschen eines Kunden in der Apotheke " + this.model.getName() + " ist ein Fehler aufgetreten!");
                 }
-                this.view.loadRezepte();
-                this.mainView.loadListViews();
-                this.mainView.setChanged(true);
-                System.out.println("Das ausgewählte Rezept wurde erfolgreich geändert/verändert!");
-            } else {
-                this.mainView.errorAlert("Fehler beim Ändern eines Rezepts", "Ein genau solches Rezept existiert bereits in der Apotheke " + this.model.getName() + "!");
             }
+            this.view.loadRezepte();
+            this.mainView.loadListViews();
+            this.mainView.setChanged(true);
+            System.out.println("Das ausgewählte Rezept wurde erfolgreich geändert/verändert!");
         });
     }
 
