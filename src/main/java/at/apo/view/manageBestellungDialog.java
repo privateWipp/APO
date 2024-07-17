@@ -35,9 +35,8 @@ public class manageBestellungDialog extends Dialog<Bestellung> {
         gridPane.setVgap(10);
 
         Label bezeichnungL = new Label("Bezeichnung:");
-        TextField bezeichnungTF = new TextField();
+        TextField bezeichnungTF = new TextField(this.bestellung.getBezeichnung());
         bezeichnungTF.setPromptText("Bezeichnung für die Bestellung");
-        bezeichnungTF.setText(bestellung.getBezeichnung());
 
         Label datumL = new Label("Datum:");
         DatePicker datePickerDP = new DatePicker(bestellung.getDatum());
@@ -50,7 +49,7 @@ public class manageBestellungDialog extends Dialog<Bestellung> {
         }
         Button neuesMedikament = new Button("neues Medikament");
         neuesMedikament.setOnAction(e -> {
-            addMedikamentDialog addMedikamentDialog = new addMedikamentDialog();
+            addMedikamentDialog addMedikamentDialog = new addMedikamentDialog(this.model);
             Optional<Medikament> m = addMedikamentDialog.showAndWait();
 
             m.ifPresent(medikament -> {
@@ -65,9 +64,9 @@ public class manageBestellungDialog extends Dialog<Bestellung> {
                         this.medikamentenListView.refresh();
                     } else {
                         Alert information = new Alert(Alert.AlertType.INFORMATION);
-                        information.setTitle("Info / Warnung");
-                        information.setHeaderText("gleiches Medikament");
-                        information.setContentText("ACHTUNG:\n" + "Ein genau gleiches Medikament existiert bereits in der Liste!");
+                        information.setTitle("ACHTUNG");
+                        information.setHeaderText("gleiches Medikament vorhanden");
+                        information.setContentText("Ein genau gleiches Medikament existiert bereits in dieser Liste!");
                         information.showAndWait();
                     }
                 } catch (APOException ex) {
@@ -87,7 +86,7 @@ public class manageBestellungDialog extends Dialog<Bestellung> {
                 Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                 errorAlert.setTitle("Medikament hinzufügen");
                 errorAlert.setHeaderText("übergebenes Medikament");
-                errorAlert.setContentText("Das übergebene/ausgewählte Medikament für die Liste ist entweder ungültig oder bereits vorhanden!");
+                errorAlert.setContentText("Das gewählte Medikament ist in der Liste bereits vorhanden!");
                 medikamenteCB.setValue(null);
                 errorAlert.showAndWait();
             }
@@ -124,7 +123,7 @@ public class manageBestellungDialog extends Dialog<Bestellung> {
                 Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
                 confirmation.setTitle("Bestellung verändern");
                 confirmation.setHeaderText("Sind Sie sicher?");
-                confirmation.setContentText("Sind Sie sicher, dass Sie diese Bestellung verändern wollen?");
+                confirmation.setContentText("Sind Sie sicher, dass Sie diese Bestellung (" + this.bestellung.getBezeichnung() + ") verändern wollen?");
 
                 ButtonType yes = new ButtonType("Ja");
                 ButtonType no = new ButtonType("Nein");
@@ -135,10 +134,10 @@ public class manageBestellungDialog extends Dialog<Bestellung> {
                 Optional<ButtonType> result = confirmation.showAndWait();
                 if (result.isPresent() && result.get() == yes) {
                     try {
-                        bestellung.setBezeichnung(bezeichnungTF.getText());
-                        bestellung.setMedikamente(new ArrayList<Medikament>(this.medikamentenListView.getItems()));
-                        bestellung.berechneGesamtkosten();
-                        return bestellung;
+                        this.bestellung.setBezeichnung(bezeichnungTF.getText());
+                        this.bestellung.setMedikamente(new ArrayList<Medikament>(this.medikamentenListView.getItems()));
+                        this.bestellung.berechneGesamtkosten();
+                        return this.bestellung;
                     } catch (APOException e) {
                         Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                         errorAlert.setTitle("Fehler");
@@ -152,7 +151,6 @@ public class manageBestellungDialog extends Dialog<Bestellung> {
             }
             return null;
         });
-
         updateKosten();
     }
 
@@ -166,7 +164,7 @@ public class manageBestellungDialog extends Dialog<Bestellung> {
 
     private void loadMedikamentenListView() {
         this.medikamentenListView.getItems().clear();
-        for (Medikament medikament : bestellung.getMedikamente()) {
+        for (Medikament medikament : this.bestellung.getMedikamente()) {
             this.medikamentenListView.getItems().add(medikament);
         }
     }

@@ -38,7 +38,7 @@ public class manageMedikamente extends BorderPane {
     }
 
     private void initGUI() {
-        this.stage.setTitle(this.model.getName() + " : Medikamente verwalten");
+        this.stage.setTitle("Medikamente verwalten : " + this.model.getName());
         this.stage.setResizable(false);
         Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.25, this.apoInstance.getScreenHeight() * 0.4);
         this.stage.setScene(scene);
@@ -52,11 +52,6 @@ public class manageMedikamente extends BorderPane {
 
         menuBar.getMenus().addAll(listen);
 
-        refreshLists.setOnAction(e -> {
-            updateMedikamente();
-            System.out.println("Die rezeptfreie und nicht rezeptfreie Liste an Medikamenten wurde aktualisiert.");
-        });
-
         HBox manageMedikamenteHBox = new HBox();
         Button addMedikament = new Button("+ Medikament");
         Button removeMedikament = new Button("- Medikament");
@@ -69,9 +64,11 @@ public class manageMedikamente extends BorderPane {
         VBox topVBox = new VBox(menuBar, manageMedikamenteHBox);
         topVBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
-        setTop(topVBox);
+        refreshLists.setOnAction(e -> {
+            updateMedikamente();
+            System.out.println("Die rezeptfreie und nicht rezeptfreie Liste an Medikamenten wurde aktualisiert.");
+        });
 
-        // Verwaltung der Buttons
         addMedikament.setOnAction(e -> this.ctrl.addMedikament());
         removeMedikament.disableProperty().bind(
                 this.rMedikamente.getSelectionModel().selectedItemProperty().isNull()
@@ -105,12 +102,16 @@ public class manageMedikamente extends BorderPane {
         });
         printMedikamente.setOnAction(e -> this.ctrl.printMedikamente());
 
+        setTop(topVBox);
+
         // -------------------------------------------------------------------------------------------------------------
 
         setLeft(this.rMedikamente);
+
         Text text = new Text("rezeptpflichtig / NICHT rezeptpflichtig");
         text.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.005) + "px;");
         setCenter(text);
+
         setRight(this.nrMedikamente);
 
         // -------------------------------------------------------------------------------------------------------------
@@ -128,13 +129,5 @@ public class manageMedikamente extends BorderPane {
                 this.nrMedikamente.getItems().add(medikament);
             }
         }
-    }
-
-    public ListView<Medikament> getrMedikamente() {
-        return this.rMedikamente;
-    }
-
-    public ListView<Medikament> getNRMedikamente() {
-        return this.nrMedikamente;
     }
 }

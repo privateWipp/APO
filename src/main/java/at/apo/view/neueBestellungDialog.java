@@ -25,7 +25,7 @@ public class neueBestellungDialog extends Dialog<Bestellung> {
         this.medikamentenListView = new ListView<Medikament>();
         this.kostenTF = new TextField();
 
-        setTitle("neue Bestellung aufgeben");
+        setTitle("neue Bestellung aufgeben : " + this.model.getName());
 
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(10, 10, 10, 10));
@@ -45,9 +45,27 @@ public class neueBestellungDialog extends Dialog<Bestellung> {
         for(Medikament medikament : this.model.getMedikamente()) {
             medikamenteCB.getItems().add(medikament);
         }
+
+        Button addMed = new Button("+");
+        addMed.disableProperty().bind(medikamenteCB.getSelectionModel().selectedItemProperty().isNull());
+        addMed.setOnAction(e -> {
+            if(!this.medikamentenListView.getItems().contains(medikamenteCB.getValue())) {
+                this.medikamentenListView.getItems().add(medikamenteCB.getValue());
+                this.medikamentenListView.refresh();
+                medikamenteCB.setValue(null);
+            } else {
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setTitle("Medikament hinzufügen");
+                errorAlert.setHeaderText("übergebenes Medikament");
+                errorAlert.setContentText("Das gewählte Medikament ist in der Liste bereits vorhanden!");
+                medikamenteCB.setValue(null);
+                errorAlert.showAndWait();
+            }
+        });
+
         Button neuesMedikament = new Button("neues Medikament");
         neuesMedikament.setOnAction(e -> {
-            addMedikamentDialog addMedikamentDialog = new addMedikamentDialog();
+            addMedikamentDialog addMedikamentDialog = new addMedikamentDialog(this.model);
             Optional<Medikament> m = addMedikamentDialog.showAndWait();
 
             m.ifPresent(medikament -> {
@@ -62,9 +80,9 @@ public class neueBestellungDialog extends Dialog<Bestellung> {
                         this.medikamentenListView.refresh();
                     } else {
                         Alert information = new Alert(Alert.AlertType.INFORMATION);
-                        information.setTitle("Info / Warnung");
+                        information.setTitle("ACHTUNG");
                         information.setHeaderText("gleiches Medikament");
-                        information.setContentText("ACHTUNG:\n" + "Ein genau gleiches Medikament existiert bereits in der Liste!");
+                        information.setContentText("Ein genau gleiches Medikament existiert bereits in der Liste!");
                         information.showAndWait();
                     }
                 } catch (APOException ex) {
@@ -72,22 +90,6 @@ public class neueBestellungDialog extends Dialog<Bestellung> {
                     System.out.println("Fehler: Beim Aufnehmen eines neuen Medikaments in die Apotheke " + this.model.getName() + " ist ein Fehler aufgetreten!");
                 }
             });
-        });
-        Button addMed = new Button("+");
-        addMed.disableProperty().bind(medikamenteCB.getSelectionModel().selectedItemProperty().isNull());
-        addMed.setOnAction(e -> {
-            if(!this.medikamentenListView.getItems().contains(medikamenteCB.getValue())) {
-                this.medikamentenListView.getItems().add(medikamenteCB.getValue());
-                this.medikamentenListView.refresh();
-                medikamenteCB.setValue(null);
-            } else {
-                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                errorAlert.setTitle("Medikament hinzufügen");
-                errorAlert.setHeaderText("übergebenes Medikament");
-                errorAlert.setContentText("Das übergebene/ausgewählte Medikament für die Liste ist entweder ungültig oder bereits vorhanden!");
-                medikamenteCB.setValue(null);
-                errorAlert.showAndWait();
-            }
         });
 
         Label kostenL = new Label("Gesamtkosten:");
@@ -130,7 +132,6 @@ public class neueBestellungDialog extends Dialog<Bestellung> {
             }
             return null;
         });
-
         updateKosten();
     }
 

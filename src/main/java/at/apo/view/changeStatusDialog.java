@@ -40,7 +40,7 @@ public class changeStatusDialog extends Dialog<Bestellung> {
                     Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
                     confirmation.setTitle("Sind Sie sicher?");
                     confirmation.setHeaderText("Bestellstatus ändern");
-                    confirmation.setContentText("Sind Sie sicher, dass sie den Bestellstatus von '" + bestellung.getBestellstatus() + "' auf '" + statusCB.getValue() + "' ändern wollen?");
+                    confirmation.setContentText("Sind Sie sicher, dass sie den Bestellstatus von '" + this.bestellung.getBestellstatus() + "' auf '" + statusCB.getValue() + "' ändern wollen?");
 
                     ButtonType yes = new ButtonType("Ja");
                     ButtonType no = new ButtonType("Nein");
@@ -51,8 +51,8 @@ public class changeStatusDialog extends Dialog<Bestellung> {
                     Optional<ButtonType> result = confirmation.showAndWait();
                     if (result.isPresent() && result.get() == yes) {
                         try {
-                            bestellung.setBestellstatus(statusCB.getValue());
-                            return bestellung;
+                            this.bestellung.setBestellstatus(statusCB.getValue());
+                            return this.bestellung;
                         } catch (APOException e) {
                             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                             errorAlert.setTitle("Fehler");
@@ -67,7 +67,7 @@ public class changeStatusDialog extends Dialog<Bestellung> {
                     Alert information = new Alert(Alert.AlertType.INFORMATION);
                     information.setTitle("ACHTUNG");
                     information.setHeaderText("ausgewählter Bestellstatus");
-                    information.setContentText("Sie haben keinen Bestellstatus ausgewählt!");
+                    information.setContentText("Sie haben keinen Bestellstatus ausgewählt!\nKeine Änderungen werden vorgenommen.");
                     information.showAndWait();
                 }
             }

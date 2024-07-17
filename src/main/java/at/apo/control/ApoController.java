@@ -11,6 +11,9 @@ import javafx.scene.control.ButtonType;
 import java.util.HashMap;
 import java.util.Optional;
 
+/**
+ * @author Jonas Mader
+ */
 public class ApoController {
     private ApoView view;
     private Apotheke model;
@@ -75,17 +78,17 @@ public class ApoController {
     }
 
     public void geschaeftsfuehrerAnzeigen() {
-        if(this.model.getGeschaeftsfuehrer() != null) {
+        if (this.model.getGeschaeftsfuehrer() != null) {
             geschaeftsfuehrerAnzeigen geschaeftsfuehrerAnzeigen = new geschaeftsfuehrerAnzeigen(this.model);
         } else {
-            this.view.errorAlert("Geschäftsführer", "Die Apotheke: " + this.model.getName()  + "\n" +
+            this.view.errorAlert("Geschäftsführer", "Die Apotheke: " + this.model.getName() + "\n" +
                     "hat zurzeit keinen Geschäftsführer, daher können auch keine Informationen angezeigt werden!");
         }
     }
 
     public void oeffnungszeitenFestlegen() {
         if (!this.model.getOeffnungszeiten().containsKey("Montag")) {
-            oeffnungszeitenFestlegenDialog oeffnungszeitenFestlegenDialog = new oeffnungszeitenFestlegenDialog(this.model,false);
+            oeffnungszeitenFestlegenDialog oeffnungszeitenFestlegenDialog = new oeffnungszeitenFestlegenDialog(this.model, false);
             Optional<HashMap<String, String>> oe = oeffnungszeitenFestlegenDialog.showAndWait();
 
             oe.ifPresent(oeffnungszeiten -> {
@@ -168,5 +171,9 @@ public class ApoController {
 
     public void manageBestellungen() {
         manageBestellungen manageBestellungen = new manageBestellungen(this.view, this.model);
+    }
+
+    public void manageKunden() {
+        manageKunden manageKunden = new manageKunden(this.view, this.model);
     }
 }

@@ -1,6 +1,7 @@
 package at.apo.view;
 
 import at.apo.model.APOException;
+import at.apo.model.Apotheke;
 import at.apo.model.Medikament;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -9,12 +10,14 @@ import javafx.scene.layout.GridPane;
 import java.util.Optional;
 
 public class manageMedikamentDialog extends Dialog<Medikament> {
+    private Apotheke model;
     private Medikament medikament;
 
-    public manageMedikamentDialog(Medikament medikament) {
+    public manageMedikamentDialog(Apotheke model, Medikament medikament) {
+        this.model = model;
         this.medikament = medikament;
 
-        setTitle("Medikament: " + medikament.getBezeichnung() + " verwalten/ändern");
+        setTitle("Medikament (" + this.medikament.getBezeichnung() + ") verwalten : " + this.model.getName());
 
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(10, 10, 10, 10));
@@ -22,56 +25,53 @@ public class manageMedikamentDialog extends Dialog<Medikament> {
         gridPane.setVgap(10);
 
         Label bezeichnungL = new Label("Bezeichnung:");
-        TextField bezeichnungTF = new TextField(medikament.getBezeichnung());
+        TextField bezeichnungTF = new TextField(this.medikament.getBezeichnung());
         bezeichnungTF.setPromptText("Bsp.: Ibuprofen, Aspirin (C), Pilka, ...");
 
         Label preisL = new Label("Preis:");
-        TextField preisTF = new TextField(Double.toString(medikament.getPreis()));
+        TextField preisTF = new TextField(Double.toString(this.medikament.getPreis()));
         preisTF.setPromptText("Preis für das Medikament");
 
         Label lagerbestandL = new Label("Lagerbestand/Anzahl:");
-        TextField lagerbestandTF = new TextField(Integer.toString(medikament.getLagerbestand()));
+        TextField lagerbestandTF = new TextField(Integer.toString(this.medikament.getLagerbestand()));
         lagerbestandTF.setPromptText("mind. 1 - MAX. 500");
 
         Label verfallsdatumL = new Label("Verfallsdatum:");
-        DatePicker verfallsdatumDP = new DatePicker(medikament.getVerfallsdatum());
+        DatePicker verfallsdatumDP = new DatePicker(this.medikament.getVerfallsdatum());
 
         Label herstellerL = new Label("Hersteller:");
-        TextField herstellerTF = new TextField(medikament.getHersteller());
+        TextField herstellerTF = new TextField(this.medikament.getHersteller());
         herstellerTF.setPromptText("Hersteller des Medikaments");
 
         Label wirkstoffL = new Label("Wirkstoff/e:");
-        TextField wirkstoffTF = new TextField(medikament.getWirkstoff());
+        TextField wirkstoffTF = new TextField(this.medikament.getWirkstoff());
         wirkstoffTF.setPromptText("Hauptwirkstoff/e des Medikaments");
 
         Label dosierungL = new Label("Dosierung:");
-        TextField dosierungTF = new TextField(medikament.getDosierung());
+        TextField dosierungTF = new TextField(this.medikament.getDosierung());
         dosierungTF.setPromptText("z.B.: 15ng / ml");
 
         Label rezeptpflichtig = new Label("Rezeptpflichtig:");
         ComboBox<String> rezeptpflichtigCB = new ComboBox<String>();
         rezeptpflichtigCB.getItems().addAll("Ja", "Nein");
-        rezeptpflichtigCB.setValue((medikament.isRezeptpflichtig() ? "Ja" : "Nein"));
+        rezeptpflichtigCB.setValue((this.medikament.isRezeptpflichtig() ? "Ja" : "Nein"));
 
         Label nebenwirkungenL = new Label("Nebenwirkungen:");
-        TextField nebenwirkungenTF = new TextField(medikament.getNebenwirkungen());
+        TextField nebenwirkungenTF = new TextField(this.medikament.getNebenwirkungen());
         nebenwirkungenTF.setPromptText("Wenn keine => Feld leer lassen");
 
         Label lagerbedingungenL = new Label("Lagerbedingungen:");
-        TextField lagerbedingungenTF = new TextField(medikament.getLagerbedingungen());
+        TextField lagerbedingungenTF = new TextField(this.medikament.getLagerbedingungen());
         lagerbedingungenTF.setPromptText("Wenn keine => Feld leer lassen");
 
         Label verfuegbarL = new Label("Verfügbar:");
         ComboBox<String> verfuegbarCB = new ComboBox<String>();
         verfuegbarCB.getItems().addAll("Ja", "Nein");
-        verfuegbarCB.setValue((medikament.isVerfuegbar() ? "Ja" : "Nein"));
+        verfuegbarCB.setValue((this.medikament.isVerfuegbar() ? "Ja" : "Nein"));
 
         Label beschreibungL = new Label("Beschreibung:");
-        TextField beschreibungTF = new TextField(medikament.getBeschreibung());
+        TextField beschreibungTF = new TextField(this.medikament.getBeschreibung());
         beschreibungTF.setPromptText("Beschreibung für das Medikament");
-
-        ButtonType buttonType = new ButtonType("Ändern", ButtonBar.ButtonData.APPLY);
-        getDialogPane().getButtonTypes().add(buttonType);
 
         gridPane.add(bezeichnungL, 0, 0);
         gridPane.add(bezeichnungTF, 1, 0);
@@ -101,12 +101,15 @@ public class manageMedikamentDialog extends Dialog<Medikament> {
 
         getDialogPane().setContent(gridPane);
 
+        ButtonType buttonType = new ButtonType("Ändern", ButtonBar.ButtonData.APPLY);
+        getDialogPane().getButtonTypes().add(buttonType);
+
         this.setResultConverter(bt -> {
             if(bt == buttonType) {
                 Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
                 confirmation.setTitle("Medikament ändern");
                 confirmation.setHeaderText("Sind Sie sicher?");
-                confirmation.setContentText("Sind Sie sicher, dass Sie das Medikament " + medikament.getBezeichnung() + " verändern/bearbeiten wollen?");
+                confirmation.setContentText("Sind Sie sicher, dass Sie das Medikament " + this.medikament.getBezeichnung() + " verändern wollen?");
 
                 ButtonType yes = new ButtonType("Ja");
                 ButtonType no = new ButtonType("Nein");
@@ -117,32 +120,32 @@ public class manageMedikamentDialog extends Dialog<Medikament> {
                 Optional<ButtonType> result = confirmation.showAndWait();
                 if(result.isPresent() && result.get() == yes) {
                     try {
-                        medikament.setBezeichnung(bezeichnungTF.getText());
-                        medikament.setPreis(Double.parseDouble(preisTF.getText()));
-                        medikament.setLagerbestand(Integer.parseInt(lagerbestandTF.getText()));
-                        medikament.setVerfallsdatum(verfallsdatumDP.getValue());
-                        medikament.setHersteller(herstellerTF.getText());
-                        medikament.setWirkstoff(wirkstoffTF.getText());
-                        medikament.setDosierung(dosierungTF.getText());
+                        this.medikament.setBezeichnung(bezeichnungTF.getText());
+                        this.medikament.setPreis(Double.parseDouble(preisTF.getText()));
+                        this.medikament.setLagerbestand(Integer.parseInt(lagerbestandTF.getText()));
+                        this.medikament.setVerfallsdatum(verfallsdatumDP.getValue());
+                        this.medikament.setHersteller(herstellerTF.getText());
+                        this.medikament.setWirkstoff(wirkstoffTF.getText());
+                        this.medikament.setDosierung(dosierungTF.getText());
                         if(rezeptpflichtigCB.getValue().equals("Ja")) {
-                            medikament.setRezeptpflichtig(true);
+                            this.medikament.setRezeptpflichtig(true);
                         } else if(rezeptpflichtigCB.getValue().equals("Nein")){
-                            medikament.setRezeptpflichtig(false);
+                            this.medikament.setRezeptpflichtig(false);
                         }
-                        medikament.setNebenwirkungen(nebenwirkungenTF.getText());
-                        medikament.setLagerbedingungen(lagerbedingungenTF.getText());
+                        this.medikament.setNebenwirkungen(nebenwirkungenTF.getText());
+                        this.medikament.setLagerbedingungen(lagerbedingungenTF.getText());
                         if(verfuegbarCB.getValue().equals("Ja")) {
-                            medikament.setVerfuegbar(true);
+                            this.medikament.setVerfuegbar(true);
                         } else if(verfuegbarCB.getValue().equals("Nein")) {
-                            medikament.setVerfuegbar(false);
+                            this.medikament.setVerfuegbar(false);
                         }
-                        medikament.setBeschreibung(beschreibungTF.getText());
+                        this.medikament.setBeschreibung(beschreibungTF.getText());
 
-                        return medikament;
+                        return this.medikament;
                     } catch (APOException e) {
                         Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                         errorAlert.setTitle("Fehler");
-                        errorAlert.setHeaderText("Fehler beim Hinzufügen eines neuen Medikaments");
+                        errorAlert.setHeaderText("Fehler beim Verwalten des Medikaments: " + this.medikament.getBezeichnung());
                         errorAlert.setContentText(e.getMessage());
                         errorAlert.showAndWait();
                     }

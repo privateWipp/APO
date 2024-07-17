@@ -37,8 +37,8 @@ public class Geschaeftsfuehrer implements Serializable, Cloneable {
     }
 
     public void setNachname(String nachname) throws APOException {
-        if(nachname != null) {
-            if(!nachname.isEmpty()) {
+        if (nachname != null) {
+            if (!nachname.isEmpty()) {
                 this.nachname = nachname;
             } else {
                 throw new APOException("Der Nachname des Geschäftsführers ist ungültig!");
@@ -49,8 +49,8 @@ public class Geschaeftsfuehrer implements Serializable, Cloneable {
     }
 
     public void setVorname(String vorname) throws APOException {
-        if(vorname != null) {
-            if(!vorname.isEmpty()) {
+        if (vorname != null) {
+            if (!vorname.isEmpty()) {
                 this.vorname = vorname;
             } else {
                 throw new APOException("Der Vorname des Geschäftsführers ist ungültig!");
@@ -61,8 +61,8 @@ public class Geschaeftsfuehrer implements Serializable, Cloneable {
     }
 
     public void setGeburtsdatum(LocalDate geburtsdatum) throws APOException {
-        if(geburtsdatum != null) {
-            if(geburtsdatum.isBefore(LocalDate.now())) {
+        if (geburtsdatum != null) {
+            if (geburtsdatum.isBefore(LocalDate.now())) {
                 this.geburtsdatum = geburtsdatum;
             } else {
                 throw new APOException("Des Geschäftsführers Geburtsdatum ist ungültig!");
@@ -73,9 +73,9 @@ public class Geschaeftsfuehrer implements Serializable, Cloneable {
     }
 
     public void setGeschlecht(String geschlecht) throws APOException {
-        if(geschlecht != null) {
-            if(!geschlecht.isEmpty()) {
-                if(geschlecht.equals("Männlich") || geschlecht.equals("Weiblich") || geschlecht.equals("Inter") || geschlecht.equals("Divers") || geschlecht.equals("Offen") || geschlecht.equals("keine Angabe")) {
+        if (geschlecht != null) {
+            if (!geschlecht.isEmpty()) {
+                if (geschlecht.equals("Männlich") || geschlecht.equals("Weiblich") || geschlecht.equals("Inter") || geschlecht.equals("Divers") || geschlecht.equals("Offen") || geschlecht.equals("keine Angabe")) {
                     this.geschlecht = geschlecht;
                 } else {
                     throw new APOException("gültige Geschlechter:\n" +
@@ -90,8 +90,8 @@ public class Geschaeftsfuehrer implements Serializable, Cloneable {
     }
 
     public void setAdresse(String adresse) throws APOException {
-        if(adresse != null) {
-            if(!adresse.isEmpty()) {
+        if (adresse != null) {
+            if (!adresse.isEmpty()) {
                 this.adresse = adresse;
             } else {
                 throw new APOException("Die Adresse des Geschäftsführers ist ungültig!");
@@ -102,8 +102,8 @@ public class Geschaeftsfuehrer implements Serializable, Cloneable {
     }
 
     public void setTelefonnummer(String telefonnummer) throws APOException {
-        if(telefonnummer != null) {
-            if(telefonnummer.length() >= 5) {
+        if (telefonnummer != null) {
+            if (telefonnummer.length() >= 5) {
                 this.telefonnummer = telefonnummer;
             } else {
                 throw new APOException("Ungültige Telefonnummer!");
@@ -114,8 +114,8 @@ public class Geschaeftsfuehrer implements Serializable, Cloneable {
     }
 
     public void setEmail(String email) throws APOException {
-        if(email != null) {
-            if(!email.isEmpty()) {
+        if (email != null) {
+            if (!email.isEmpty()) {
                 this.email = email;
             } else {
                 throw new APOException("Die E-Mail-Adresse des Geschäftsführers ist ungültig!");

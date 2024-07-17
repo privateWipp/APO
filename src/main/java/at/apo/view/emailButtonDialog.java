@@ -15,15 +15,14 @@ public class emailButtonDialog extends Dialog<String> {
     public emailButtonDialog(Apotheke model) {
         this.model = model;
 
-        setTitle("E-Mail Adresse der Apotheke ändern");
+        setTitle("E-Mail Adresse ändern : " + this.model.getName());
 
         FlowPane flowPane = new FlowPane();
         flowPane.setOrientation(Orientation.VERTICAL);
 
         HBox emailHBox = new HBox();
         Label emailL = new Label("E-Mail Adresse:");
-        TextField emailTF = new TextField();
-        emailTF.setText(this.model.getEmail());
+        TextField emailTF = new TextField(this.model.getEmail());
         emailHBox.getChildren().addAll(emailL, emailTF);
         emailHBox.setPadding(new Insets(10, 10, 10, 10));
         emailHBox.setSpacing(10);
@@ -39,8 +38,8 @@ public class emailButtonDialog extends Dialog<String> {
             if(bt == buttonType) {
                 Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
                 confirmation.setTitle("E-Mail Adresse ändern");
-                confirmation.setHeaderText("E-Mail Adresse der Apotheke verändern");
-                confirmation.setContentText("Sind Sie sicher, dass Sie die aktuelle E-Mail Adresse von der Apotheke " + this.model.getName() + " von " + this.model.getEmail() + " auf " + emailTF.getText() + " ändern wollen?");
+                confirmation.setHeaderText("E-Mail Adresse der Apotheke " + this.model.getName() + " verändern");
+                confirmation.setContentText("Sind Sie sicher, dass Sie die E-Mail Adresse der Apotheke " + this.model.getName() + " von " + this.model.getEmail() + " auf " + emailTF.getText() + " ändern wollen?");
 
                 ButtonType yes = new ButtonType("Ja");
                 ButtonType no = new ButtonType("Nein");
@@ -52,7 +51,7 @@ public class emailButtonDialog extends Dialog<String> {
                 if (result.isPresent() && result.get() == yes) {
                     return emailTF.getText();
                 } else {
-                    close();
+                    confirmation.close();
                 }
             }
             return null;

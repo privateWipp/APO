@@ -21,7 +21,7 @@ public class RezepteController {
     }
 
     public void addRezept() {
-        addRezeptDialog addRezeptDialog = new addRezeptDialog(this.model);
+        addRezeptDialog addRezeptDialog = new addRezeptDialog(this.mainView, this.model);
         Optional<Rezept> r = addRezeptDialog.showAndWait();
 
         r.ifPresent(rezept -> {
@@ -74,7 +74,7 @@ public class RezepteController {
     public void manageRezept(Rezept rezept) {
         Rezept rezeptBefore = rezept.clone();
 
-        manageRezeptDialog manageRezeptDialog = new manageRezeptDialog(this.model, rezept);
+        manageRezeptDialog manageRezeptDialog = new manageRezeptDialog(this.mainView, this.model, rezept);
         Optional<Rezept> r = manageRezeptDialog.showAndWait();
 
         r.ifPresent(rezept1 -> {
@@ -92,14 +92,14 @@ public class RezepteController {
             this.view.loadRezepte();
             this.mainView.loadListViews();
             this.mainView.setChanged(true);
-            System.out.println("Das ausgewählte Rezept wurde erfolgreich geändert/verändert!");
+            System.out.println("Das ausgewählte Rezept wurde erfolgreich verändert!");
         });
     }
 
     public void printRezepte() {
         if (!this.model.getRezepte().isEmpty()) {
             printRezepte printRezepte = new printRezepte(this.model);
-            System.out.println("Alle Mitarbeiter der Apotheke in Form einer Liste ausgegeben.");
+            System.out.println("Alle Mitarbeiter der Apotheke " + this.model.getName() + " in Form einer Liste ausgegeben.");
         } else {
             this.mainView.errorAlert("Rezepte in der Apotheke", "Es gibt keine/nicht genug Rezepte in der Apotheke, daher kann auch keine Liste ausgegeben werden!");
         }

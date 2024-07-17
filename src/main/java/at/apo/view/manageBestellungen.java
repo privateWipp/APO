@@ -38,7 +38,7 @@ public class manageBestellungen extends BorderPane {
     }
 
     private void initGUI() {
-        this.stage.setTitle(this.model.getName() + " : Bestellungen verwalten");
+        this.stage.setTitle("Bestellungen verwalten : " + this.model.getName());
         this.stage.setResizable(false);
         Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.25, this.apoInstance.getScreenHeight() * 0.4);
         this.stage.setScene(scene);
@@ -63,8 +63,6 @@ public class manageBestellungen extends BorderPane {
         VBox topVBox = new VBox(menuBar, manageBestellungenHBox);
         topVBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
-        setTop(topVBox);
-
         aktualisiereListe.setOnAction(e -> {
             updateBestellungen();
         });
@@ -76,6 +74,8 @@ public class manageBestellungen extends BorderPane {
         manageBestellung.setOnAction(e -> this.ctrl.manageBestellung(this.bestellungenListView.getSelectionModel().getSelectedItem()));
         changeStatus.disableProperty().bind(this.bestellungenListView.getSelectionModel().selectedItemProperty().isNull());
         changeStatus.setOnAction(e -> this.ctrl.changeStatus(this.bestellungenListView.getSelectionModel().getSelectedItem()));
+
+        setTop(topVBox);
 
         // -------------------------------------------------------------------------------------------------------------
 
@@ -92,9 +92,9 @@ public class manageBestellungen extends BorderPane {
 
         toolBar.getItems().add(printAllBestellungen);
 
-        setRight(toolBar);
-
         printAllBestellungen.setOnAction(e -> this.ctrl.printAllBestellungen());
+
+        setRight(toolBar);
 
         // -------------------------------------------------------------------------------------------------------------
 

@@ -8,7 +8,7 @@ import javafx.scene.layout.GridPane;
 
 public class createApoDialog extends Dialog<Apotheke> {
     public createApoDialog() {
-        setTitle("neue Apotheke");
+        setTitle("neue Apotheke gründen");
 
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(10, 10, 10, 10));
@@ -49,7 +49,7 @@ public class createApoDialog extends Dialog<Apotheke> {
 
         getDialogPane().setContent(gridPane);
 
-        ButtonType buttonType = new ButtonType("Erstellen", ButtonBar.ButtonData.APPLY);
+        ButtonType buttonType = new ButtonType("Gründen", ButtonBar.ButtonData.APPLY);
         getDialogPane().getButtonTypes().add(buttonType);
 
         this.setResultConverter(bt -> {
@@ -59,7 +59,7 @@ public class createApoDialog extends Dialog<Apotheke> {
                 } catch (APOException e) {
                     Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                     errorAlert.setTitle("Fehler");
-                    errorAlert.setHeaderText("Fehler beim Erstellen der Apotheke");
+                    errorAlert.setHeaderText("Fehler beim Gründen der Apotheke");
                     errorAlert.setContentText(e.getMessage());
                     errorAlert.showAndWait();
                 }

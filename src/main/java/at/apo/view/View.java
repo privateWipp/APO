@@ -21,11 +21,14 @@ public class View extends BorderPane {
 
     public View() {
         this.apoInstance = APO.getInstance();
+
         this.directory = new File("apotheken");
         if(!this.directory.exists()) {
             this.directory.mkdir();
         }
+
         this.ctrl = new Controller(this);
+
         this.apothekenListView = new ListView<Apotheke>();
         loadApotheken();
 
@@ -33,7 +36,7 @@ public class View extends BorderPane {
     }
 
     private void initGUI() {
-        // Top: Menü(s)
+        // Top: MenuBar
         MenuBar menuBar = new MenuBar();
 
         Menu apotheke = new Menu("Apotheke");
@@ -50,9 +53,6 @@ public class View extends BorderPane {
 
         menuBar.getMenus().addAll(apotheke, help);
 
-        setTop(menuBar);
-
-        // Menü-Verwaltung
         createApo.setOnAction(e -> this.ctrl.createApo());
         importApo.setOnAction(e -> this.ctrl.importApo());
         openApo.disableProperty().bind(this.apothekenListView.getSelectionModel().selectedItemProperty().isNull());
@@ -62,6 +62,8 @@ public class View extends BorderPane {
         refreshList.setOnAction(e -> loadApotheken());
 
         aboutMe.setOnAction(e -> this.ctrl.aboutMe());
+
+        setTop(menuBar);
 
         // -------------------------------------------------------------------------------------------------------------
 
@@ -78,19 +80,18 @@ public class View extends BorderPane {
 
         VBox toolBarItemsVBox = new VBox();
         toolBarItemsVBox.setSpacing(10);
-        Button openApo2 = new Button("Öffnen/Verwalten");
-        Button deleteApo2 = new Button("Löschen");
+        Button openApo2 = new Button("öffnen/verwalten");
+        Button deleteApo2 = new Button("löschen");
         toolBarItemsVBox.getChildren().addAll(openApo2, deleteApo2);
 
         toolBar.getItems().addAll(toolBarItemsVBox);
 
-        setRight(toolBar);
-
-        // Verwalten der Funktionen, der Buttons in der ToolBar
         openApo2.disableProperty().bind(this.apothekenListView.getSelectionModel().selectedItemProperty().isNull());
         openApo2.setOnAction(e -> this.ctrl.openApo(this.apothekenListView.getSelectionModel().getSelectedItem()));
         deleteApo2.disableProperty().bind(this.apothekenListView.getSelectionModel().selectedItemProperty().isNull());
         deleteApo2.setOnAction(e -> this.ctrl.deleteApo(this.apothekenListView.getSelectionModel().getSelectedItem()));
+
+        setRight(toolBar);
     }
 
     private void loadApotheken() {
@@ -103,7 +104,7 @@ public class View extends BorderPane {
                     apotheke.laden(file);
                     this.apothekenListView.getItems().add(apotheke);
                 } catch (APOException e) {
-                    errorAlert("Fehler beim Laden der Apotheken aus dem Ordner", e.getMessage());
+                    errorAlert("Fehler beim Laden der Apotheken aus dem Ordner 'apotheken'", e.getMessage());
                 }
             });
         }

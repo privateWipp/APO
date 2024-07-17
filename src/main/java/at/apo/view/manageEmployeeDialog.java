@@ -1,6 +1,7 @@
 package at.apo.view;
 
 import at.apo.model.APOException;
+import at.apo.model.Apotheke;
 import at.apo.model.Mitarbeiter;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -9,12 +10,14 @@ import javafx.scene.layout.GridPane;
 import java.util.Optional;
 
 public class manageEmployeeDialog extends Dialog<Mitarbeiter> {
+    private Apotheke model;
     private Mitarbeiter mitarbeiter;
 
-    public manageEmployeeDialog(Mitarbeiter mitarbeiter) {
+    public manageEmployeeDialog(Apotheke model, Mitarbeiter mitarbeiter) {
+        this.model = model;
         this.mitarbeiter = mitarbeiter;
 
-        setTitle("Mitarbeiter " + mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " bearbeiten/verwalten");
+        setTitle("Mitarbeiter (" + this.mitarbeiter.getVorname() + " " + this.mitarbeiter.getNachname() + ") verwalten : " + this.model.getName());
 
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(10, 10, 10, 10));
@@ -22,39 +25,36 @@ public class manageEmployeeDialog extends Dialog<Mitarbeiter> {
         gridPane.setVgap(10);
 
         Label nachnameL = new Label("Nachname:");
-        TextField nachnameTF = new TextField(mitarbeiter.getNachname());
+        TextField nachnameTF = new TextField(this.mitarbeiter.getNachname());
         nachnameTF.setPromptText("Nachname des Mitarbeiters");
 
         Label vornameL = new Label("Vorname:");
-        TextField vornameTF = new TextField(mitarbeiter.getVorname());
+        TextField vornameTF = new TextField(this.mitarbeiter.getVorname());
         vornameTF.setPromptText("Vorname des Mitarbeiters");
 
         Label geburtsdatumL = new Label("Geb. Dat.:");
-        DatePicker geburtsdatumDP = new DatePicker(mitarbeiter.getGeburtsdatum());
+        DatePicker geburtsdatumDP = new DatePicker(this.mitarbeiter.getGeburtsdatum());
 
         Label geschlechtL = new Label("Geschlecht:");
         ComboBox<String> geschlechtCB = new ComboBox<>();
         geschlechtCB.getItems().addAll("Männlich", "Weiblich", "Inter", "Divers", "Offen", "keine Angabe");
-        geschlechtCB.setValue(mitarbeiter.getGeschlecht());
+        geschlechtCB.setValue(this.mitarbeiter.getGeschlecht());
 
         Label adresseL = new Label("Adresse:");
-        TextField adresseTF = new TextField(mitarbeiter.getAdresse());
+        TextField adresseTF = new TextField(this.mitarbeiter.getAdresse());
         adresseTF.setPromptText("Adresse des Mitarbeiters");
 
         Label telefonnummerL = new Label("Tel. Nr.:");
-        TextField telefonnummerTF = new TextField(mitarbeiter.getTelefonnummer());
+        TextField telefonnummerTF = new TextField(this.mitarbeiter.getTelefonnummer());
         telefonnummerTF.setPromptText("Telefonnummer eingeben");
 
         Label emailL = new Label("E-Mail Adresse:");
-        TextField emailTF = new TextField(mitarbeiter.getEmail());
+        TextField emailTF = new TextField(this.mitarbeiter.getEmail());
         emailTF.setPromptText("E-Mail Adresse vom Mitarbeiter");
 
         Label gehaltL = new Label("Gehalt:");
-        TextField gehaltTF = new TextField(Double.toString(mitarbeiter.getGehalt()));
+        TextField gehaltTF = new TextField(Double.toString(this.mitarbeiter.getGehalt()));
         gehaltTF.setPromptText("üblich: 2500");
-
-        ButtonType buttonType = new ButtonType("Ändern", ButtonBar.ButtonData.APPLY);
-        getDialogPane().getButtonTypes().add(buttonType);
 
         gridPane.add(nachnameL, 0, 0);
         gridPane.add(nachnameTF, 1, 0);
@@ -76,12 +76,15 @@ public class manageEmployeeDialog extends Dialog<Mitarbeiter> {
 
         getDialogPane().setContent(gridPane);
 
+        ButtonType buttonType = new ButtonType("Ändern", ButtonBar.ButtonData.APPLY);
+        getDialogPane().getButtonTypes().add(buttonType);
+
         this.setResultConverter(bt -> {
             if (bt == buttonType) {
                 Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-                confirmation.setTitle("Medikament ändern");
+                confirmation.setTitle("Mitarbeiter verwalten");
                 confirmation.setHeaderText("Sind Sie sicher?");
-                confirmation.setContentText("Sind Sie sicher, dass Sie den Mitarbeiter " + mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " ändern wollen?");
+                confirmation.setContentText("Sind Sie sicher, dass Sie neue Änderungen am Mitarbeiter " + this.mitarbeiter.getVorname() + " " + this.mitarbeiter.getNachname() + " vornehmen wollen?");
 
                 ButtonType yes = new ButtonType("Ja");
                 ButtonType no = new ButtonType("Nein");
@@ -92,19 +95,20 @@ public class manageEmployeeDialog extends Dialog<Mitarbeiter> {
                 Optional<ButtonType> result = confirmation.showAndWait();
                 if (result.isPresent() && result.get() == yes) {
                     try {
-                        mitarbeiter.setNachname(nachnameTF.getText());
-                        mitarbeiter.setVorname(vornameTF.getText());
-                        mitarbeiter.setGeburtsdatum(geburtsdatumDP.getValue());
-                        mitarbeiter.setGeschlecht(geschlechtCB.getValue());
-                        mitarbeiter.setAdresse(adresseTF.getText());
-                        mitarbeiter.setTelefonnummer(telefonnummerTF.getText());
-                        mitarbeiter.setEmail(emailTF.getText());
-                        mitarbeiter.setGehalt(Double.parseDouble(gehaltTF.getText()));
-                        return mitarbeiter;
+                        this.mitarbeiter.setNachname(nachnameTF.getText());
+                        this.mitarbeiter.setVorname(vornameTF.getText());
+                        this.mitarbeiter.setGeburtsdatum(geburtsdatumDP.getValue());
+                        this.mitarbeiter.setGeschlecht(geschlechtCB.getValue());
+                        this.mitarbeiter.setAdresse(adresseTF.getText());
+                        this.mitarbeiter.setTelefonnummer(telefonnummerTF.getText());
+                        this.mitarbeiter.setEmail(emailTF.getText());
+                        this.mitarbeiter.setGehalt(Double.parseDouble(gehaltTF.getText()));
+
+                        return this.mitarbeiter;
                     } catch (APOException e) {
                         Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                         errorAlert.setTitle("Fehler");
-                        errorAlert.setHeaderText("Fehler beim Ändern/Verwalten eines Mitarbeiters");
+                        errorAlert.setHeaderText("Fehler beim Verwalten eines Mitarbeiters");
                         errorAlert.setContentText(e.getMessage());
                         errorAlert.showAndWait();
                     }

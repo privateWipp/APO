@@ -7,15 +7,13 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-import java.time.LocalDate;
-
 public class geschaeftsfuehrerFestlegenDialog extends Dialog<Geschaeftsfuehrer> {
     private Apotheke model;
 
     public geschaeftsfuehrerFestlegenDialog(Apotheke model, boolean change) {
         this.model = model;
 
-        setTitle("Geschäftsführer festlegen");
+        setTitle("Geschäftsführer festlegen : " + this.model.getName());
 
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(10, 10, 10, 10));
@@ -64,6 +62,8 @@ public class geschaeftsfuehrerFestlegenDialog extends Dialog<Geschaeftsfuehrer> 
         gridPane.add(emailL, 0, 6);
         gridPane.add(emailTF, 1, 6);
 
+        getDialogPane().setContent(gridPane);
+
         ButtonType buttonType;
 
         if (change) {
@@ -81,7 +81,6 @@ public class geschaeftsfuehrerFestlegenDialog extends Dialog<Geschaeftsfuehrer> 
         }
 
         getDialogPane().getButtonTypes().add(buttonType);
-        getDialogPane().setContent(gridPane);
 
         this.setResultConverter(bt -> {
             if (bt == buttonType) {
@@ -90,7 +89,7 @@ public class geschaeftsfuehrerFestlegenDialog extends Dialog<Geschaeftsfuehrer> 
                 } catch (APOException e) {
                     Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                     errorAlert.setTitle("Fehler");
-                    errorAlert.setHeaderText("Fehler beim Festlegen des Geschäftsführers.");
+                    errorAlert.setHeaderText("Fehler beim Festlegen des Geschäftsführers");
                     errorAlert.setContentText(e.getMessage());
                     errorAlert.showAndWait();
                 }

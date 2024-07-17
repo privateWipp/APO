@@ -24,16 +24,18 @@ public class printRezepte extends BorderPane {
         this.apoInstance = APO.getInstance();
         this.originalModel = originalModel;
         this.model = this.originalModel.clone();
+
         this.textArea = new TextArea();
         this.textArea.setEditable(false);
         updateTextArea();
+
         this.stage = new Stage();
 
         initGUI();
     }
 
     private void initGUI() {
-        this.stage.setTitle("Rezepte-Liste ausgeben");
+        this.stage.setTitle("alle Rezepte ausgeben : " + this.model.getName());
         this.stage.setResizable(false);
         Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.25, this.apoInstance.getScreenHeight() * 0.4);
         this.stage.setScene(scene);
@@ -52,8 +54,6 @@ public class printRezepte extends BorderPane {
         bearbeiten.getItems().addAll(sortRNr, sortArzt, sortAusstellungsdatum, sortGueltigBis, sortAnzWiederholungen, sortRezeptart, sortPreis);
 
         menuBar.getMenus().addAll(bearbeiten);
-
-        setTop(menuBar);
 
         sortRNr.setOnAction(e -> {
             this.model.getRezepte().sort(Comparator.comparing(Rezept::getRezeptnummer));
@@ -83,6 +83,8 @@ public class printRezepte extends BorderPane {
             this.model.getRezepte().sort(Comparator.comparing(Rezept::getPreis));
             updateTextArea();
         });
+
+        setTop(menuBar);
 
         // -------------------------------------------------------------------------------------------------------------
 

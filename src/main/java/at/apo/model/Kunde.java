@@ -21,8 +21,8 @@ public class Kunde implements Serializable, Cloneable {
     }
 
     public void setName(String name) throws APOException {
-        if(name != null) {
-            if(!name.isEmpty()) {
+        if (name != null) {
+            if (!name.isEmpty()) {
                 this.name = name;
             } else {
                 throw new APOException("Der angegebene Name des Kunden ist ungültig!");

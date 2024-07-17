@@ -5,21 +5,22 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
 public class manageRezeptDialog extends Dialog<Rezept> {
+    private ApoView view;
     private Apotheke model;
     private Rezept rezept;
     private ListView<Medikament> medikamentenListView;
 
-    public manageRezeptDialog(Apotheke model, Rezept rezept) {
+    public manageRezeptDialog(ApoView view, Apotheke model, Rezept rezept) {
+        this.view = view;
         this.model = model;
         this.rezept = rezept;
         this.medikamentenListView = new ListView<Medikament>();
 
-        setTitle("Rezept ändern");
+        setTitle("Rezept (Nr. " + this.rezept.getRezeptnummer() + ") verändern : " + this.model.getName());
 
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(20, 20, 20, 20));
@@ -44,6 +45,7 @@ public class manageRezeptDialog extends Dialog<Rezept> {
         for (Medikament medikament : this.rezept.getMedikamente()) {
             this.medikamentenListView.getItems().add(medikament);
         }
+
         Button addMed = new Button("+");
         addMed.disableProperty().bind(medikamenteCB.getSelectionModel().selectedItemProperty().isNull());
         addMed.setOnAction(e -> {
@@ -55,10 +57,39 @@ public class manageRezeptDialog extends Dialog<Rezept> {
                 Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                 errorAlert.setTitle("Medikament hinzufügen");
                 errorAlert.setHeaderText("übergebenes Medikament");
-                errorAlert.setContentText("Das übergebene/ausgewählte Medikament für die Liste ist entweder ungültig oder bereits vorhanden!");
+                errorAlert.setContentText("Das gewählte Medikament ist in der Liste bereits vorhanden!");
                 medikamenteCB.setValue(null);
                 errorAlert.showAndWait();
             }
+        });
+
+        Button neuesMedikament = new Button("neues Medikament");
+        neuesMedikament.setOnAction(e -> {
+            addMedikamentDialog addMedikamentDialog = new addMedikamentDialog(this.model);
+            Optional<Medikament> m = addMedikamentDialog.showAndWait();
+
+            m.ifPresent(medikament -> {
+                try {
+                    this.model.addMedikament(medikament);
+                    this.view.loadListViews();
+                    this.view.setChanged(true);
+                    System.out.println("Das Medikament " + medikament.getBezeichnung() + " wurde in die Apotheke " + this.model.getName() + " mit " + medikament.getLagerbestand() + " Stück aufgenommen.");
+
+                    if(!this.medikamentenListView.getItems().contains(medikament)) {
+                        this.medikamentenListView.getItems().add(medikament);
+                        this.medikamentenListView.refresh();
+                    } else {
+                        Alert information = new Alert(Alert.AlertType.INFORMATION);
+                        information.setTitle("ACHTUNG");
+                        information.setHeaderText("gleiches Medikament");
+                        information.setContentText("Ein genau gleiches Medikament existiert bereits in der Liste!");
+                        information.showAndWait();
+                    }
+                } catch (APOException ex) {
+                    this.view.errorAlert("Fehler beim Hinzufügen eines neuen Medikaments", ex.getMessage());
+                    System.out.println("Fehler: Beim Aufnehmen eines neuen Medikaments in die Apotheke " + this.model.getName() + " ist ein Fehler aufgetreten!");
+                }
+            });
         });
 
         Label ausstellungsDatumL = new Label("Ausstellungsdatum:");
@@ -90,6 +121,7 @@ public class manageRezeptDialog extends Dialog<Rezept> {
         gridPane.add(medikamenteL, 0, 2);
         gridPane.add(medikamenteCB, 1, 2);
         gridPane.add(addMed, 2, 2);
+        gridPane.add(neuesMedikament, 3, 2);
         gridPane.add(this.medikamentenListView, 1, 3);
         gridPane.add(ausstellungsDatumL, 0, 4);
         gridPane.add(ausstellungsDatumTF, 1, 4);
@@ -112,7 +144,7 @@ public class manageRezeptDialog extends Dialog<Rezept> {
                 Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
                 confirmation.setTitle("Rezept ändern");
                 confirmation.setHeaderText("Sind Sie sicher?");
-                confirmation.setContentText("Sind Sie sicher, dass Sie das aktuelle Rezept verändern wollen?");
+                confirmation.setContentText("Sind Sie sicher, dass Sie das aktuelle Rezept (Nr. " + this.rezept.getRezeptnummer() + ") verändern wollen?");
 
                 ButtonType yes = new ButtonType("Ja");
                 ButtonType no = new ButtonType("Nein");
@@ -136,7 +168,7 @@ public class manageRezeptDialog extends Dialog<Rezept> {
                     } catch (APOException e) {
                         Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                         errorAlert.setTitle("Fehler");
-                        errorAlert.setHeaderText("Fehler beim Hinzufügen eines neuen Rezepts");
+                        errorAlert.setHeaderText("Fehler beim Verwalten des Rezepts Nr. " + this.rezept.getRezeptnummer());
                         errorAlert.setContentText(e.getMessage());
                         errorAlert.showAndWait();
                     }

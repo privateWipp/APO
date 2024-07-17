@@ -21,7 +21,7 @@ public class MedikamenteController {
     }
 
     public void addMedikament() {
-        addMedikamentDialog addMedikamentDialog = new addMedikamentDialog();
+        addMedikamentDialog addMedikamentDialog = new addMedikamentDialog(this.model);
         Optional<Medikament> m = addMedikamentDialog.showAndWait();
 
         m.ifPresent(medikament -> {
@@ -68,7 +68,7 @@ public class MedikamenteController {
     }
 
     public void manageMedikament(Medikament medikament) {
-        manageMedikamentDialog manageMedikamentDialog = new manageMedikamentDialog(medikament);
+        manageMedikamentDialog manageMedikamentDialog = new manageMedikamentDialog(this.model, medikament);
         Optional<Medikament> m = manageMedikamentDialog.showAndWait();
 
         m.ifPresent(medikament1 -> {

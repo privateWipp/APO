@@ -21,16 +21,18 @@ public class printAllMedikamente extends BorderPane {
         this.apoInstance = APO.getInstance();
         this.originalModel = model;
         this.model = this.originalModel.clone();
+
         this.textArea = new TextArea();
         this.textArea.setEditable(false);
         updateTextArea();
+
         this.stage = new Stage();
 
         initGUI();
     }
 
     private void initGUI() {
-        this.stage.setTitle("Alle Medikamente der Apotheke " + this.model.getName() + " ausgeben");
+        this.stage.setTitle("alle Medikamente ausgeben : " + this.model.getName());
         this.stage.setResizable(false);
         Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.15, this.apoInstance.getScreenHeight() * 0.4);
         this.stage.setScene(scene);

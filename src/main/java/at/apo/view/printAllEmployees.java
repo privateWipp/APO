@@ -24,16 +24,18 @@ public class printAllEmployees extends BorderPane {
         this.apoInstance = APO.getInstance();
         this.originalModel = originalModel;
         this.model = this.originalModel.clone();
+
         this.textArea = new TextArea();
         this.textArea.setEditable(false);
         updateTextArea();
+
         this.stage = new Stage();
 
         initGUI();
     }
 
     private void initGUI() {
-        this.stage.setTitle("Mitarbeiter-Liste ausgeben");
+        this.stage.setTitle("alle Mitarbeiter ausgeben : " + this.model.getName());
         this.stage.setResizable(false);
         Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.25, this.apoInstance.getScreenHeight() * 0.4);
         this.stage.setScene(scene);
@@ -50,8 +52,6 @@ public class printAllEmployees extends BorderPane {
         bearbeiten.getItems().addAll(sortID, sortNachname, sortVorname, sortGebDat, sortGehalt);
 
         menuBar.getMenus().addAll(bearbeiten);
-
-        setTop(menuBar);
 
         sortID.setOnAction(e -> {
             this.model.getMitarbeiter().sort(Comparator.comparing(Mitarbeiter::getId));
@@ -73,6 +73,8 @@ public class printAllEmployees extends BorderPane {
             this.model.getMitarbeiter().sort(Comparator.comparing(Mitarbeiter::getGehalt));
             updateTextArea();
         });
+
+        setTop(menuBar);
 
         // -------------------------------------------------------------------------------------------------------------
 

@@ -24,16 +24,18 @@ public class printAllBestellungen extends BorderPane {
         this.apoInstance = APO.getInstance();
         this.originalModel = originalModel;
         this.model = this.originalModel.clone();
+
         this.textArea = new TextArea();
         this.textArea.setEditable(false);
         updateTextArea();
+
         this.stage = new Stage();
 
         initGUI();
     }
 
     private void initGUI() {
-        this.stage.setTitle(this.originalModel.getName() + " : alle Bestellungen ausgeben");
+        this.stage.setTitle("alle Bestellungen ausgeben : " + this.model.getName());
         this.stage.setResizable(false);
         Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.25, this.apoInstance.getScreenHeight() * 0.4);
         this.stage.setScene(scene);
@@ -50,8 +52,6 @@ public class printAllBestellungen extends BorderPane {
         bearbeiten.getItems().addAll(sortBestellnummer, sortBezeichnung, sortDatum, sortKosten, sortStatus);
 
         menuBar.getMenus().addAll(bearbeiten);
-
-        setTop(menuBar);
 
         sortBestellnummer.setOnAction(e -> {
             this.model.getBestellungen().sort(Comparator.comparing(Bestellung::getBestellnummer));
@@ -73,6 +73,8 @@ public class printAllBestellungen extends BorderPane {
             this.model.getBestellungen().sort(Comparator.comparing(Bestellung::getBestellstatus));
             updateTextArea();
         });
+
+        setTop(menuBar);
 
         // -------------------------------------------------------------------------------------------------------------
 

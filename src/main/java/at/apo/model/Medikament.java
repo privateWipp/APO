@@ -64,7 +64,7 @@ public class Medikament implements Serializable, Cloneable {
     }
 
     public void setLagerbestand(int lagerbestand) throws APOException {
-        if (lagerbestand >= 1) {
+        if (lagerbestand >= 1 && lagerbestand <= 500) {
             this.lagerbestand = lagerbestand;
         } else {
             throw new APOException("Es muss mindestens ein Medikament solcher Art auf Lager sein!");

@@ -28,6 +28,7 @@ public class manageEmployees extends BorderPane {
         this.mainView = mainView;
         this.model = model;
         this.ctrl = new EmployeeController(this.mainView, this, this.model);
+
         this.mitarbeiterListView = new ListView<Mitarbeiter>();
         this.mitarbeiterListView.setCellFactory(new Callback<ListView<Mitarbeiter>, ListCell<Mitarbeiter>>() {
             @Override
@@ -50,15 +51,17 @@ public class manageEmployees extends BorderPane {
             }
         });
         updateMitarbeiterListView();
+
         this.mitarbeiterTA = new TextArea();
         this.mitarbeiterTA.setEditable(false);
+
         this.stage = new Stage();
 
         initGUI();
     }
 
     private void initGUI() {
-        this.stage.setTitle(this.model.getName() + " : Mitarbeiter verwalten");
+        this.stage.setTitle("Mitarbeiter verwalten : " + this.model.getName());
         this.stage.setResizable(false);
         Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.25, this.apoInstance.getScreenHeight() * 0.4);
         this.stage.setScene(scene);
@@ -72,11 +75,6 @@ public class manageEmployees extends BorderPane {
 
         menuBar.getMenus().add(list);
 
-        refreshList.setOnAction(e -> {
-            updateMitarbeiterListView();
-            System.out.println("Die Liste der Mitarbeiter wurde aktualisiert.");
-        });
-
         Button addEmployee = new Button("+ Mitarbeiter");
         Button removeEmployee = new Button("- Mitarbeiter");
         Button manageEmployee = new Button("anschauen/verwalten");
@@ -87,14 +85,18 @@ public class manageEmployees extends BorderPane {
         VBox topVBox = new VBox(menuBar, manageEmployeesHBox);
         topVBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
-        setTop(topVBox);
+        refreshList.setOnAction(e -> {
+            updateMitarbeiterListView();
+            System.out.println("Die Liste der Mitarbeiter wurde aktualisiert.");
+        });
 
-        // Verwaltung der Buttons
         addEmployee.setOnAction(e -> this.ctrl.addEmployee());
         removeEmployee.disableProperty().bind(this.mitarbeiterListView.getSelectionModel().selectedItemProperty().isNull());
         removeEmployee.setOnAction(e -> this.ctrl.removeEmployee(this.mitarbeiterListView.getSelectionModel().getSelectedItem()));
         manageEmployee.disableProperty().bind(this.mitarbeiterListView.getSelectionModel().selectedItemProperty().isNull());
         manageEmployee.setOnAction(e -> this.ctrl.manageEmployee(this.mitarbeiterListView.getSelectionModel().getSelectedItem()));
+
+        setTop(topVBox);
 
         // -------------------------------------------------------------------------------------------------------------
 
@@ -113,9 +115,9 @@ public class manageEmployees extends BorderPane {
 
         toolBar.getItems().add(printAllEmployees);
 
-        setRight(toolBar);
-
         printAllEmployees.setOnAction(e -> this.ctrl.printAllEmployees());
+
+        setRight(toolBar);
 
         // -------------------------------------------------------------------------------------------------------------
 
@@ -129,6 +131,7 @@ public class manageEmployees extends BorderPane {
         });
         VBox mitarbeiterTAVBox = new VBox(this.mitarbeiterTA);
         mitarbeiterTAVBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
+
         setBottom(this.mitarbeiterTA);
 
         // -------------------------------------------------------------------------------------------------------------
@@ -141,25 +144,5 @@ public class manageEmployees extends BorderPane {
         for (Mitarbeiter mitarbeiter : this.model.getMitarbeiter()) {
             this.mitarbeiterListView.getItems().add(mitarbeiter);
         }
-    }
-
-    public ListView<Mitarbeiter> getMitarbeiterListView() {
-        return this.mitarbeiterListView;
-    }
-
-    public TextArea getMitarbeiterTA() {
-        return this.mitarbeiterTA;
-    }
-
-    public void errorAlert(String headerText, String contentText) {
-        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-        errorAlert.setTitle("Fehler");
-        errorAlert.setHeaderText(headerText);
-        errorAlert.setContentText(contentText);
-        errorAlert.showAndWait();
-    }
-
-    public Apotheke getModel() {
-        return this.model;
     }
 }

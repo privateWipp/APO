@@ -1,16 +1,19 @@
 package at.apo.view;
 
 import at.apo.model.APOException;
+import at.apo.model.Apotheke;
 import at.apo.model.Medikament;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-import java.time.LocalDate;
-
 public class addMedikamentDialog extends Dialog<Medikament> {
-    public addMedikamentDialog() {
-        setTitle("neues Medikament");
+    private Apotheke model;
+
+    public addMedikamentDialog(Apotheke model) {
+        this.model = model;
+
+        setTitle("neues Medikament : " + this.model.getName());
 
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(10, 10, 10, 10));
@@ -96,14 +99,14 @@ public class addMedikamentDialog extends Dialog<Medikament> {
         getDialogPane().getButtonTypes().add(buttonType);
 
         this.setResultConverter(bt -> {
-            if(bt == buttonType) {
+            if (bt == buttonType) {
                 try {
                     boolean rezeptpflichtigCBInput = false;
-                    if(rezeptpflichtigCB.getValue().equals("Ja")) {
+                    if (rezeptpflichtigCB.getValue().equals("Ja")) {
                         rezeptpflichtigCBInput = true;
                     }
                     boolean verfuegbarCBInput = false;
-                    if(verfuegbarCB.getValue().equals("Ja")) {
+                    if (verfuegbarCB.getValue().equals("Ja")) {
                         verfuegbarCBInput = true;
                     }
 

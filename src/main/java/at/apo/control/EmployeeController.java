@@ -21,7 +21,7 @@ public class EmployeeController {
     }
 
     public void addEmployee() {
-        addEmployeeDialog addEmployeeDialog = new addEmployeeDialog();
+        addEmployeeDialog addEmployeeDialog = new addEmployeeDialog(this.model);
         Optional<Mitarbeiter> m = addEmployeeDialog.showAndWait();
 
         m.ifPresent(mitarbeiter -> {
@@ -33,7 +33,7 @@ public class EmployeeController {
                 this.mainView.setChanged(true);
                 System.out.println("Der Mitarbeiter " + mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " wurde in die Apotheke " + this.model.getName() + " aufgenommen.");
             } catch (APOException e) {
-                this.view.errorAlert("Fehler beim Einstellen eines neuen Mitarbeiters", e.getMessage());
+                this.mainView.errorAlert("Fehler beim Einstellen eines neuen Mitarbeiters", e.getMessage());
                 System.out.println("Fehler: Das Aufnehmen eines neuen Mitarbeiters in die Apotheke " + this.model.getName() + " ist fehlgeschlagen!");
             }
         });
@@ -92,7 +92,7 @@ public class EmployeeController {
                 this.mainView.setChanged(true);
                 System.out.println(mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " ist nun kein Teil mehr der Apotheke: " + this.model.getName());
             } catch (APOException e) {
-                this.view.errorAlert("Fehler beim Feuern eines Mitarbeiters", e.getMessage());
+                this.mainView.errorAlert("Fehler beim Feuern eines Mitarbeiters", e.getMessage());
                 System.out.println("Fehler: Der Mitarbeiter " + mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " konnte nicht gefeuert werden!");
             }
         } else {
@@ -101,7 +101,7 @@ public class EmployeeController {
     }
 
     public void manageEmployee(Mitarbeiter mitarbeiter) {
-        manageEmployeeDialog manageEmployeeDialog = new manageEmployeeDialog(mitarbeiter);
+        manageEmployeeDialog manageEmployeeDialog = new manageEmployeeDialog(this.model, mitarbeiter);
         Optional<Mitarbeiter> m = manageEmployeeDialog.showAndWait();
 
         m.ifPresent(mitarbeiter1 -> {
@@ -117,7 +117,7 @@ public class EmployeeController {
             printAllEmployees printAllEmployees = new printAllEmployees(this.model);
             System.out.println("Alle Mitarbeiter der Apotheke " + this.model.getName() + " wurden in Form einer Liste ausgegeben.");
         } else {
-            this.view.errorAlert("Mitarbeiter in der Apotheke", "Es gibt keine/nicht genug Mitarbeiter in der Apotheke, daher kann auch keine Liste ausgegeben werden!");
+            this.mainView.errorAlert("Mitarbeiter in der Apotheke", "Es gibt keine/nicht genug Mitarbeiter in der Apotheke, daher kann auch keine Liste ausgegeben werden!");
         }
     }
 }

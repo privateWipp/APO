@@ -20,7 +20,7 @@ public class aboutMe extends BorderPane {
     }
 
     private void initGUI() {
-        this.stage.setTitle("Über mich");
+        this.stage.setTitle("Über mich : APO");
         this.stage.setResizable(true);
         Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.125, this.apoInstance.getScreenHeight() * 0.125);
         this.stage.setScene(scene);

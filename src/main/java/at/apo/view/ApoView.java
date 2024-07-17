@@ -61,7 +61,7 @@ public class ApoView extends BorderPane {
         System.setOut(ps);
         System.setErr(ps);
 
-        this.stage.setTitle(this.model.getName() + " : Apotheke");
+        this.stage.setTitle(this.model.getName() + " : APO");
         this.stage.setResizable(true);
         Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.8, this.apoInstance.getScreenHeight() * 0.8);
         this.stage.setScene(scene);
@@ -134,7 +134,7 @@ public class ApoView extends BorderPane {
         manageRezepte.setOnAction(e -> this.ctrl.manageRezepte());
         newBestellung.setOnAction(e -> this.ctrl.newBestellung());
         manageBestellungen.setOnAction(e -> this.ctrl.manageBestellungen());
-        //manageKunden.setOnAction(e -> this.ctrl.manageKunden());
+        manageKunden.setOnAction(e -> this.ctrl.manageKunden());
 
         geschaeftsfuehrerFestlegen.setOnAction(e -> this.ctrl.geschaeftsfuehrerFestlegen());
         geschaeftsfuehrerAnzeigen.setOnAction(e -> this.ctrl.geschaeftsfuehrerAnzeigen());
@@ -155,9 +155,9 @@ public class ApoView extends BorderPane {
 
         toolBar.getItems().addAll(aIZAVBox);
 
-        setRight(toolBar);
-
         apothekeBearbeiten.setOnAction(e -> this.ctrl.apothekeBearbeiten());
+
+        setRight(toolBar);
 
         // -------------------------------------------------------------------------------------------------------------
 
@@ -235,13 +235,13 @@ public class ApoView extends BorderPane {
         Button clearChanges = new Button("leeren");
         HBox aenderungenHBox = new HBox(changes, clearChanges);
         aenderungenHBox.setSpacing(10);
-        aenderungenHBox.setPadding(new Insets(0, 0, 5, 0));
+        aenderungenHBox.setPadding(new Insets(0, 0, 5, 15));
         VBox changesVBox = new VBox(aenderungenHBox, this.changesTA);
         changesVBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
-        setBottom(changesVBox);
-
         clearChanges.setOnAction(e -> this.ctrl.clearChanges());
+
+        setBottom(changesVBox);
 
         // -------------------------------------------------------------------------------------------------------------
 
@@ -249,6 +249,8 @@ public class ApoView extends BorderPane {
             event.consume();
             saveConfirmation();
         });
+
+        // -------------------------------------------------------------------------------------------------------------
 
         this.stage.show();
     }
@@ -306,9 +308,9 @@ public class ApoView extends BorderPane {
         if (this.changed) {
             Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
             confirmation.setTitle("ungespeicherte Änderungen");
-            confirmation.setHeaderText("Speichern?");
+            confirmation.setHeaderText("NICHT gespeicherte Arbeit");
             confirmation.setContentText("Es wurden (noch nicht gespeicherte) Änderungen vorgenommen.\n" +
-                    "Wollen Sie speichern?");
+                    "Wollen Sie diese speichern?");
 
             ButtonType yes = new ButtonType("Ja");
             ButtonType no = new ButtonType("Nein");
@@ -337,7 +339,7 @@ public class ApoView extends BorderPane {
                     System.out.println("Fehler: Das Speichern der Apotheke ist fehlgeschlagen!");
                     errorAlert.showAndWait();
                 }
-            } else if (result.isPresent() && result.get() == no) { // NICHT SPEICHERN
+            } else if (result.isPresent() && result.get() == no) {
                 this.model = deepCopy(this.originalModel);
                 this.stage.close();
             } else {
@@ -362,25 +364,5 @@ public class ApoView extends BorderPane {
 
     public TextArea getChangesTA() {
         return this.changesTA;
-    }
-
-    public ListView<Medikament> getMedikamentenListView() {
-        return this.medikamentenListView;
-    }
-
-    public ListView<Rezept> getRezepteListView() {
-        return this.rezepteListView;
-    }
-
-    public ListView<Bestellung> getBestellungenListView() {
-        return this.bestellungenListView;
-    }
-
-    public ListView<Kunde> getKundenListView() {
-        return this.kundenListView;
-    }
-
-    public ListView<Mitarbeiter> getMitarbeiterListView() {
-        return this.mitarbeiterListView;
     }
 }

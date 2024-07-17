@@ -15,15 +15,14 @@ public class telefonnummerButtonDialog extends Dialog<String> {
     public telefonnummerButtonDialog(Apotheke model) {
         this.model = model;
 
-        setTitle("Telefonnummer der Apotheke ändern");
+        setTitle("Telefonnummer ändern : " + this.model.getName());
 
         FlowPane flowPane = new FlowPane();
         flowPane.setOrientation(Orientation.VERTICAL);
 
         HBox telefonnummerHBox = new HBox();
         Label telefonnummerL = new Label("Tel. Nr.:");
-        TextField telefonnummerTF = new TextField();
-        telefonnummerTF.setText(this.model.getTelefonnummer());
+        TextField telefonnummerTF = new TextField(this.model.getTelefonnummer());
         telefonnummerHBox.getChildren().addAll(telefonnummerL, telefonnummerTF);
         telefonnummerHBox.setPadding(new Insets(10, 10, 10, 10));
         telefonnummerHBox.setSpacing(10);
@@ -40,7 +39,7 @@ public class telefonnummerButtonDialog extends Dialog<String> {
                 Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
                 confirmation.setTitle("Telefonnummer ändern");
                 confirmation.setHeaderText("Telefonnummer der Apotheke verändern");
-                confirmation.setContentText("Sind Sie sicher, dass Sie die aktuelle Telefonnummer von der Apotheke " + this.model.getName() + " von " + this.model.getTelefonnummer() + " auf " + telefonnummerTF.getText() + " ändern wollen?");
+                confirmation.setContentText("Sind Sie sicher, dass Sie die Telefonnummer der Apotheke " + this.model.getName() + " von " + this.model.getTelefonnummer() + " auf " + telefonnummerTF.getText() + " ändern wollen?");
 
                 ButtonType yes = new ButtonType("Ja");
                 ButtonType no = new ButtonType("Nein");
@@ -52,7 +51,7 @@ public class telefonnummerButtonDialog extends Dialog<String> {
                 if (result.isPresent() && result.get() == yes) {
                     return telefonnummerTF.getText();
                 } else {
-                    close();
+                    confirmation.close();
                 }
             }
             return null;

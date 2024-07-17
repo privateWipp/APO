@@ -10,6 +10,9 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.util.Optional;
 
+/**
+ * @author Jonas Mader
+ */
 public class Controller {
     private View view;
 
@@ -22,13 +25,17 @@ public class Controller {
         Optional<Apotheke> a = newApo.showAndWait();
 
         a.ifPresent(apotheke -> {
-            File file = new File(this.view.getDirectory(), apotheke.getName() + ".apo");
-            try {
-                apotheke.speichern(file);
-                this.view.getApothekenListView().getItems().add(apotheke);
-                this.view.getApothekenListView().refresh();
-            } catch (Exception e) {
-                this.view.errorAlert("Fehler beim Erstellen der Apotheke", e.getMessage());
+            if (!this.view.getApothekenListView().getItems().contains(apotheke)) {
+                File file = new File(this.view.getDirectory(), apotheke.getName() + ".apo");
+                try {
+                    apotheke.speichern(file);
+                    this.view.getApothekenListView().getItems().add(apotheke);
+                    this.view.getApothekenListView().refresh();
+                } catch (Exception e) {
+                    this.view.errorAlert("Fehler beim Erstellen der Apotheke", e.getMessage());
+                }
+            } else {
+                this.view.errorAlert("Fehler beim Erstellen der Apotheke", "Eine genau solche Apotheke ist bereits vorhanden!");
             }
         });
     }
@@ -88,7 +95,7 @@ public class Controller {
         Optional<ButtonType> result = confirmation.showAndWait();
         if (result.isPresent() && result.get() == yes) {
             File file = new File(this.view.getDirectory(), apotheke.getName() + ".apo");
-            if(file.exists()) {
+            if (file.exists()) {
                 this.view.getApothekenListView().getItems().remove(apotheke);
                 file.delete();
                 this.view.getApothekenListView().refresh();

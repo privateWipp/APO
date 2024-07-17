@@ -35,7 +35,7 @@ public class manageRezepte extends BorderPane {
     }
 
     private void initGUI() {
-        this.stage.setTitle(this.model.getName() + " : Rezepte verwalten");
+        this.stage.setTitle("Rezepte verwalten : " + this.model.getName());
         this.stage.setResizable(false);
         Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.25, this.apoInstance.getScreenHeight() * 0.4);
         this.stage.setScene(scene);
@@ -49,12 +49,12 @@ public class manageRezepte extends BorderPane {
 
         menuBar.getMenus().add(list);
 
-        setTop(menuBar);
-
         refreshList.setOnAction(e -> {
             loadRezepte();
             System.out.println("Die Liste der Rezepte wurde aktualisiert.");
         });
+
+        setTop(menuBar);
 
         // -------------------------------------------------------------------------------------------------------------
 
@@ -76,14 +76,14 @@ public class manageRezepte extends BorderPane {
 
         toolBar.getItems().add(buttonVBox);
 
-        setRight(toolBar);
-
         addRezept.setOnAction(e -> this.ctrl.addRezept());
         removeRezept.disableProperty().bind(this.rezeptListView.getSelectionModel().selectedItemProperty().isNull());
         removeRezept.setOnAction(e -> this.ctrl.removeRezept(this.rezeptListView.getSelectionModel().getSelectedItem()));
         manageRezept.disableProperty().bind(this.rezeptListView.getSelectionModel().selectedItemProperty().isNull());
         manageRezept.setOnAction(e -> this.ctrl.manageRezept(this.rezeptListView.getSelectionModel().getSelectedItem()));
         printRezepte.setOnAction(e -> this.ctrl.printRezepte());
+
+        setRight(toolBar);
 
         // -------------------------------------------------------------------------------------------------------------
 
@@ -95,9 +95,5 @@ public class manageRezepte extends BorderPane {
         for(Rezept rezept : this.model.getRezepte()) {
             this.rezeptListView.getItems().add(rezept);
         }
-    }
-
-    public ListView<Rezept> getRezeptListView() {
-        return this.rezeptListView;
     }
 }

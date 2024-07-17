@@ -121,7 +121,7 @@ public class Bestellung implements Serializable, Cloneable {
 
     public void berechneGesamtkosten() {
         double gesamtkosten = 0;
-        for(Medikament medikament : this.medikamente) {
+        for (Medikament medikament : this.medikamente) {
             gesamtkosten += medikament.getPreis();
         }
         this.gesamtkosten = gesamtkosten;

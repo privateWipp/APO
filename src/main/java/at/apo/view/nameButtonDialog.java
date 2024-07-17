@@ -15,15 +15,14 @@ public class nameButtonDialog extends Dialog<String> {
     public nameButtonDialog(Apotheke model) {
         this.model = model;
 
-        setTitle("offiziellen Namen der Apotheke ändern");
+        setTitle("offiziellen Namen ändern : " + this.model.getName());
 
         FlowPane flowPane = new FlowPane();
         flowPane.setOrientation(Orientation.VERTICAL);
 
         HBox nameHBox = new HBox();
         Label nameL = new Label("Name:");
-        TextField nameTF = new TextField();
-        nameTF.setText(this.model.getName());
+        TextField nameTF = new TextField(this.model.getName());
         nameHBox.getChildren().addAll(nameL, nameTF);
         nameHBox.setPadding(new Insets(10, 10, 10, 10));
         nameHBox.setSpacing(10);
@@ -52,7 +51,7 @@ public class nameButtonDialog extends Dialog<String> {
                 if (result.isPresent() && result.get() == yes) {
                     return nameTF.getText();
                 } else {
-                    close();
+                    confirmation.close();
                 }
             }
             return null;

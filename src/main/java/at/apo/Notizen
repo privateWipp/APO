@@ -1,7 +1,0 @@
-- Alle Klasse durchgehen und auf folgende Sachen achten:
-    - add/addAll...
-    - setTitle
-    - this.
-    - if-Abfragen
-    - nicht benutzte Variablen oder Methoden
-    - bei Controller die update-Methoden alle gleich machen (übereinstimmig)

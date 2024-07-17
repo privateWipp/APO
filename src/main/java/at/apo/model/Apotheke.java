@@ -181,7 +181,7 @@ public class Apotheke implements Serializable, Cloneable {
 
     public void addMedikament(Medikament medikament) throws APOException {
         if (medikament != null) {
-            if(!this.medikamente.contains(medikament)) {
+            if (!this.medikamente.contains(medikament)) {
                 this.medikamente.add(medikament);
             } else {
                 throw new APOException("Das übergebene Medikament existiert bereits in derselben Apotheke!");
@@ -201,7 +201,7 @@ public class Apotheke implements Serializable, Cloneable {
 
     public void addKunde(Kunde kunde) throws APOException {
         if (kunde != null) {
-            if(!this.kunden.contains(kunde)) {
+            if (!this.kunden.contains(kunde)) {
                 this.kunden.add(kunde);
             } else {
                 throw new APOException("Der übergebene Kunde existiert bereits in derselben Apotheke!");
@@ -229,7 +229,7 @@ public class Apotheke implements Serializable, Cloneable {
 
     public void addBestellung(Bestellung bestellung) throws APOException {
         if (bestellung != null) {
-            if(!this.bestellungen.contains(bestellung)) {
+            if (!this.bestellungen.contains(bestellung)) {
                 this.bestellungen.add(bestellung);
                 bestellung.setBestellnummer(this.nextBestellung);
                 this.nextBestellung++;
@@ -259,7 +259,7 @@ public class Apotheke implements Serializable, Cloneable {
 
     public void addRezept(Rezept rezept) throws APOException {
         if (rezept != null) {
-            if(!this.rezepte.contains(rezept)) {
+            if (!this.rezepte.contains(rezept)) {
                 this.rezepte.add(rezept);
                 rezept.setRezeptnummer(this.nextRezept);
                 this.nextRezept++;

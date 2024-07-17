@@ -41,7 +41,7 @@ public class Rezept implements Serializable, Cloneable {
     }
 
     public void setRezeptnummer(int rezeptnummer) throws APOException {
-        if(rezeptnummer >= 1) {
+        if (rezeptnummer >= 1) {
             this.rezeptnummer = rezeptnummer;
         } else {
             throw new APOException("Ungültige Rezeptnummer!");
@@ -49,7 +49,7 @@ public class Rezept implements Serializable, Cloneable {
     }
 
     public void setPatient(Kunde patient) throws APOException {
-        if(patient != null) {
+        if (patient != null) {
             this.patient = patient;
         } else {
             throw new APOException("Der angegebene Patient ist ungültig!");
@@ -57,8 +57,8 @@ public class Rezept implements Serializable, Cloneable {
     }
 
     public void setArzt(String arzt) throws APOException {
-        if(arzt != null) {
-            if(!arzt.isEmpty()) {
+        if (arzt != null) {
+            if (!arzt.isEmpty()) {
                 this.arzt = arzt;
             } else {
                 throw new APOException("Der angegebene Arzt ist ungültig!");
@@ -69,7 +69,7 @@ public class Rezept implements Serializable, Cloneable {
     }
 
     public void setMedikamente(ArrayList<Medikament> medikamente) throws APOException {
-        if(medikamente == null || medikamente.isEmpty()) {
+        if (medikamente == null || medikamente.isEmpty()) {
             throw new APOException("Der übergebene Parameter (Medikamente) darf nicht null bzw. leer sein!");
         } else {
             this.medikamente = medikamente;
@@ -77,8 +77,8 @@ public class Rezept implements Serializable, Cloneable {
     }
 
     public void setGueltigBis(LocalDate gueltigBis) throws APOException {
-        if(gueltigBis != null) {
-            if(gueltigBis.isAfter(LocalDate.now())) {
+        if (gueltigBis != null) {
+            if (gueltigBis.isAfter(LocalDate.now())) {
                 this.gueltigBis = gueltigBis;
             } else {
                 throw new APOException("Das übergebene Datum, bis wann das Rezept gültig ist, ist ungültig!");
@@ -89,7 +89,7 @@ public class Rezept implements Serializable, Cloneable {
     }
 
     public void setAnzDerWiederholungen(int anzDerWiederholungen) throws APOException {
-        if(anzDerWiederholungen >= 1) {
+        if (anzDerWiederholungen >= 1) {
             this.anzDerWiederholungen = anzDerWiederholungen;
         } else {
             throw new APOException("Die Einnahme des Medikaments (erhalten durch dieses Rezept) muss mindestens einmal erfolgen!");
@@ -97,8 +97,8 @@ public class Rezept implements Serializable, Cloneable {
     }
 
     public void setRezeptArt(String rezeptArt) throws APOException {
-        if(rezeptArt != null) {
-            if(!rezeptArt.isEmpty()) {
+        if (rezeptArt != null) {
+            if (!rezeptArt.isEmpty()) {
                 this.rezeptArt = rezeptArt;
             } else {
                 throw new APOException("Die angegebene Art des Rezepts ist ungültig!");
@@ -109,15 +109,15 @@ public class Rezept implements Serializable, Cloneable {
     }
 
     public void berechnePreis() {
-        if(this.medikamente != null && !this.medikamente.isEmpty()) {
-            for(Medikament medikament : this.medikamente) {
+        if (this.medikamente != null && !this.medikamente.isEmpty()) {
+            for (Medikament medikament : this.medikamente) {
                 this.preis += medikament.getPreis();
             }
         }
     }
 
     public void setBemerkung(String bemerkung) throws APOException {
-        if(bemerkung != null) {
+        if (bemerkung != null) {
             this.bemerkung = bemerkung;
         } else {
             throw new APOException("Die Bemerkung für das jeweilige Rezept darf nicht null sein!");

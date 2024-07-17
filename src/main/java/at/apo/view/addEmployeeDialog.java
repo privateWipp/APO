@@ -1,14 +1,19 @@
 package at.apo.view;
 
 import at.apo.model.APOException;
+import at.apo.model.Apotheke;
 import at.apo.model.Mitarbeiter;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
 public class addEmployeeDialog extends Dialog<Mitarbeiter> {
-    public addEmployeeDialog() {
-        setTitle("neuer Mitarbeiter");
+    private Apotheke model;
+
+    public addEmployeeDialog(Apotheke model) {
+        this.model = model;
+
+        setTitle("neuer Mitarbeiter : " + this.model.getName());
 
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(10, 10, 10, 10));
