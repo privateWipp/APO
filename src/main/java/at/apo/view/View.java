@@ -4,6 +4,7 @@ import at.apo.APO;
 import at.apo.control.Controller;
 import at.apo.model.APOException;
 import at.apo.model.Apotheke;
+import at.apo.model.ConfigManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
@@ -14,12 +15,16 @@ import java.io.File;
 import java.util.Arrays;
 
 public class View extends BorderPane {
+    private ConfigManager configManager;
+
     private APO apoInstance;
     private File directory;
     private Controller ctrl;
     private ListView<Apotheke> apothekenListView;
 
     public View() {
+        this.configManager = new ConfigManager();
+
         this.apoInstance = APO.getInstance();
 
         this.directory = new File("apotheken");
@@ -38,6 +43,11 @@ public class View extends BorderPane {
     private void initGUI() {
         // Top: MenuBar
         MenuBar menuBar = new MenuBar();
+
+        Menu benutzer = new Menu("Benutzer");
+        MenuItem anmelden = new MenuItem("anmelden/ummelden");
+        MenuItem abmelden = new MenuItem("abmelden");
+        benutzer.getItems().addAll();
 
         Menu apotheke = new Menu("Apotheke");
         MenuItem createApo = new MenuItem("Erstellen");
@@ -136,5 +146,9 @@ public class View extends BorderPane {
 
     public APO getApoInstance() {
         return this.apoInstance;
+    }
+
+    public boolean checkLoginStatus() {
+        return this.configManager.isLoggedIn();
     }
 }

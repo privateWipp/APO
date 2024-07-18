@@ -164,10 +164,6 @@ public class Rezept implements Serializable, Cloneable {
         return this.bemerkung;
     }
 
-    public int getAnzMedikamenten() {
-        return getMedikamente().size();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

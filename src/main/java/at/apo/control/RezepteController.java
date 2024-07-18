@@ -56,7 +56,6 @@ public class RezepteController {
         Optional<ButtonType> result = confirmation.showAndWait();
         if (result.isPresent() && result.get() == yes) {
             try {
-                this.model.removeKunde(rezept.getPatient());
                 this.model.removeRezept(rezept);
                 this.view.loadRezepte();
                 this.mainView.loadListViews();

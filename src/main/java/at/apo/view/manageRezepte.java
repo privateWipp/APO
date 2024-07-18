@@ -17,19 +17,21 @@ public class manageRezepte extends BorderPane {
     private ApoView view;
     private Apotheke model;
     private RezepteController ctrl;
-    private Stage stage;
 
     private ListView<Rezept> rezeptListView;
+
+    private Stage stage;
 
     public manageRezepte(ApoView view, Apotheke model) {
         this.apoInstance = APO.getInstance();
         this.view = view;
         this.model = model;
         this.ctrl = new RezepteController(this.model, this.view, this);
-        this.stage = new Stage();
 
         this.rezeptListView = new ListView<Rezept>();
         loadRezepte();
+
+        this.stage = new Stage();
 
         initGUI();
     }
