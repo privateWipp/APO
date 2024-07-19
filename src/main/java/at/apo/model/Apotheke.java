@@ -351,6 +351,7 @@ public class Apotheke implements Serializable, Cloneable {
             oos.writeObject(getBestellungen());
             oos.writeObject(getLagerbestand());
             oos.writeObject(getRezepte());
+            oos.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

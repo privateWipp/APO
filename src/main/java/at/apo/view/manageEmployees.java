@@ -79,7 +79,7 @@ public class manageEmployees extends BorderPane {
         Button removeEmployee = new Button("- Mitarbeiter");
         Button manageEmployee = new Button("anschauen/verwalten");
         HBox manageEmployeesHBox = new HBox(addEmployee, removeEmployee, manageEmployee);
-        manageEmployeesHBox.setPadding(new Insets(20, 20, 20, 20));
+        manageEmployeesHBox.setPadding(new Insets(20, 10, 20, 10));
         manageEmployeesHBox.setSpacing(10);
 
         VBox topVBox = new VBox(menuBar, manageEmployeesHBox);

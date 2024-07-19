@@ -58,7 +58,7 @@ public class manageMedikamente extends BorderPane {
         Button manageMedikament = new Button("anschauen/verwalten");
         Button printMedikamente = new Button("alle Medikamente ausgeben");
         manageMedikamenteHBox.getChildren().addAll(addMedikament, removeMedikament, manageMedikament, printMedikamente);
-        manageMedikamenteHBox.setPadding(new Insets(20, 20, 20, 20));
+        manageMedikamenteHBox.setPadding(new Insets(20, 10, 20, 10));
         manageMedikamenteHBox.setSpacing(10);
 
         VBox topVBox = new VBox(menuBar, manageMedikamenteHBox);

@@ -57,7 +57,7 @@ public class manageBestellungen extends BorderPane {
         Button manageBestellung = new Button("ändern/verwalten"); // nur wenn Bestellstatus = "BESTELLT" ist!!!
         Button changeStatus = new Button("NUR Bestellstatus ändern");
         HBox manageBestellungenHBox = new HBox(addBestellung, removeBestellung, manageBestellung, changeStatus);
-        manageBestellungenHBox.setPadding(new Insets(20, 20, 20, 20));
+        manageBestellungenHBox.setPadding(new Insets(20, 10, 20, 10));
         manageBestellungenHBox.setSpacing(10);
 
         VBox topVBox = new VBox(menuBar, manageBestellungenHBox);
