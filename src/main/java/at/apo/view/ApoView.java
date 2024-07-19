@@ -161,28 +161,50 @@ public class ApoView extends BorderPane {
 
         // -------------------------------------------------------------------------------------------------------------
 
-        HBox listViewFensterHBox = new HBox();
+        Label medikamenteLabel = new Label("Medikamente:");
+        Label rezepteLabel = new Label("Rezepte:");
+        Label bestellungenLabel = new Label("Bestellungen:");
+        Label kundenLabel = new Label("Kunden:");
+        Label mitarbeiterLabel = new Label("Mitarbeiter:");
 
-        VBox medikamenteVBox = new VBox(new Label("Medikamente:"), this.medikamentenListView);
-        medikamenteVBox.setPadding(new Insets(0, 10, 0, 0));
+        double fontSize = 30;
+        medikamenteLabel.setStyle("-fx-font-size: " + fontSize + "px;");
+        rezepteLabel.setStyle("-fx-font-size: " + fontSize + "px;");
+        bestellungenLabel.setStyle("-fx-font-size: " + fontSize + "px;");
+        kundenLabel.setStyle("-fx-font-size: " + fontSize + "px;");
+        mitarbeiterLabel.setStyle("-fx-font-size: " + fontSize + "px;");
 
-        VBox rezepteVBox = new VBox(new Label("Rezepte:"), this.rezepteListView);
-        rezepteVBox.setPadding(new Insets(0, 10, 0, 0));
+        double listViewWidth = 450;
+        double listViewHeight = 600;
 
-        VBox bestellungenVBox = new VBox(new Label("Bestellungen:"), this.bestellungenListView);
-        bestellungenVBox.setPadding(new Insets(0, 10, 0, 0));
+        this.medikamentenListView.setPrefSize(listViewWidth, listViewHeight);
+        this.rezepteListView.setPrefSize(listViewWidth, listViewHeight);
+        this.bestellungenListView.setPrefSize(listViewWidth, listViewHeight);
+        this.kundenListView.setPrefSize(listViewWidth, listViewHeight);
+        this.mitarbeiterListView.setPrefSize(listViewWidth, listViewHeight);
 
-        VBox kundenVBox = new VBox(new Label("Kunden:"), this.kundenListView);
-        kundenVBox.setPadding(new Insets(0, 10, 0, 0));
+        VBox medikamenteVBox = new VBox(medikamenteLabel, this.medikamentenListView);
+        medikamenteVBox.setPadding(new Insets(10));
 
-        VBox mitarbeiterVBox = new VBox(new Label("Mitarbeiter:"), this.mitarbeiterListView);
+        VBox rezepteVBox = new VBox(rezepteLabel, this.rezepteListView);
+        rezepteVBox.setPadding(new Insets(10));
+
+        VBox bestellungenVBox = new VBox(bestellungenLabel, this.bestellungenListView);
+        bestellungenVBox.setPadding(new Insets(10));
+
+        VBox kundenVBox = new VBox(kundenLabel, this.kundenListView);
+        kundenVBox.setPadding(new Insets(10));
+
+        VBox mitarbeiterVBox = new VBox(mitarbeiterLabel, this.mitarbeiterListView);
+        mitarbeiterVBox.setPadding(new Insets(10));
 
         medikamenteVBox.setVisible(false);
         rezepteVBox.setVisible(false);
         bestellungenVBox.setVisible(false);
         kundenVBox.setVisible(false);
         mitarbeiterVBox.setVisible(false);
-        listViewFensterHBox.getChildren().addAll(medikamenteVBox, rezepteVBox, bestellungenVBox, kundenVBox, mitarbeiterVBox);
+
+        HBox listViewFensterHBox = new HBox(medikamenteVBox, rezepteVBox, bestellungenVBox, kundenVBox, mitarbeiterVBox);
         listViewFensterHBox.setPadding(new Insets(10, 0, 0, 10));
         listViewFensterHBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 

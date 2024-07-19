@@ -42,14 +42,14 @@ public class neueBestellungDialog extends Dialog<Bestellung> {
 
         Label medikamenteL = new Label("Medikamente:");
         ComboBox<Medikament> medikamenteCB = new ComboBox<Medikament>();
-        for(Medikament medikament : this.model.getMedikamente()) {
+        for (Medikament medikament : this.model.getMedikamente()) {
             medikamenteCB.getItems().add(medikament);
         }
 
         Button addMed = new Button("+");
         addMed.disableProperty().bind(medikamenteCB.getSelectionModel().selectedItemProperty().isNull());
         addMed.setOnAction(e -> {
-            if(!this.medikamentenListView.getItems().contains(medikamenteCB.getValue())) {
+            if (!this.medikamentenListView.getItems().contains(medikamenteCB.getValue())) {
                 this.medikamentenListView.getItems().add(medikamenteCB.getValue());
                 this.medikamentenListView.refresh();
                 medikamenteCB.setValue(null);
@@ -69,25 +69,15 @@ public class neueBestellungDialog extends Dialog<Bestellung> {
             Optional<Medikament> m = addMedikamentDialog.showAndWait();
 
             m.ifPresent(medikament -> {
-                try {
-                    this.model.addMedikament(medikament);
-                    this.view.loadListViews();
-                    this.view.setChanged(true);
-                    System.out.println("Das Medikament " + medikament.getBezeichnung() + " wurde in die Apotheke " + this.model.getName() + " mit " + medikament.getLagerbestand() + " Stück aufgenommen.");
-
-                    if(!this.medikamentenListView.getItems().contains(medikament)) {
-                        this.medikamentenListView.getItems().add(medikament);
-                        this.medikamentenListView.refresh();
-                    } else {
-                        Alert information = new Alert(Alert.AlertType.INFORMATION);
-                        information.setTitle("ACHTUNG");
-                        information.setHeaderText("gleiches Medikament");
-                        information.setContentText("Ein genau gleiches Medikament existiert bereits in der Liste!");
-                        information.showAndWait();
-                    }
-                } catch (APOException ex) {
-                    this.view.errorAlert("Fehler beim Hinzufügen eines neuen Medikaments", ex.getMessage());
-                    System.out.println("Fehler: Beim Aufnehmen eines neuen Medikaments in die Apotheke " + this.model.getName() + " ist ein Fehler aufgetreten!");
+                if (!this.medikamentenListView.getItems().contains(medikament)) {
+                    this.medikamentenListView.getItems().add(medikament);
+                    this.medikamentenListView.refresh();
+                } else {
+                    Alert information = new Alert(Alert.AlertType.INFORMATION);
+                    information.setTitle("ACHTUNG");
+                    information.setHeaderText("gleiches Medikament");
+                    information.setContentText("Ein genau gleiches Medikament existiert bereits in der Liste!");
+                    information.showAndWait();
                 }
             });
         });
@@ -119,7 +109,7 @@ public class neueBestellungDialog extends Dialog<Bestellung> {
         getDialogPane().getButtonTypes().add(buttonType);
 
         this.setResultConverter(bt -> {
-            if(bt == buttonType) {
+            if (bt == buttonType) {
                 try {
                     return new Bestellung(bezeichnungTF.getText(), new ArrayList<Medikament>(this.medikamentenListView.getItems()));
                 } catch (APOException e) {

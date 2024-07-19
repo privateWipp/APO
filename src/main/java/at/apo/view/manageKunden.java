@@ -5,12 +5,11 @@ import at.apo.control.KundenController;
 import at.apo.model.Apotheke;
 import at.apo.model.Kunde;
 import at.apo.model.Rezept;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -78,8 +77,18 @@ public class manageKunden extends BorderPane {
         setLeft(this.kundenListView);
 
         Text text = new Text("Kunden / Rezepte, die an ausgewählten Kunden gehen");
-        text.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
-        setCenter(text);
+        text.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.004) + "px;");
+
+        Button printListe = new Button("Liste ausgeben");
+        printListe.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
+
+        VBox centerVBox = new VBox(text, printListe);
+        centerVBox.setAlignment(Pos.CENTER);
+        centerVBox.setSpacing(10);
+
+        printListe.setOnAction(e -> this.ctrl.printListe());
+
+        setCenter(centerVBox);
 
         setRight(this.rezepteListView);
 

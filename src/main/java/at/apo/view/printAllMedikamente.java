@@ -41,64 +41,38 @@ public class printAllMedikamente extends BorderPane {
         MenuBar menuBar = new MenuBar();
 
         Menu bearbeiten = new Menu("Bearbeiten");
-
-        Menu rezeptpflichtig = new Menu("rezeptpflichtig");
-        MenuItem sortBezeichnungR = new MenuItem("sortieren nach Bezeichnung");
-        MenuItem sortPreisR = new MenuItem("sortieren nach Preis");
-        MenuItem sortLagerbestandR = new MenuItem("sortieren nach Lagerbestand/Anzahl");
-        MenuItem sortVerfallsdatumR = new MenuItem("sortieren nach Verfallsdatum");
-        MenuItem sortVerfuegbarR = new MenuItem("sortieren nach Verfügbarkeit");
-        rezeptpflichtig.getItems().addAll(sortBezeichnungR, sortPreisR, sortLagerbestandR, sortVerfallsdatumR, sortVerfuegbarR);
-
-        Menu nichtRezeptpflichtig = new Menu("nicht rezeptpflichtig");
-        MenuItem sortBezeichnungNR = new MenuItem("sortieren nach Bezeichnung");
-        MenuItem sortPreisNR = new MenuItem("sortieren nach Preis");
-        MenuItem sortLagerbestandNR = new MenuItem("sortieren nach Lagerbestand/Anzahl");
-        MenuItem sortVerfallsdatumNR = new MenuItem("sortieren nach Verfallsdatum");
-        MenuItem sortVerfuegbarNR = new MenuItem("sortieren nach Verfügbarkeit");
-        nichtRezeptpflichtig.getItems().addAll(sortBezeichnungNR, sortPreisNR, sortLagerbestandNR, sortVerfallsdatumNR, sortVerfuegbarNR);
-
-        bearbeiten.getItems().addAll(rezeptpflichtig, nichtRezeptpflichtig);
+        MenuItem sortRezeptpflichtig = new MenuItem("sortieren nach rezeptpflichtig");
+        MenuItem sortBezeichnung = new MenuItem("sortieren nach Bezeichnung");
+        MenuItem sortPreis = new MenuItem("sortieren nach Preis");
+        MenuItem sortLagerbestand = new MenuItem("sortieren nach Lagerbestand/Anzahl");
+        MenuItem sortVerfallsdatum = new MenuItem("sortieren nach Verfallsdatum");
+        MenuItem sortVerfuegbar = new MenuItem("sortieren nach Verfügbarkeit");
+        bearbeiten.getItems().addAll(sortRezeptpflichtig, sortBezeichnung, sortPreis, sortLagerbestand, sortVerfallsdatum, sortVerfuegbar);
 
         menuBar.getMenus().add(bearbeiten);
 
-        sortBezeichnungR.setOnAction(e -> {
+        sortRezeptpflichtig.setOnAction(e -> {
+            this.model.getMedikamente().sort(Comparator.comparing(Medikament::isRezeptpflichtig));
+            updateTextArea();
+        });
+
+        sortBezeichnung.setOnAction(e -> {
             this.model.getMedikamente().sort(Comparator.comparing(Medikament::getBezeichnung));
             updateTextArea();
         });
-        sortBezeichnungNR.setOnAction(e -> {
-            this.model.getMedikamente().sort(Comparator.comparing(Medikament::getBezeichnung));
-            updateTextArea();
-        });
-        sortPreisR.setOnAction(e -> {
+        sortPreis.setOnAction(e -> {
             this.model.getMedikamente().sort(Comparator.comparing(Medikament::getPreis));
             updateTextArea();
         });
-        sortPreisNR.setOnAction(e -> {
-            this.model.getMedikamente().sort(Comparator.comparing(Medikament::getPreis));
-            updateTextArea();
-        });
-        sortLagerbestandR.setOnAction(e -> {
+        sortLagerbestand.setOnAction(e -> {
             this.model.getMedikamente().sort(Comparator.comparing(Medikament::getLagerbestand));
             updateTextArea();
         });
-        sortLagerbestandNR.setOnAction(e -> {
-            this.model.getMedikamente().sort(Comparator.comparing(Medikament::getLagerbestand));
-            updateTextArea();
-        });
-        sortVerfallsdatumR.setOnAction(e -> {
+        sortVerfallsdatum.setOnAction(e -> {
             this.model.getMedikamente().sort(Comparator.comparing(Medikament::getVerfallsdatum));
             updateTextArea();
         });
-        sortVerfallsdatumNR.setOnAction(e -> {
-            this.model.getMedikamente().sort(Comparator.comparing(Medikament::getVerfallsdatum));
-            updateTextArea();
-        });
-        sortVerfuegbarR.setOnAction(e -> {
-            this.model.getMedikamente().sort(Comparator.comparing(Medikament::isVerfuegbar));
-            updateTextArea();
-        });
-        sortVerfuegbarNR.setOnAction(e -> {
+        sortVerfuegbar.setOnAction(e -> {
             this.model.getMedikamente().sort(Comparator.comparing(Medikament::isVerfuegbar));
             updateTextArea();
         });
