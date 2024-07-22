@@ -108,7 +108,7 @@ public class EmployeeController {
             this.view.updateMitarbeiterListView();
             this.mainView.loadListViews();
             this.mainView.setChanged(true);
-            System.out.println("Die Daten von " + mitarbeiter1.getVorname() + " " + mitarbeiter1.getNachname() + " wurden aktualisiert.");
+            System.out.println("Die Daten von " + mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " wurden aktualisiert.");
         });
     }
 

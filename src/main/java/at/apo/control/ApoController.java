@@ -1,9 +1,6 @@
 package at.apo.control;
 
-import at.apo.model.APOException;
-import at.apo.model.Apotheke;
-import at.apo.model.Bestellung;
-import at.apo.model.Geschaeftsfuehrer;
+import at.apo.model.*;
 import at.apo.view.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -175,5 +172,245 @@ public class ApoController {
 
     public void manageKunden() {
         manageKunden manageKunden = new manageKunden(this.view, this.model);
+    }
+
+    public void manageEmployee(Mitarbeiter mitarbeiter) {
+        manageEmployeeDialog manageEmployeeDialog = new manageEmployeeDialog(this.model, mitarbeiter);
+        Optional<Mitarbeiter> m = manageEmployeeDialog.showAndWait();
+
+        m.ifPresent(mitarbeiter1 -> {
+            this.view.loadListViews();
+            this.view.setChanged(true);
+            System.out.println("Die Daten von " + mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " wurden aktualisiert.");
+        });
+    }
+
+    public void manageMedikament(Medikament medikament) {
+        manageMedikamentDialog manageMedikamentDialog = new manageMedikamentDialog(this.model, medikament);
+        Optional<Medikament> m = manageMedikamentDialog.showAndWait();
+
+        m.ifPresent(medikament1 -> {
+            this.view.loadListViews();
+            this.view.setChanged(true);
+            System.out.println("Die Daten von dem Medikament " + medikament.getBezeichnung() + " wurden aktualisiert.");
+        });
+    }
+
+    public void manageRezept(Rezept rezept) {
+        Rezept rezeptBefore = rezept.clone();
+
+        manageRezeptDialog manageRezeptDialog = new manageRezeptDialog(this.view, this.model, rezept);
+        Optional<Rezept> r = manageRezeptDialog.showAndWait();
+
+        r.ifPresent(rezept1 -> {
+            rezept1.berechnePreis();
+            if (!(rezeptBefore.getPatient().getName().equals(rezept1.getPatient().getName()))) {
+                try {
+                    this.model.removeKunde(rezeptBefore.getPatient());
+                    this.model.addKunde(rezept1.getPatient());
+                    System.out.println("Das Rezept ist nun ausgestellt an den Kunden " + rezept1.getPatient().getName() + " und nicht mehr an " + rezeptBefore.getPatient().getName() + ".");
+                } catch (APOException e) {
+                    this.view.errorAlert("Fehler beim Entfernen eines Kunden", e.getMessage());
+                    System.out.println("Fehler: Beim Löschen eines Kunden in der Apotheke " + this.model.getName() + " ist ein Fehler aufgetreten.");
+                }
+            }
+            this.view.loadListViews();
+            this.view.setChanged(true);
+            System.out.println("Das ausgewählte Rezept wurde erfolgreich verändert!");
+        });
+    }
+
+    public void manageBestellung(Bestellung bestellung) {
+        if (bestellung.getBestellstatus().equals("BESTELLT")) {
+            Bestellung bestellungBefore = bestellung.clone();
+
+            manageBestellungDialog manageBestellungDialog = new manageBestellungDialog(bestellung, this.view, this.model);
+            Optional<Bestellung> b = manageBestellungDialog.showAndWait();
+
+            b.ifPresent(bestellung1 -> {
+                this.view.loadListViews();
+                this.view.setChanged(true);
+                System.out.println("Die Bestellung (" + bestellungBefore.getBezeichnung() + ") wurde geändert.");
+            });
+        } else {
+            this.view.errorAlert("Bestellung verändern", "Die ausgewählte Bestellung ('" + bestellung.getBezeichnung() + "') kann NICHT verändert werden, da sie schon " + bestellung.getBestellstatus() + " ist (nur möglich wenn Bestellstatus = 'BESTELLT')!");
+        }
+    }
+
+    public void deleteEmployee(Mitarbeiter mitarbeiter) {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Mitarbeiter feuern");
+        confirmation.setHeaderText("Sind Sie sicher?");
+        confirmation.setContentText("Sind Sie sicher, dass sie den ausgewählten Mitarbeiter (" + mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + ") feuern wollen?");
+
+        ButtonType yes = new ButtonType("Ja");
+        ButtonType no = new ButtonType("Nein");
+        ButtonType cancel = new ButtonType("Abbrechen");
+
+        confirmation.getButtonTypes().setAll(yes, no, cancel);
+
+        Optional<ButtonType> result = confirmation.showAndWait();
+        if (result.isPresent() && result.get() == yes) {
+            try {
+                this.model.removeMitarbeiter(mitarbeiter);
+                this.view.loadListViews();
+                this.view.setChanged(true);
+                System.out.println(mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " ist nun kein Teil mehr der Apotheke: " + this.model.getName());
+            } catch (APOException e) {
+                this.view.errorAlert("Fehler beim Feuern eines Mitarbeiters", e.getMessage());
+                System.out.println("Fehler: Der Mitarbeiter " + mitarbeiter.getVorname() + " " + mitarbeiter.getNachname() + " konnte nicht gefeuert werden!");
+            }
+        } else {
+            confirmation.close();
+        }
+    }
+
+    public void deleteMedikament(Medikament medikament) {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Medikament entfernen");
+        confirmation.setHeaderText("Sind Sie sicher?");
+        confirmation.setContentText("Sind Sie sicher, dass sie " + medikament.getLagerbestand() + " Stück von dem Medikament " + medikament.getBezeichnung() + " aus der Apotheke " + this.model.getName() + " entfernen wollen?");
+
+        ButtonType yes = new ButtonType("Ja");
+        ButtonType no = new ButtonType("Nein");
+        ButtonType cancel = new ButtonType("Abbrechen");
+
+        confirmation.getButtonTypes().setAll(yes, no, cancel);
+
+        Optional<ButtonType> result = confirmation.showAndWait();
+        if (result.isPresent() && result.get() == yes) {
+            try {
+                this.model.removeMedikament(medikament);
+                this.view.loadListViews();
+                this.view.setChanged(true);
+                System.out.println("Das Medikament " + medikament.getBezeichnung() + " (" + medikament.getLagerbestand() + " Stück) wurde aus der Apotheke " + this.model.getName() + " entfernt.");
+            } catch (APOException e) {
+                this.view.errorAlert("Fehler beim Entfernen des Medikaments " + medikament.getBezeichnung(), e.getMessage());
+                System.out.println("Fehler: Beim Entfernen von dem Medikament " + medikament.getBezeichnung() + " (" + medikament.getLagerbestand() + " Stück) ist ein Fehler aufgetreten!");
+            }
+        } else {
+            confirmation.close();
+        }
+    }
+
+    public void deleteRezept(Rezept rezept) {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Rezept entfernen");
+        confirmation.setHeaderText("Sind Sie sicher?");
+        confirmation.setContentText("Sind Sie sicher, dass sie das ausgewählte Rezept aus der Apotheke " + this.model.getName() + " entfernen möchten?");
+
+        ButtonType yes = new ButtonType("Ja");
+        ButtonType no = new ButtonType("Nein");
+        ButtonType cancel = new ButtonType("Abbrechen");
+
+        confirmation.getButtonTypes().setAll(yes, no, cancel);
+
+        Optional<ButtonType> result = confirmation.showAndWait();
+        if (result.isPresent() && result.get() == yes) {
+            try {
+                this.model.removeRezept(rezept);
+                this.view.loadListViews();
+                this.view.setChanged(true);
+                System.out.println("Das ausgewählte Rezept wurde erfolgreich aus der Apotheke " + this.model.getName() + " entfernt.");
+            } catch (APOException e) {
+                this.view.errorAlert("Fehler beim Entfernen eines Rezepts", e.getMessage());
+                System.out.println("Fehler: Beim Löschen eines Rezepts in der Apotheke " + this.model.getName() + " ist ein Fehler aufgetreten!");
+            }
+        } else {
+            confirmation.close();
+        }
+    }
+
+    public void deleteBestellung(Bestellung bestellung) {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Bestellung stornieren");
+        confirmation.setHeaderText("Sind Sie sicher?");
+        confirmation.setContentText("Sind Sie sicher, dass sie die ausgewählte Bestellung mit der Bezeichnung '" + bestellung.getBezeichnung() + "' stornieren wollen?");
+
+        ButtonType yes = new ButtonType("Ja");
+        ButtonType no = new ButtonType("Nein");
+        ButtonType cancel = new ButtonType("Abbrechen");
+
+        confirmation.getButtonTypes().setAll(yes, no, cancel);
+
+        Optional<ButtonType> result = confirmation.showAndWait();
+        if (result.isPresent() && result.get() == yes) {
+            if (bestellung.getBestellstatus().equals("BESTELLT") || bestellung.getBestellstatus().equals("VERSANDT")) {
+                this.view.loadListViews();
+                this.view.setChanged(true);
+                System.out.println("Die ausgewählte Bestellung mit der Bezeichnung '" + bestellung.getBezeichnung() + "' wurde erfolgreich storniert.");
+            } else {
+                Alert confirmation2 = new Alert(Alert.AlertType.CONFIRMATION);
+                confirmation2.setTitle("Bestellung stornieren");
+                confirmation2.setHeaderText("Alles oder Nichts");
+                confirmation2.setContentText("Sollen die durch die Bestellung erhaltenen Medikamente ebenfalls 'storniert' werden, oder sollen sie ihren Platz in der Apotheke behalten?");
+
+                ButtonType behalten = new ButtonType("Behalten");
+                ButtonType stornieren = new ButtonType("Stornieren");
+
+                confirmation2.getButtonTypes().setAll(behalten, stornieren, cancel);
+
+                Optional<ButtonType> result2 = confirmation2.showAndWait();
+                if (result2.isPresent() && result2.get() == behalten) {
+                    try {
+                        this.model.removeBestellung(bestellung);
+                        this.view.loadListViews();
+                        this.view.setChanged(true);
+                    } catch (APOException e) {
+                        this.view.errorAlert("Fehler beim Stornieren einer Bestellung", e.getMessage());
+                        System.out.println("Fehler: Beim Stornieren der Bestellung mit der Bezeichnung '" + bestellung.getBezeichnung() + "' ist ein Fehler aufgetreten!");
+                    }
+                } else if (result2.isPresent() && result2.get() == stornieren) {
+                    for (Medikament medikament : bestellung.getMedikamente()) {
+                        try {
+                            this.model.removeMedikament(medikament);
+                        } catch (APOException e) {
+                            this.view.errorAlert("Fehler beim Stornieren eines Medikaments", e.getMessage());
+                            System.out.println("Fehler: Beim Stornieren des Medikaments mit der Bezeichnung '" + medikament.getBezeichnung() + "' ist ein Fehler aufgetreten!");
+                        }
+                    }
+                    try {
+                        this.model.removeBestellung(bestellung);
+                        this.view.loadListViews();
+                        this.view.setChanged(true);
+                    } catch (APOException e) {
+                        this.view.errorAlert("Fehler beim Stornieren einer Bestellung", e.getMessage());
+                        System.out.println("Fehler: Beim Stornieren der Bestellung mit der Bezeichnung '" + bestellung.getBezeichnung() + "' ist ein Fehler aufgetreten!");
+                    }
+                } else {
+                    confirmation2.close();
+                }
+            }
+        } else {
+            confirmation.close();
+        }
+    }
+
+    public void deleteKunde(Kunde kunde) {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Kunde entfernen");
+        confirmation.setHeaderText("Sind Sie sicher?");
+        confirmation.setContentText("Sind Sie sicher, dass sie den ausgewählten Kunden aus der Apotheke " + this.model.getName() + " entfernen wollen?\n" +
+                "Seien Sie sich bewusst, dass alle Rezepte, die mit dem Kunden zusammenhängen bestehen bleiben!");
+
+        ButtonType yes = new ButtonType("Ja");
+        ButtonType no = new ButtonType("Nein");
+        ButtonType cancel = new ButtonType("Abbrechen");
+
+        confirmation.getButtonTypes().setAll(yes, no, cancel);
+
+        Optional<ButtonType> result = confirmation.showAndWait();
+        if (result.isPresent() && result.get() == yes) {
+            try {
+                this.model.removeKunde(kunde);
+                this.view.loadListViews();
+                this.view.setChanged(true);
+            } catch (APOException e) {
+                this.view.errorAlert("Fehler beim Löschen des Kunden " + kunde.getName(), e.getMessage());
+                System.out.println("Fehler: Beim Löschen des ausgewählten Kunden (" + kunde.getName() + ") ist ein Fehler aufgetreten.");
+            }
+        } else {
+            confirmation.close();
+        }
     }
 }

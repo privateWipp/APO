@@ -8,6 +8,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -246,6 +248,45 @@ public class ApoView extends BorderPane {
             System.out.println("Die Listen: Medikamente, Rezepte, Bestellungen, Kunden und Mitarbeiter wurden aktualisiert.");
         });
 
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem manage = new MenuItem("ansehen/verwalten");
+        MenuItem delete = new MenuItem("löschen");
+        contextMenu.getItems().addAll(manage, delete);
+
+        manage.setOnAction(e -> {
+            if(getSelectedItemFromListView() instanceof Mitarbeiter) {
+                this.ctrl.manageEmployee(this.mitarbeiterListView.getSelectionModel().getSelectedItem());
+            } else if(getSelectedItemFromListView() instanceof Medikament) {
+                this.ctrl.manageMedikament(this.medikamentenListView.getSelectionModel().getSelectedItem());
+            } else if(getSelectedItemFromListView() instanceof Rezept) {
+                this.ctrl.manageRezept(this.rezepteListView.getSelectionModel().getSelectedItem());
+            } else if(getSelectedItemFromListView() instanceof Bestellung) {
+                this.ctrl.manageBestellung(this.bestellungenListView.getSelectionModel().getSelectedItem());
+            } else {
+                errorAlert("verwalten eines Kunden", "Da es beim Kunden an sich nicht viel zu verwalten gibt, ist diese Aktion unterbunden");
+                System.out.println("Fehler: Beim Verwalten eines Kunden ist ein Fehler aufgetreten. Siehe: Error-Alert bzw. Dialog");
+            }
+        });
+        delete.setOnAction(e -> {
+            if(getSelectedItemFromListView() instanceof Mitarbeiter) {
+                this.ctrl.deleteEmployee(this.mitarbeiterListView.getSelectionModel().getSelectedItem());
+            } else if(getSelectedItemFromListView() instanceof Medikament) {
+                this.ctrl.deleteMedikament(this.medikamentenListView.getSelectionModel().getSelectedItem());
+            } else if(getSelectedItemFromListView() instanceof Rezept) {
+                this.ctrl.deleteRezept(this.rezepteListView.getSelectionModel().getSelectedItem());
+            } else if(getSelectedItemFromListView() instanceof Bestellung) {
+                this.ctrl.deleteBestellung(this.bestellungenListView.getSelectionModel().getSelectedItem());
+            } else if(getSelectedItemFromListView() instanceof Kunde) {
+                this.ctrl.deleteKunde(this.kundenListView.getSelectionModel().getSelectedItem());
+            }
+        });
+
+        addContextMenuToListView(this.mitarbeiterListView, contextMenu);
+        addContextMenuToListView(this.medikamentenListView, contextMenu);
+        addContextMenuToListView(this.rezepteListView, contextMenu);
+        addContextMenuToListView(this.bestellungenListView, contextMenu);
+        addContextMenuToListView(this.kundenListView, contextMenu);
+
         setCenter(listViewFensterHBox);
 
         // -------------------------------------------------------------------------------------------------------------
@@ -272,6 +313,38 @@ public class ApoView extends BorderPane {
         // -------------------------------------------------------------------------------------------------------------
 
         this.stage.show();
+    }
+
+    private Object getSelectedItemFromListView() {
+        if(this.mitarbeiterListView.getSelectionModel().getSelectedItem() != null) {
+            return this.mitarbeiterListView.getSelectionModel().getSelectedItem();
+        }
+        if(this.medikamentenListView.getSelectionModel().getSelectedItem() != null) {
+            return this.medikamentenListView.getSelectionModel().getSelectedItem();
+        }
+        if(this.rezepteListView.getSelectionModel().getSelectedItem() != null) {
+            return this.rezepteListView.getSelectionModel().getSelectedItem();
+        }
+        if(this.kundenListView.getSelectionModel().getSelectedItem() != null) {
+            return this.kundenListView.getSelectionModel().getSelectedItem();
+        }
+        if(this.bestellungenListView.getSelectionModel().getSelectedItem() != null) {
+            return this.bestellungenListView.getSelectionModel().getSelectedItem();
+        }
+        return null;
+    }
+
+    private void addContextMenuToListView(ListView<?> listView, ContextMenu contextMenu) {
+        listView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            if (event.getButton() == MouseButton.SECONDARY) {
+                int index = listView.getSelectionModel().getSelectedIndex();
+                if (index != -1) {
+                    contextMenu.show(listView, event.getScreenX(), event.getScreenY());
+                }
+            } else {
+                contextMenu.hide();
+            }
+        });
     }
 
     public void loadListViews() {
@@ -361,8 +434,6 @@ public class ApoView extends BorderPane {
             } else if (result.isPresent() && result.get() == no) {
                 this.model = deepCopy(this.originalModel);
                 this.stage.close();
-            } else {
-                // bei Abbrechen => nichts tun
             }
         } else {
             this.stage.close();
