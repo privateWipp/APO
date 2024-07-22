@@ -108,9 +108,10 @@ public class ApoController {
 
             ButtonType yes = new ButtonType("Ja");
             ButtonType no = new ButtonType("Nein");
+            ButtonType wsdoz = new ButtonType("Was sind die Öffnungszeiten?");
             ButtonType cancel = new ButtonType("Abbrechen");
 
-            confirmation.getButtonTypes().setAll(yes, no, cancel);
+            confirmation.getButtonTypes().setAll(yes, no, wsdoz, cancel);
 
             Optional<ButtonType> result = confirmation.showAndWait();
             if (result.isPresent() && result.get() == yes) {
@@ -127,6 +128,8 @@ public class ApoController {
                         System.out.println("Fehler: Das Festlegen der Öffnungszeiten für die Apotheke " + this.model.getName() + " ist fehlgeschlagen!");
                     }
                 });
+            } else if(result.isPresent() && result.get() == wsdoz) {
+                displayOeffnungszeiten oeffnungszeiten = new displayOeffnungszeiten(this.model);
             } else {
                 confirmation.close();
             }
