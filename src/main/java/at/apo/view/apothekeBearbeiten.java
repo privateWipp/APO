@@ -39,7 +39,7 @@ public class apothekeBearbeiten extends FlowPane {
     private void initGUI() {
         this.stage.setTitle("allgemeine Informationen bearbeiten : " + this.model.getName());
         this.stage.setResizable(true);
-        Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.14, this.apoInstance.getScreenHeight() * 0.265);
+        Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.35, this.apoInstance.getScreenHeight() * 0.5);
         this.stage.setScene(scene);
         this.setPadding(new Insets(30, 30, 30, 30));
 

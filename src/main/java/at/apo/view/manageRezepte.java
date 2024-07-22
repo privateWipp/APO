@@ -39,7 +39,7 @@ public class manageRezepte extends BorderPane {
     private void initGUI() {
         this.stage.setTitle("Rezepte verwalten : " + this.model.getName());
         this.stage.setResizable(false);
-        Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.25, this.apoInstance.getScreenHeight() * 0.4);
+        Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.45, this.apoInstance.getScreenHeight() * 0.55);
         this.stage.setScene(scene);
 
         // Top: MenuBar
@@ -67,7 +67,6 @@ public class manageRezepte extends BorderPane {
         ToolBar toolBar = new ToolBar();
         toolBar.setOrientation(Orientation.VERTICAL);
         toolBar.setPadding(new Insets(10, 10, 10, 10));
-        toolBar.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
         Button addRezept = new Button("neues Rezept freigeben");
         Button removeRezept = new Button("löschen");

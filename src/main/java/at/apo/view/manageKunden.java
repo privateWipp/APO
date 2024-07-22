@@ -54,7 +54,7 @@ public class manageKunden extends BorderPane {
 
         this.stage.setTitle("Kunden verwalten : " + this.model.getName());
         this.stage.setResizable(false);
-        Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.25, this.apoInstance.getScreenHeight() * 0.4);
+        Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.45, this.apoInstance.getScreenHeight() * 0.55);
         this.stage.setScene(scene);
 
         // Top: MenuBar
@@ -76,17 +76,22 @@ public class manageKunden extends BorderPane {
 
         setLeft(this.kundenListView);
 
-        Text text = new Text("Kunden / Rezepte, die an ausgewählten Kunden gehen");
-        text.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.004) + "px;");
+        Text text = new Text("Kunden / Rezepte");
+        text.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.008) + "px;");
 
         Button printListe = new Button("Liste ausgeben");
-        printListe.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
+        printListe.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.007) + "px;");
 
-        VBox centerVBox = new VBox(text, printListe);
+        Button showRezept = new Button("gewähltes Rezept ansehen");
+        showRezept.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.007) + "px;");
+
+        VBox centerVBox = new VBox(text, printListe, showRezept);
         centerVBox.setAlignment(Pos.CENTER);
         centerVBox.setSpacing(10);
 
         printListe.setOnAction(e -> this.ctrl.printListe());
+        showRezept.disableProperty().bind(this.rezepteListView.getSelectionModel().selectedItemProperty().isNull());
+        showRezept.setOnAction(e -> this.ctrl.showRezept(this.rezepteListView.getSelectionModel().getSelectedItem()));
 
         setCenter(centerVBox);
 

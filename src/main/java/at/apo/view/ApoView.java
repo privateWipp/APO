@@ -147,7 +147,6 @@ public class ApoView extends BorderPane {
         ToolBar toolBar = new ToolBar();
         toolBar.setOrientation(Orientation.VERTICAL);
         toolBar.setPadding(new Insets(15, 15, 15, 15));
-        toolBar.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
         Button apothekeBearbeiten = new Button("Apotheke bearbeiten");
         VBox aIZAVBox = new VBox(new Label("allgemeine Informationen zur Apotheke bearbeiten:"), apothekeBearbeiten);
@@ -167,15 +166,15 @@ public class ApoView extends BorderPane {
         Label kundenLabel = new Label("Kunden:");
         Label mitarbeiterLabel = new Label("Mitarbeiter:");
 
-        double fontSize = 30;
+        double fontSize = 20;
         medikamenteLabel.setStyle("-fx-font-size: " + fontSize + "px;");
         rezepteLabel.setStyle("-fx-font-size: " + fontSize + "px;");
         bestellungenLabel.setStyle("-fx-font-size: " + fontSize + "px;");
         kundenLabel.setStyle("-fx-font-size: " + fontSize + "px;");
         mitarbeiterLabel.setStyle("-fx-font-size: " + fontSize + "px;");
 
-        double listViewWidth = 450;
-        double listViewHeight = 600;
+        double listViewWidth = 350;
+        double listViewHeight = 500;
 
         this.medikamentenListView.setPrefSize(listViewWidth, listViewHeight);
         this.rezepteListView.setPrefSize(listViewWidth, listViewHeight);
@@ -206,7 +205,6 @@ public class ApoView extends BorderPane {
 
         HBox listViewFensterHBox = new HBox(medikamenteVBox, rezepteVBox, bestellungenVBox, kundenVBox, mitarbeiterVBox);
         listViewFensterHBox.setPadding(new Insets(10, 0, 0, 10));
-        listViewFensterHBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
         medikamenteCMI.setOnAction(e -> {
             medikamenteVBox.setVisible(medikamenteCMI.isSelected());
@@ -259,7 +257,6 @@ public class ApoView extends BorderPane {
         aenderungenHBox.setSpacing(10);
         aenderungenHBox.setPadding(new Insets(0, 0, 5, 15));
         VBox changesVBox = new VBox(aenderungenHBox, this.changesTA);
-        changesVBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
         clearChanges.setOnAction(e -> this.ctrl.clearChanges());
 

@@ -63,7 +63,7 @@ public class manageEmployees extends BorderPane {
     private void initGUI() {
         this.stage.setTitle("Mitarbeiter verwalten : " + this.model.getName());
         this.stage.setResizable(false);
-        Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.25, this.apoInstance.getScreenHeight() * 0.4);
+        Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.45, this.apoInstance.getScreenHeight() * 0.55);
         this.stage.setScene(scene);
 
         // Top: MenuBar
@@ -83,7 +83,6 @@ public class manageEmployees extends BorderPane {
         manageEmployeesHBox.setSpacing(10);
 
         VBox topVBox = new VBox(menuBar, manageEmployeesHBox);
-        topVBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
         refreshList.setOnAction(e -> {
             updateMitarbeiterListView();
@@ -109,7 +108,6 @@ public class manageEmployees extends BorderPane {
         ToolBar toolBar = new ToolBar();
         toolBar.setOrientation(Orientation.VERTICAL);
         toolBar.setPadding(new Insets(10, 10, 10, 10));
-        toolBar.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
         Button printAllEmployees = new Button("alle Mitarbeiter anzeigen");
 

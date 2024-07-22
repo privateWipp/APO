@@ -40,7 +40,7 @@ public class manageMedikamente extends BorderPane {
     private void initGUI() {
         this.stage.setTitle("Medikamente verwalten : " + this.model.getName());
         this.stage.setResizable(false);
-        Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.25, this.apoInstance.getScreenHeight() * 0.4);
+        Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.45, this.apoInstance.getScreenHeight() * 0.55);
         this.stage.setScene(scene);
 
         // Top: MenuBar
@@ -62,7 +62,6 @@ public class manageMedikamente extends BorderPane {
         manageMedikamenteHBox.setSpacing(10);
 
         VBox topVBox = new VBox(menuBar, manageMedikamenteHBox);
-        topVBox.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
         refreshLists.setOnAction(e -> {
             updateMedikamente();
@@ -109,7 +108,7 @@ public class manageMedikamente extends BorderPane {
         setLeft(this.rMedikamente);
 
         Text text = new Text("rezeptpflichtig / NICHT rezeptpflichtig");
-        text.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.005) + "px;");
+        text.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.01) + "px;");
         setCenter(text);
 
         setRight(this.nrMedikamente);

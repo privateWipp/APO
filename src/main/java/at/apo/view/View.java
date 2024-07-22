@@ -77,7 +77,6 @@ public class View extends BorderPane {
         ToolBar toolBar = new ToolBar();
         toolBar.setOrientation(Orientation.VERTICAL);
         toolBar.setPadding(new Insets(20, 20, 20, 20));
-        toolBar.setStyle("-fx-font-size: " + (this.apoInstance.getScreenWidth() * 0.003) + "px;");
 
         VBox toolBarItemsVBox = new VBox();
         toolBarItemsVBox.setSpacing(10);

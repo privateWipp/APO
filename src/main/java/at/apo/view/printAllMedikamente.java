@@ -34,7 +34,7 @@ public class printAllMedikamente extends BorderPane {
     private void initGUI() {
         this.stage.setTitle("alle Medikamente ausgeben : " + this.model.getName());
         this.stage.setResizable(false);
-        Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.15, this.apoInstance.getScreenHeight() * 0.4);
+        Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.35, this.apoInstance.getScreenHeight() * 0.5);
         this.stage.setScene(scene);
 
         // Top: MenuBar

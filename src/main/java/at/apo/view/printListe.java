@@ -38,7 +38,7 @@ public class printListe extends BorderPane {
     private void initGUI() {
         this.stage.setTitle("alle Kunden ausgeben : " + this.model.getName());
         this.stage.setResizable(false);
-        Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.25, this.apoInstance.getScreenHeight() * 0.4);
+        Scene scene = new Scene(this, this.apoInstance.getScreenWidth() * 0.35, this.apoInstance.getScreenHeight() * 0.5);
         this.stage.setScene(scene);
 
         // Top: MenuBar

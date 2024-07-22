@@ -1,12 +1,4 @@
 Notizen:
-    -   Rezeptnummer funktioniert nicht:
-        Man kann zwar ein Rezept hinzufügen, jedoch haben alle die Rezeptnr. 1 in der Liste.
-        Es ist wirklich identisch mit allen anderen Bereichen (Medikamente, Bestellungen, Mitarbeiter),
-        aber trotzdem gibt es irgendeine Zeile oder irgendwelche Zeilen, die das einfach nur hinnig machen.
-
-    -   manageKunden muss fertiggestellt werden:
-        Vielleicht noch ein, zwei coole Features miteinbauen dann passts auch!
-
     -   potenzielle Funktionen, die man implementieren könnte:
             -   Benutzerlogin:
                 Jeder hat seine eigenen Login-Daten (Nachname, Passwort), und jedem User sind eben seine Apotheken zugewiesen.

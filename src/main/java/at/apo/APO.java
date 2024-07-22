@@ -22,7 +22,7 @@ public class APO extends Application {
         this.stage = stage;
 
         View view = new View();
-        Scene scene = new Scene(view, getScreenWidth() * 0.25, getScreenHeight() * 0.4);
+        Scene scene = new Scene(view, getScreenWidth() * 0.45, getScreenHeight() * 0.5);
         this.stage.setTitle("APO");
         this.stage.setResizable(false);
         this.stage.setScene(scene);
