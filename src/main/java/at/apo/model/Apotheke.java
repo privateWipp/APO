@@ -279,6 +279,14 @@ public class Apotheke implements Serializable, Cloneable {
         }
     }
 
+    public void decreaseBudget(double amount) throws APOException {
+        if(amount >= 0) {
+            this.budget -= amount;
+        } else {
+            throw new APOException("Das Budget der Apotheke " + getName() + " kann nicht um " + amount + "€ reduziert werden!");
+        }
+    }
+
     public String getName() {
         return this.name;
     }

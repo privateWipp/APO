@@ -177,6 +177,10 @@ public class ApoController {
         manageKunden manageKunden = new manageKunden(this.view, this.model);
     }
 
+    public void manageGehaelter() {
+        manageGehaelter manageGehaelter = new manageGehaelter(this.view, this.model);
+    }
+
     public void manageEmployee(Mitarbeiter mitarbeiter) {
         manageEmployeeDialog manageEmployeeDialog = new manageEmployeeDialog(this.model, mitarbeiter);
         Optional<Mitarbeiter> m = manageEmployeeDialog.showAndWait();

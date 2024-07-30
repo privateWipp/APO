@@ -45,8 +45,11 @@ public class View extends BorderPane {
         MenuItem importApo = new MenuItem("Importieren");
         MenuItem openApo = new MenuItem("Apotheke öffnen/verwalten");
         MenuItem deleteApo = new MenuItem("Löschen");
-        MenuItem refreshList = new MenuItem("Liste aktualisieren");
-        apotheke.getItems().addAll(createApo, importApo, openApo, deleteApo, refreshList);
+        apotheke.getItems().addAll(createApo, importApo, openApo, deleteApo);
+
+        Menu list = new Menu("Liste");
+        MenuItem refreshList = new MenuItem("aktualisieren");
+        list.getItems().add(refreshList);
 
         Menu help = new Menu("Hilfe");
         MenuItem aboutMe = new MenuItem("Über mich");

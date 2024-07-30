@@ -28,6 +28,7 @@ public class EmployeeController {
             try {
                 validateMitarbeiter(mitarbeiter);
                 this.model.addMitarbeiter(mitarbeiter);
+                this.model.decreaseBudget(mitarbeiter.getGehalt());
                 this.view.updateMitarbeiterListView();
                 this.mainView.loadListViews();
                 this.mainView.setChanged(true);

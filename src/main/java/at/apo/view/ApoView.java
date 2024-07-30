@@ -110,6 +110,10 @@ public class ApoView extends BorderPane {
         MenuItem manageKunden = new MenuItem("Kunden verwalten");
         kunden.getItems().add(manageKunden);
 
+        Menu gehaelter = new Menu("Gehälter");
+        MenuItem manageGehaelter = new MenuItem("verwalten");
+        gehaelter.getItems().add(manageGehaelter);
+
         Menu optionen = new Menu("Optionen");
         MenuItem geschaeftsfuehrerFestlegen = new MenuItem("Geschäftsführer ändern/festlegen");
         MenuItem geschaeftsfuehrerAnzeigen = new MenuItem("Details zu Geschäftsführer anzeigen");
@@ -128,7 +132,7 @@ public class ApoView extends BorderPane {
         MenuItem refreshLists = new MenuItem("Listen aktualisieren");
         ansicht.getItems().addAll(fenster, alleAnzeigen, refreshLists);
 
-        menuBar.getMenus().addAll(mitarbeiter, medikamente, rezepte, bestellungen, kunden, optionen, ansicht);
+        menuBar.getMenus().addAll(mitarbeiter, medikamente, rezepte, bestellungen, kunden, gehaelter, optionen, ansicht);
 
         manageEmployees.setOnAction(e -> this.ctrl.manageEmployees());
 
@@ -137,6 +141,7 @@ public class ApoView extends BorderPane {
         newBestellung.setOnAction(e -> this.ctrl.newBestellung());
         manageBestellungen.setOnAction(e -> this.ctrl.manageBestellungen());
         manageKunden.setOnAction(e -> this.ctrl.manageKunden());
+        manageGehaelter.setOnAction(e -> this.ctrl.manageGehaelter());
 
         geschaeftsfuehrerFestlegen.setOnAction(e -> this.ctrl.geschaeftsfuehrerFestlegen());
         geschaeftsfuehrerAnzeigen.setOnAction(e -> this.ctrl.geschaeftsfuehrerAnzeigen());
